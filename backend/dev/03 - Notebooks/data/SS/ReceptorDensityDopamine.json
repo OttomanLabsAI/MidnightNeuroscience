@@ -1,0 +1,146 @@
+[
+    {
+        "Brain Structure":"Caudate nucleus",
+        "D1 Receptor Density (fmol\/mg protein)":"20000:40000",
+        "D2 Receptor Density (fmol\/mg protein)":"15000:30000",
+        "D3 Receptor Density (fmol\/mg protein)":"500:2000",
+        "D4 Receptor Density (fmol\/mg protein)":"200:1500",
+        "D5 Receptor Density (fmol\/mg protein)":"1000:3000"
+    },
+    {
+        "Brain Structure":"Putamen",
+        "D1 Receptor Density (fmol\/mg protein)":"25000:45000",
+        "D2 Receptor Density (fmol\/mg protein)":"18000:35000",
+        "D3 Receptor Density (fmol\/mg protein)":"500:2500",
+        "D4 Receptor Density (fmol\/mg protein)":"200:2000",
+        "D5 Receptor Density (fmol\/mg protein)":"1000:3500"
+    },
+    {
+        "Brain Structure":"Nucleus Accumbens",
+        "D1 Receptor Density (fmol\/mg protein)":"15000:25000",
+        "D2 Receptor Density (fmol\/mg protein)":"10000:15000",
+        "D3 Receptor Density (fmol\/mg protein)":"5000:10000",
+        "D4 Receptor Density (fmol\/mg protein)":"200:1500",
+        "D5 Receptor Density (fmol\/mg protein)":"1000:3000"
+    },
+    {
+        "Brain Structure":"Globus Pallidus (External segment)",
+        "D1 Receptor Density (fmol\/mg protein)":"500:2500",
+        "D2 Receptor Density (fmol\/mg protein)":"2000:6000",
+        "D3 Receptor Density (fmol\/mg protein)":"200:1000",
+        "D4 Receptor Density (fmol\/mg protein)":"100:500",
+        "D5 Receptor Density (fmol\/mg protein)":"100:500"
+    },
+    {
+        "Brain Structure":"Globus Pallidus (Internal segment)",
+        "D1 Receptor Density (fmol\/mg protein)":"500:2000",
+        "D2 Receptor Density (fmol\/mg protein)":"1000:3000",
+        "D3 Receptor Density (fmol\/mg protein)":"200:1000",
+        "D4 Receptor Density (fmol\/mg protein)":"100:500",
+        "D5 Receptor Density (fmol\/mg protein)":"100:500"
+    },
+    {
+        "Brain Structure":"Substantia Nigra (Pars compacta)",
+        "D1 Receptor Density (fmol\/mg protein)":"500:2000",
+        "D2 Receptor Density (fmol\/mg protein)":"1000:4000",
+        "D3 Receptor Density (fmol\/mg protein)":"500:2500",
+        "D4 Receptor Density (fmol\/mg protein)":"100:500",
+        "D5 Receptor Density (fmol\/mg protein)":"200:1000"
+    },
+    {
+        "Brain Structure":"Substantia Nigra (Pars reticulata)",
+        "D1 Receptor Density (fmol\/mg protein)":"500:2000",
+        "D2 Receptor Density (fmol\/mg protein)":"1000:3000",
+        "D3 Receptor Density (fmol\/mg protein)":"500:2000",
+        "D4 Receptor Density (fmol\/mg protein)":"100:500",
+        "D5 Receptor Density (fmol\/mg protein)":"200:1000"
+    },
+    {
+        "Brain Structure":"Prefrontal Cortex",
+        "D1 Receptor Density (fmol\/mg protein)":"2000:4000",
+        "D2 Receptor Density (fmol\/mg protein)":"500:2000",
+        "D3 Receptor Density (fmol\/mg protein)":"500:2000",
+        "D4 Receptor Density (fmol\/mg protein)":"1000:2500",
+        "D5 Receptor Density (fmol\/mg protein)":"2000:5000"
+    },
+    {
+        "Brain Structure":"Motor Cortex",
+        "D1 Receptor Density (fmol\/mg protein)":"1000:2000",
+        "D2 Receptor Density (fmol\/mg protein)":"500:1500",
+        "D3 Receptor Density (fmol\/mg protein)":"500:1500",
+        "D4 Receptor Density (fmol\/mg protein)":"500:1500",
+        "D5 Receptor Density (fmol\/mg protein)":"1000:2000"
+    },
+    {
+        "Brain Structure":"Somatosensory Cortex",
+        "D1 Receptor Density (fmol\/mg protein)":"1000:2000",
+        "D2 Receptor Density (fmol\/mg protein)":"500:1500",
+        "D3 Receptor Density (fmol\/mg protein)":"500:1500",
+        "D4 Receptor Density (fmol\/mg protein)":"500:1500",
+        "D5 Receptor Density (fmol\/mg protein)":"1000:2000"
+    },
+    {
+        "Brain Structure":"Visual Cortex",
+        "D1 Receptor Density (fmol\/mg protein)":"500:1500",
+        "D2 Receptor Density (fmol\/mg protein)":"200:1000",
+        "D3 Receptor Density (fmol\/mg protein)":"200:1000",
+        "D4 Receptor Density (fmol\/mg protein)":"100:1000",
+        "D5 Receptor Density (fmol\/mg protein)":"500:1500"
+    },
+    {
+        "Brain Structure":"Auditory Cortex",
+        "D1 Receptor Density (fmol\/mg protein)":"500:2000",
+        "D2 Receptor Density (fmol\/mg protein)":"200:1500",
+        "D3 Receptor Density (fmol\/mg protein)":"200:1500",
+        "D4 Receptor Density (fmol\/mg protein)":"200:1500",
+        "D5 Receptor Density (fmol\/mg protein)":"500:2000"
+    },
+    {
+        "Brain Structure":"Fusiform Gyrus",
+        "D1 Receptor Density (fmol\/mg protein)":"500:2000",
+        "D2 Receptor Density (fmol\/mg protein)":"200:1500",
+        "D3 Receptor Density (fmol\/mg protein)":"200:1500",
+        "D4 Receptor Density (fmol\/mg protein)":"200:1500",
+        "D5 Receptor Density (fmol\/mg protein)":"500:2000"
+    },
+    {
+        "Brain Structure":"Hippocampus (CA1 and CA3)",
+        "D1 Receptor Density (fmol\/mg protein)":"500:2000",
+        "D2 Receptor Density (fmol\/mg protein)":"200:1000",
+        "D3 Receptor Density (fmol\/mg protein)":"200:1000",
+        "D4 Receptor Density (fmol\/mg protein)":"100:1000",
+        "D5 Receptor Density (fmol\/mg protein)":"500:2000"
+    },
+    {
+        "Brain Structure":"Thalamus (Mediodorsal nucleus)",
+        "D1 Receptor Density (fmol\/mg protein)":"500:1500",
+        "D2 Receptor Density (fmol\/mg protein)":"1000:3000",
+        "D3 Receptor Density (fmol\/mg protein)":"200:1500",
+        "D4 Receptor Density (fmol\/mg protein)":"100:1000",
+        "D5 Receptor Density (fmol\/mg protein)":"200:1500"
+    },
+    {
+        "Brain Structure":"Thalamus (Pulvinar nucleus)",
+        "D1 Receptor Density (fmol\/mg protein)":"500:1500",
+        "D2 Receptor Density (fmol\/mg protein)":"500:1500",
+        "D3 Receptor Density (fmol\/mg protein)":"200:1500",
+        "D4 Receptor Density (fmol\/mg protein)":"100:1000",
+        "D5 Receptor Density (fmol\/mg protein)":"200:1500"
+    },
+    {
+        "Brain Structure":"Amygdala",
+        "D1 Receptor Density (fmol\/mg protein)":"1000:3000",
+        "D2 Receptor Density (fmol\/mg protein)":"500:2000",
+        "D3 Receptor Density (fmol\/mg protein)":"500:2000",
+        "D4 Receptor Density (fmol\/mg protein)":"200:1500",
+        "D5 Receptor Density (fmol\/mg protein)":"500:2000"
+    },
+    {
+        "Brain Structure":"Hypothalamus (Arcuate nucleus)",
+        "D1 Receptor Density (fmol\/mg protein)":"500:2500",
+        "D2 Receptor Density (fmol\/mg protein)":"500:2500",
+        "D3 Receptor Density (fmol\/mg protein)":"500:2000",
+        "D4 Receptor Density (fmol\/mg protein)":"200:1500",
+        "D5 Receptor Density (fmol\/mg protein)":"500:2000"
+    }
+]

@@ -1,0 +1,13 @@
+Receptor Family,Receptor Subtypes,Type,Mechanism
+Dopamine Receptors,"D1, D2, D3, D4, D5",Metabotropic,G protein-coupled (GPCR)
+Serotonin Receptors,"5-HT1A, 5-HT1B, 5-HT1D, 5-HT1E, 5-HT1F, 5-HT2A, 5-HT2B, 5-HT2C, 5-HT3, 5-HT4, 5-HT5A, 5-HT5B, 5-HT6, 5-HT7","Metabotropic, Ionotropic (5-HT3)","GPCR, Ligand-gated ion channel (5-HT3)"
+Glutamate Receptors,"AMPA (GluA1, GluA2, GluA3, GluA4), NMDA (GluN1, GluN2A, GluN2B, GluN2C, GluN2D), Kainate (GluK1, GluK2, GluK3, GluK4, GluK5), mGluR1, mGluR2, mGluR3, mGluR4, mGluR5, mGluR6, mGluR7, mGluR8","Ionotropic, Metabotropic","Ligand-gated ion channels (Na+/K+/Ca2+), GPCR"
+GABA Receptors,"GABA-A, GABA-B","Ionotropic, Metabotropic","Ligand-gated ion channel (Cl-), GPCR"
+Acetylcholine Receptors,"Nicotinic (α1, α2, α3, α4, α5, α6, α7, α9, α10, β1, β2, β3, β4), Muscarinic (M1, M2, M3, M4, M5)","Ionotropic, Metabotropic","Ligand-gated ion channel (Na+/K+/Ca2+), GPCR"
+Norepinephrine Receptors,"α1 (α1A, α1B, α1D), α2 (α2A, α2B, α2C), β1, β2, β3",Metabotropic,GPCR
+Histamine Receptors,"H1, H2, H3, H4",Metabotropic,GPCR
+Opioid Receptors,"μ (mu), κ (kappa), δ (delta), NOP",Metabotropic,GPCR
+Endocannabinoid Receptors,"CB1, CB2",Metabotropic,GPCR
+Adenosine Receptors,"A1, A2A, A2B, A3",Metabotropic,GPCR
+Purinergic Receptors,"P2X (P2X1, P2X2, P2X3, P2X4, P2X5, P2X6, P2X7), P2Y (P2Y1, P2Y2, P2Y4, P2Y6, P2Y11, P2Y12, P2Y13, P2Y14)","Ionotropic, Metabotropic","Ligand-gated ion channel (Na+/K+/Ca2+), GPCR"
+Neuropeptide Receptors,"NPY (Y1, Y2, Y4, Y5), CRF1, CRF2, Oxytocin, Vasopressin (V1A, V1B, V2)",Metabotropic,GPCR

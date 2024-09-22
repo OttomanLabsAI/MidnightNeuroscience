@@ -1,0 +1,956 @@
+[
+    {
+        "Receptor Subtype": "NR1 (NMDA)",
+        "Family": "Glutamate",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "NR2A (NMDA)",
+        "Family": "Glutamate",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "NR2B (NMDA)",
+        "Family": "Glutamate",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "NR2C (NMDA)",
+        "Family": "Glutamate",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "NR2D (NMDA)",
+        "Family": "Glutamate",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "NR3A (NMDA)",
+        "Family": "Glutamate",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "NR3B (NMDA)",
+        "Family": "Glutamate",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "GluA1 (AMPA)",
+        "Family": "Glutamate",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "GluA2 (AMPA)",
+        "Family": "Glutamate",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "GluA3 (AMPA)",
+        "Family": "Glutamate",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "GluA4 (AMPA)",
+        "Family": "Glutamate",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "GluK1 (Kainate)",
+        "Family": "Glutamate",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "GluK2 (Kainate)",
+        "Family": "Glutamate",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "GluK3 (Kainate)",
+        "Family": "Glutamate",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "GluK4 (Kainate)",
+        "Family": "Glutamate",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "GluK5 (Kainate)",
+        "Family": "Glutamate",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "mGluR1",
+        "Family": "Glutamate",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "mGluR2",
+        "Family": "Glutamate",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "mGluR3",
+        "Family": "Glutamate",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "mGluR4",
+        "Family": "Glutamate",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "mGluR5",
+        "Family": "Glutamate",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "mGluR6",
+        "Family": "Glutamate",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "mGluR7",
+        "Family": "Glutamate",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "mGluR8",
+        "Family": "Glutamate",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "α1 (GABA_A)",
+        "Family": "GABA",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Cl⁻)"
+    },
+    {
+        "Receptor Subtype": "α2 (GABA_A)",
+        "Family": "GABA",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Cl⁻)"
+    },
+    {
+        "Receptor Subtype": "α3 (GABA_A)",
+        "Family": "GABA",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Cl⁻)"
+    },
+    {
+        "Receptor Subtype": "α4 (GABA_A)",
+        "Family": "GABA",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Cl⁻)"
+    },
+    {
+        "Receptor Subtype": "α5 (GABA_A)",
+        "Family": "GABA",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Cl⁻)"
+    },
+    {
+        "Receptor Subtype": "α6 (GABA_A)",
+        "Family": "GABA",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Cl⁻)"
+    },
+    {
+        "Receptor Subtype": "β1 (GABA_A)",
+        "Family": "GABA",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Cl⁻)"
+    },
+    {
+        "Receptor Subtype": "β2 (GABA_A)",
+        "Family": "GABA",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Cl⁻)"
+    },
+    {
+        "Receptor Subtype": "β3 (GABA_A)",
+        "Family": "GABA",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Cl⁻)"
+    },
+    {
+        "Receptor Subtype": "γ1 (GABA_A)",
+        "Family": "GABA",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Cl⁻)"
+    },
+    {
+        "Receptor Subtype": "γ2 (GABA_A)",
+        "Family": "GABA",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Cl⁻)"
+    },
+    {
+        "Receptor Subtype": "γ3 (GABA_A)",
+        "Family": "GABA",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Cl⁻)"
+    },
+    {
+        "Receptor Subtype": "δ (GABA_A)",
+        "Family": "GABA",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Cl⁻)"
+    },
+    {
+        "Receptor Subtype": "ε (GABA_A)",
+        "Family": "GABA",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Cl⁻)"
+    },
+    {
+        "Receptor Subtype": "θ (GABA_A)",
+        "Family": "GABA",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Cl⁻)"
+    },
+    {
+        "Receptor Subtype": "π (GABA_A)",
+        "Family": "GABA",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Cl⁻)"
+    },
+    {
+        "Receptor Subtype": "ρ (GABA_A)",
+        "Family": "GABA",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Cl⁻)"
+    },
+    {
+        "Receptor Subtype": "B1 (GABA_B)",
+        "Family": "GABA",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "B2 (GABA_B)",
+        "Family": "GABA",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "α1 (Nicotinic)",
+        "Family": "Acetylcholine",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "α2 (Nicotinic)",
+        "Family": "Acetylcholine",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "α3 (Nicotinic)",
+        "Family": "Acetylcholine",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "α4 (Nicotinic)",
+        "Family": "Acetylcholine",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "α5 (Nicotinic)",
+        "Family": "Acetylcholine",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "α6 (Nicotinic)",
+        "Family": "Acetylcholine",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "α7 (Nicotinic)",
+        "Family": "Acetylcholine",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "α9 (Nicotinic)",
+        "Family": "Acetylcholine",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "α10 (Nicotinic)",
+        "Family": "Acetylcholine",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "β1 (Nicotinic)",
+        "Family": "Acetylcholine",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "β2 (Nicotinic)",
+        "Family": "Acetylcholine",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "β3 (Nicotinic)",
+        "Family": "Acetylcholine",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "β4 (Nicotinic)",
+        "Family": "Acetylcholine",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "M1 (Muscarinic)",
+        "Family": "Acetylcholine",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "M2 (Muscarinic)",
+        "Family": "Acetylcholine",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "M3 (Muscarinic)",
+        "Family": "Acetylcholine",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "M4 (Muscarinic)",
+        "Family": "Acetylcholine",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "M5 (Muscarinic)",
+        "Family": "Acetylcholine",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "D1 (Dopamine)",
+        "Family": "Dopamine",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "D2 (Dopamine)",
+        "Family": "Dopamine",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "D3 (Dopamine)",
+        "Family": "Dopamine",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "D4 (Dopamine)",
+        "Family": "Dopamine",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "D5 (Dopamine)",
+        "Family": "Dopamine",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "5-HT1A (Serotonin)",
+        "Family": "Serotonin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "5-HT1B (Serotonin)",
+        "Family": "Serotonin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "5-HT1D (Serotonin)",
+        "Family": "Serotonin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "5-HT1E (Serotonin)",
+        "Family": "Serotonin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "5-HT1F (Serotonin)",
+        "Family": "Serotonin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "5-HT2A (Serotonin)",
+        "Family": "Serotonin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "5-HT2B (Serotonin)",
+        "Family": "Serotonin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "5-HT2C (Serotonin)",
+        "Family": "Serotonin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "5-HT3 (Serotonin)",
+        "Family": "Serotonin",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a)"
+    },
+    {
+        "Receptor Subtype": "5-HT4 (Serotonin)",
+        "Family": "Serotonin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "5-HT5A (Serotonin)",
+        "Family": "Serotonin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "5-HT6 (Serotonin)",
+        "Family": "Serotonin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "5-HT7 (Serotonin)",
+        "Family": "Serotonin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "α1A (Adrenergic)",
+        "Family": "Adrenergic",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "α1B (Adrenergic)",
+        "Family": "Adrenergic",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "α1D (Adrenergic)",
+        "Family": "Adrenergic",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "α2A (Adrenergic)",
+        "Family": "Adrenergic",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "α2B (Adrenergic)",
+        "Family": "Adrenergic",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "α2C (Adrenergic)",
+        "Family": "Adrenergic",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "β1 (Adrenergic)",
+        "Family": "Adrenergic",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "β2 (Adrenergic)",
+        "Family": "Adrenergic",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "β3 (Adrenergic)",
+        "Family": "Adrenergic",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "H1 (Histamine)",
+        "Family": "Histamine",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "H2 (Histamine)",
+        "Family": "Histamine",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "H3 (Histamine)",
+        "Family": "Histamine",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "H4 (Histamine)",
+        "Family": "Histamine",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "μ (Opioid)",
+        "Family": "Opioid",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "δ (Opioid)",
+        "Family": "Opioid",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "κ (Opioid)",
+        "Family": "Opioid",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "NOP (Opioid)",
+        "Family": "Opioid",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "CB1 (Cannabinoid)",
+        "Family": "Cannabinoid",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "CB2 (Cannabinoid)",
+        "Family": "Cannabinoid",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "P2X1 (Purinergic)",
+        "Family": "Purinergic",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "P2X2 (Purinergic)",
+        "Family": "Purinergic",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "P2X3 (Purinergic)",
+        "Family": "Purinergic",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "P2X4 (Purinergic)",
+        "Family": "Purinergic",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "P2X5 (Purinergic)",
+        "Family": "Purinergic",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "P2X6 (Purinergic)",
+        "Family": "Purinergic",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "P2X7 (Purinergic)",
+        "Family": "Purinergic",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/K\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "P2Y1 (Purinergic)",
+        "Family": "Purinergic",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "P2Y2 (Purinergic)",
+        "Family": "Purinergic",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "P2Y4 (Purinergic)",
+        "Family": "Purinergic",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "P2Y6 (Purinergic)",
+        "Family": "Purinergic",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "P2Y11 (Purinergic)",
+        "Family": "Purinergic",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "P2Y12 (Purinergic)",
+        "Family": "Purinergic",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "P2Y13 (Purinergic)",
+        "Family": "Purinergic",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "P2Y14 (Purinergic)",
+        "Family": "Purinergic",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "NK1 (Neuropeptide)",
+        "Family": "Neuropeptide",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "NK2 (Neuropeptide)",
+        "Family": "Neuropeptide",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "NK3 (Neuropeptide)",
+        "Family": "Neuropeptide",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "Y1 (Neuropeptide Y)",
+        "Family": "Neuropeptide Y",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "Y2 (Neuropeptide Y)",
+        "Family": "Neuropeptide Y",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "Y4 (Neuropeptide Y)",
+        "Family": "Neuropeptide Y",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "Y5 (Neuropeptide Y)",
+        "Family": "Neuropeptide Y",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "SSTR1 (Somatostatin)",
+        "Family": "Somatostatin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "SSTR2 (Somatostatin)",
+        "Family": "Somatostatin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "SSTR3 (Somatostatin)",
+        "Family": "Somatostatin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "SSTR4 (Somatostatin)",
+        "Family": "Somatostatin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "SSTR5 (Somatostatin)",
+        "Family": "Somatostatin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "OX1 (Orexin)",
+        "Family": "Orexin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "OX2 (Orexin)",
+        "Family": "Orexin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "MT1 (Melatonin)",
+        "Family": "Melatonin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "MT2 (Melatonin)",
+        "Family": "Melatonin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "EP1 (Prostaglandin)",
+        "Family": "Prostaglandin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "EP2 (Prostaglandin)",
+        "Family": "Prostaglandin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "EP3 (Prostaglandin)",
+        "Family": "Prostaglandin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "EP4 (Prostaglandin)",
+        "Family": "Prostaglandin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "B1 (Bradykinin)",
+        "Family": "Bradykinin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "B2 (Bradykinin)",
+        "Family": "Bradykinin",
+        "Category": "Metabotropic",
+        "Mechanism": "G-protein-coupled receptor"
+    },
+    {
+        "Receptor Subtype": "TRPV1 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "TRPV2 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "TRPV3 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "TRPV4 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "TRPV5 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "TRPV6 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "TRPM1 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "TRPM2 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "TRPM3 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "TRPM4 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "TRPM5 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "TRPM6 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "TRPM7 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "TRPM8 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "TRPC1 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "TRPC2 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "TRPC3 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "TRPC4 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "TRPC5 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "TRPC6 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "TRPC7 (TRP Channels)",
+        "Family": "TRP Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Ligand-gated ion channels (Na\u207a/Ca\u00b2\u207a)"
+    },
+    {
+        "Receptor Subtype": "Voltage-Gated Na\u207a Channels",
+        "Family": "Ion Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Voltage-gated ion channels (Na\u207a)"
+    },
+    {
+        "Receptor Subtype": "Voltage-Gated K\u207a Channels",
+        "Family": "Ion Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Voltage-gated ion channels (K\u207a)"
+    },
+    {
+        "Receptor Subtype": "Voltage-Gated Ca\u00b2\u207a Channels",
+        "Family": "Ion Channels",
+        "Category": "Ionotropic",
+        "Mechanism": "Voltage-gated ion channels (Ca\u00b2\u207a)"
+    }
+]
