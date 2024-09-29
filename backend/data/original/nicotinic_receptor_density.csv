@@ -1,0 +1,19 @@
+Brain Structure,α4β2 Nicotinic Receptor Density (fmol/mg),α7 Nicotinic Receptor Density (fmol/mg)
+Caudate Nucleus,1000:3000,3000:6000
+Putamen,1500:3500,3000:6000
+Nucleus Accumbens,1000:3000,2500:5000
+Globus Pallidus (External Segment),500:1500,1000:2000
+Globus Pallidus (Internal Segment),500:1500,1000:2000
+Substantia Nigra (Pars Compacta),1000:2500,500:1000
+Substantia Nigra (Pars Reticulata),1000:2500,500:1000
+Prefrontal Cortex,2000:5000,4000:8000
+Motor Cortex,1500:3000,3000:6000
+Somatosensory Cortex,1500:3000,3000:6000
+Visual Cortex,500:1500,2000:4000
+Auditory Cortex,500:1500,2000:4000
+Fusiform Gyrus,500:1500,2000:4000
+Hippocampus (CA1 and CA3),3000:6000,6000:12000
+Thalamus (Mediodorsal Nucleus),1000:2500,3000:6000
+Thalamus (Pulvinar Nucleus),1000:2500,3000:6000
+Amygdala,3000:6000,6000:12000
+Hypothalamus (Arcuate Nucleus),1000:2500,3000:6000

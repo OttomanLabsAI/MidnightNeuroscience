@@ -1,0 +1,19 @@
+Brain Structure,EP1 Prostaglandin Receptor Density (fmol/mg),EP2 Prostaglandin Receptor Density (fmol/mg),EP3 Prostaglandin Receptor Density (fmol/mg),EP4 Prostaglandin Receptor Density (fmol/mg)
+Caudate Nucleus,500:1500,1000:3000,1500:3500,1000:2500
+Putamen,500:1500,1000:3000,1500:3500,1200:3000
+Nucleus Accumbens,300:1000,800:2500,1200:3000,1000:2500
+Globus Pallidus (External Segment),200:500,300:1000,600:1500,500:1500
+Globus Pallidus (Internal Segment),200:500,300:1000,600:1500,500:1500
+Substantia Nigra (Pars Compacta),100:300,100:500,300:1000,200:800
+Substantia Nigra (Pars Reticulata),100:300,100:500,300:1000,200:800
+Prefrontal Cortex,1000:2500,2000:4000,2000:5000,1500:3500
+Motor Cortex,500:1500,1000:3000,1500:4000,1200:3000
+Somatosensory Cortex,500:1500,1000:3000,1500:4000,1200:3000
+Visual Cortex,200:1000,500:2000,800:2000,600:1800
+Auditory Cortex,200:1000,500:2000,800:2000,600:1800
+Fusiform Gyrus,200:1000,500:2000,800:2000,600:1800
+Hippocampus (CA1 and CA3),1500:3000,2500:5000,4000:8000,3000:6000
+Thalamus (Mediodorsal Nucleus),500:1500,1000:3000,1500:4000,1200:3000
+Thalamus (Pulvinar Nucleus),500:1500,1000:3000,1500:4000,1200:3000
+Amygdala,1500:3000,2500:5000,4000:8000,3000:6000
+Hypothalamus (Arcuate Nucleus),500:1500,1000:3000,1500:4000,1200:3000

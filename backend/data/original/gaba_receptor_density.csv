@@ -1,0 +1,19 @@
+Brain Structure,GABA-A Receptor Density (fmol/mg),GABA-B Receptor Density (fmol/mg)
+Caudate Nucleus,6000:12000,1000:3000
+Putamen,7000:14000,1200:3500
+Nucleus Accumbens,5000:10000,900:2500
+Globus Pallidus (External Segment),3000:8000,500:2000
+Globus Pallidus (Internal Segment),3000:8000,500:2000
+Substantia Nigra (Pars Compacta),1500:4000,300:1000
+Substantia Nigra (Pars Reticulata),1500:4000,300:1000
+Prefrontal Cortex,10000:20000,2500:6000
+Motor Cortex,6000:12000,1500:3500
+Somatosensory Cortex,6000:12000,1500:3500
+Visual Cortex,4000:9000,700:2000
+Auditory Cortex,4000:9000,700:2000
+Fusiform Gyrus,4000:9000,700:2000
+Hippocampus (CA1 and CA3),14000:28000,4500:9000
+Thalamus (Mediodorsal Nucleus),7000:14000,1500:3500
+Thalamus (Pulvinar Nucleus),7000:14000,1500:3500
+Amygdala,14000:28000,4500:9000
+Hypothalamus (Arcuate Nucleus),7000:14000,1500:3500

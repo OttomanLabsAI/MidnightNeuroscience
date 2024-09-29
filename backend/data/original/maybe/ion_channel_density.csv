@@ -1,0 +1,19 @@
+Brain Structure,Sodium Channels (fmol/mg),Potassium Channels (fmol/mg),Calcium Channels (fmol/mg)
+Caudate Nucleus,3000:6000,2500:5000,1500:4000
+Putamen,3500:7000,3000:6000,2000:5000
+Nucleus Accumbens,2500:5000,2000:4000,1000:3000
+Globus Pallidus (External Segment),1000:2000,800:2000,500:1500
+Globus Pallidus (Internal Segment),1000:2000,800:2000,500:1500
+Substantia Nigra (Pars Compacta),500:1500,500:1500,300:1000
+Substantia Nigra (Pars Reticulata),500:1500,500:1500,300:1000
+Prefrontal Cortex,4000:8000,3500:7000,3000:6000
+Motor Cortex,3000:6000,2500:5000,2000:4000
+Somatosensory Cortex,3000:6000,2500:5000,2000:4000
+Visual Cortex,2000:4000,1500:3000,1000:3000
+Auditory Cortex,2000:4000,1500:3000,1000:3000
+Fusiform Gyrus,2000:4000,1500:3000,1000:3000
+Hippocampus (CA1 and CA3),6000:12000,5000:10000,4000:9000
+Thalamus (Mediodorsal Nucleus),3000:6000,2000:4000,2000:4000
+Thalamus (Pulvinar Nucleus),3000:6000,2000:4000,2000:4000
+Amygdala,6000:12000,5000:10000,4000:9000
+Hypothalamus (Arcuate Nucleus),3000:6000,2000:4000,2000:4000

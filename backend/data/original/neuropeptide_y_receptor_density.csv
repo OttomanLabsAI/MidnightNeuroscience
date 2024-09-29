@@ -1,0 +1,19 @@
+Brain Structure,Y1 Neuropeptide Y Receptor Density (fmol/mg),Y2 Neuropeptide Y Receptor Density (fmol/mg)
+Caudate Nucleus,1000:3000,500:2000
+Putamen,1200:3500,600:2500
+Nucleus Accumbens,1000:3000,500:2000
+Globus Pallidus (External Segment),500:1500,200:1000
+Globus Pallidus (Internal Segment),500:1500,200:1000
+Substantia Nigra (Pars Compacta),300:800,100:500
+Substantia Nigra (Pars Reticulata),300:800,100:500
+Prefrontal Cortex,2000:5000,1500:4000
+Motor Cortex,1500:4000,1000:3000
+Somatosensory Cortex,1500:4000,1000:3000
+Visual Cortex,800:2000,500:1500
+Auditory Cortex,800:2000,500:1500
+Fusiform Gyrus,800:2000,500:1500
+Hippocampus (CA1 and CA3),4000:8000,2500:6000
+Thalamus (Mediodorsal Nucleus),1500:4000,1000:3000
+Thalamus (Pulvinar Nucleus),1500:4000,1000:3000
+Amygdala,4000:8000,2500:6000
+Hypothalamus (Arcuate Nucleus),1500:4000,1000:3000

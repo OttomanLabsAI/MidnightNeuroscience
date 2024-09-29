@@ -1,0 +1,160 @@
+Subunit,Type,Family,Category,Mechanism
+NR1,NMDA,Glutamate,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+NR2A,NMDA,Glutamate,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+NR2B,NMDA,Glutamate,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+NR2C,NMDA,Glutamate,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+NR2D,NMDA,Glutamate,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+NR3A,NMDA,Glutamate,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+NR3B,NMDA,Glutamate,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+GluA1,AMPA,Glutamate,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+GluA2,AMPA,Glutamate,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+GluA3,AMPA,Glutamate,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+GluA4,AMPA,Glutamate,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+GluK1,Kainate,Glutamate,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+GluK2,Kainate,Glutamate,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+GluK3,Kainate,Glutamate,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+GluK4,Kainate,Glutamate,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+GluK5,Kainate,Glutamate,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+,,Glutamate,Metabotropic,G-protein-coupled receptor
+,,Glutamate,Metabotropic,G-protein-coupled receptor
+,,Glutamate,Metabotropic,G-protein-coupled receptor
+,,Glutamate,Metabotropic,G-protein-coupled receptor
+,,Glutamate,Metabotropic,G-protein-coupled receptor
+,,Glutamate,Metabotropic,G-protein-coupled receptor
+,,Glutamate,Metabotropic,G-protein-coupled receptor
+,,Glutamate,Metabotropic,G-protein-coupled receptor
+α1,GABA_A,GABA,Ionotropic,Ligand-gated ion channels (Cl⁻)
+α2,GABA_A,GABA,Ionotropic,Ligand-gated ion channels (Cl⁻)
+α3,GABA_A,GABA,Ionotropic,Ligand-gated ion channels (Cl⁻)
+α4,GABA_A,GABA,Ionotropic,Ligand-gated ion channels (Cl⁻)
+α5,GABA_A,GABA,Ionotropic,Ligand-gated ion channels (Cl⁻)
+α6,GABA_A,GABA,Ionotropic,Ligand-gated ion channels (Cl⁻)
+β1,GABA_A,GABA,Ionotropic,Ligand-gated ion channels (Cl⁻)
+β2,GABA_A,GABA,Ionotropic,Ligand-gated ion channels (Cl⁻)
+β3,GABA_A,GABA,Ionotropic,Ligand-gated ion channels (Cl⁻)
+γ1,GABA_A,GABA,Ionotropic,Ligand-gated ion channels (Cl⁻)
+γ2,GABA_A,GABA,Ionotropic,Ligand-gated ion channels (Cl⁻)
+γ3,GABA_A,GABA,Ionotropic,Ligand-gated ion channels (Cl⁻)
+δ,GABA_A,GABA,Ionotropic,Ligand-gated ion channels (Cl⁻)
+ε,GABA_A,GABA,Ionotropic,Ligand-gated ion channels (Cl⁻)
+θ,GABA_A,GABA,Ionotropic,Ligand-gated ion channels (Cl⁻)
+π,GABA_A,GABA,Ionotropic,Ligand-gated ion channels (Cl⁻)
+ρ,GABA_A,GABA,Ionotropic,Ligand-gated ion channels (Cl⁻)
+B1,GABA_B,GABA,Metabotropic,G-protein-coupled receptor
+B2,GABA_B,GABA,Metabotropic,G-protein-coupled receptor
+α1,Nicotinic,Acetylcholine,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+α2,Nicotinic,Acetylcholine,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+α3,Nicotinic,Acetylcholine,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+α4,Nicotinic,Acetylcholine,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+α5,Nicotinic,Acetylcholine,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+α6,Nicotinic,Acetylcholine,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+α7,Nicotinic,Acetylcholine,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+α9,Nicotinic,Acetylcholine,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+α10,Nicotinic,Acetylcholine,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+β1,Nicotinic,Acetylcholine,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+β2,Nicotinic,Acetylcholine,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+β3,Nicotinic,Acetylcholine,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+β4,Nicotinic,Acetylcholine,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+M1,Muscarinic,Acetylcholine,Metabotropic,G-protein-coupled receptor
+M2,Muscarinic,Acetylcholine,Metabotropic,G-protein-coupled receptor
+M3,Muscarinic,Acetylcholine,Metabotropic,G-protein-coupled receptor
+M4,Muscarinic,Acetylcholine,Metabotropic,G-protein-coupled receptor
+M5,Muscarinic,Acetylcholine,Metabotropic,G-protein-coupled receptor
+D1,Dopamine,Dopamine,Metabotropic,G-protein-coupled receptor
+D2,Dopamine,Dopamine,Metabotropic,G-protein-coupled receptor
+D3,Dopamine,Dopamine,Metabotropic,G-protein-coupled receptor
+D4,Dopamine,Dopamine,Metabotropic,G-protein-coupled receptor
+D5,Dopamine,Dopamine,Metabotropic,G-protein-coupled receptor
+5-HT1A,Serotonin,Serotonin,Metabotropic,G-protein-coupled receptor
+5-HT1B,Serotonin,Serotonin,Metabotropic,G-protein-coupled receptor
+5-HT1D,Serotonin,Serotonin,Metabotropic,G-protein-coupled receptor
+5-HT1E,Serotonin,Serotonin,Metabotropic,G-protein-coupled receptor
+5-HT1F,Serotonin,Serotonin,Metabotropic,G-protein-coupled receptor
+5-HT2A,Serotonin,Serotonin,Metabotropic,G-protein-coupled receptor
+5-HT2B,Serotonin,Serotonin,Metabotropic,G-protein-coupled receptor
+5-HT2C,Serotonin,Serotonin,Metabotropic,G-protein-coupled receptor
+5-HT3,Serotonin,Serotonin,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺)
+5-HT4,Serotonin,Serotonin,Metabotropic,G-protein-coupled receptor
+5-HT5A,Serotonin,Serotonin,Metabotropic,G-protein-coupled receptor
+5-HT6,Serotonin,Serotonin,Metabotropic,G-protein-coupled receptor
+5-HT7,Serotonin,Serotonin,Metabotropic,G-protein-coupled receptor
+α1A,Adrenergic,Adrenergic,Metabotropic,G-protein-coupled receptor
+α1B,Adrenergic,Adrenergic,Metabotropic,G-protein-coupled receptor
+α1D,Adrenergic,Adrenergic,Metabotropic,G-protein-coupled receptor
+α2A,Adrenergic,Adrenergic,Metabotropic,G-protein-coupled receptor
+α2B,Adrenergic,Adrenergic,Metabotropic,G-protein-coupled receptor
+α2C,Adrenergic,Adrenergic,Metabotropic,G-protein-coupled receptor
+β1,Adrenergic,Adrenergic,Metabotropic,G-protein-coupled receptor
+β2,Adrenergic,Adrenergic,Metabotropic,G-protein-coupled receptor
+β3,Adrenergic,Adrenergic,Metabotropic,G-protein-coupled receptor
+H1,Histamine,Histamine,Metabotropic,G-protein-coupled receptor
+H2,Histamine,Histamine,Metabotropic,G-protein-coupled receptor
+H3,Histamine,Histamine,Metabotropic,G-protein-coupled receptor
+H4,Histamine,Histamine,Metabotropic,G-protein-coupled receptor
+μ,Opioid,Opioid,Metabotropic,G-protein-coupled receptor
+δ,Opioid,Opioid,Metabotropic,G-protein-coupled receptor
+κ,Opioid,Opioid,Metabotropic,G-protein-coupled receptor
+NOP,Opioid,Opioid,Metabotropic,G-protein-coupled receptor
+CB1,Cannabinoid,Cannabinoid,Metabotropic,G-protein-coupled receptor
+CB2,Cannabinoid,Cannabinoid,Metabotropic,G-protein-coupled receptor
+P2X1,Purinergic,Purinergic,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+P2X2,Purinergic,Purinergic,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+P2X3,Purinergic,Purinergic,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+P2X4,Purinergic,Purinergic,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+P2X5,Purinergic,Purinergic,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+P2X6,Purinergic,Purinergic,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+P2X7,Purinergic,Purinergic,Ionotropic,Ligand-gated ion channels (Na⁺/K⁺/Ca²⁺)
+P2Y1,Purinergic,Purinergic,Metabotropic,G-protein-coupled receptor
+P2Y2,Purinergic,Purinergic,Metabotropic,G-protein-coupled receptor
+P2Y4,Purinergic,Purinergic,Metabotropic,G-protein-coupled receptor
+P2Y6,Purinergic,Purinergic,Metabotropic,G-protein-coupled receptor
+P2Y11,Purinergic,Purinergic,Metabotropic,G-protein-coupled receptor
+P2Y12,Purinergic,Purinergic,Metabotropic,G-protein-coupled receptor
+P2Y13,Purinergic,Purinergic,Metabotropic,G-protein-coupled receptor
+P2Y14,Purinergic,Purinergic,Metabotropic,G-protein-coupled receptor
+NK1,Neuropeptide,Neuropeptide,Metabotropic,G-protein-coupled receptor
+NK2,Neuropeptide,Neuropeptide,Metabotropic,G-protein-coupled receptor
+NK3,Neuropeptide,Neuropeptide,Metabotropic,G-protein-coupled receptor
+Y1,Neuropeptide Y,Neuropeptide Y,Metabotropic,G-protein-coupled receptor
+Y2,Neuropeptide Y,Neuropeptide Y,Metabotropic,G-protein-coupled receptor
+Y4,Neuropeptide Y,Neuropeptide Y,Metabotropic,G-protein-coupled receptor
+Y5,Neuropeptide Y,Neuropeptide Y,Metabotropic,G-protein-coupled receptor
+SSTR1,Somatostatin,Somatostatin,Metabotropic,G-protein-coupled receptor
+SSTR2,Somatostatin,Somatostatin,Metabotropic,G-protein-coupled receptor
+SSTR3,Somatostatin,Somatostatin,Metabotropic,G-protein-coupled receptor
+SSTR4,Somatostatin,Somatostatin,Metabotropic,G-protein-coupled receptor
+SSTR5,Somatostatin,Somatostatin,Metabotropic,G-protein-coupled receptor
+OX1,Orexin,Orexin,Metabotropic,G-protein-coupled receptor
+OX2,Orexin,Orexin,Metabotropic,G-protein-coupled receptor
+MT1,Melatonin,Melatonin,Metabotropic,G-protein-coupled receptor
+MT2,Melatonin,Melatonin,Metabotropic,G-protein-coupled receptor
+EP1,Prostaglandin,Prostaglandin,Metabotropic,G-protein-coupled receptor
+EP2,Prostaglandin,Prostaglandin,Metabotropic,G-protein-coupled receptor
+EP3,Prostaglandin,Prostaglandin,Metabotropic,G-protein-coupled receptor
+EP4,Prostaglandin,Prostaglandin,Metabotropic,G-protein-coupled receptor
+B1,Bradykinin,Bradykinin,Metabotropic,G-protein-coupled receptor
+B2,Bradykinin,Bradykinin,Metabotropic,G-protein-coupled receptor
+TRPV1,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+TRPV2,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+TRPV3,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+TRPV4,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+TRPV5,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+TRPV6,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+TRPM1,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+TRPM2,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+TRPM3,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+TRPM4,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+TRPM5,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+TRPM6,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+TRPM7,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+TRPM8,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+TRPC1,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+TRPC2,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+TRPC3,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+TRPC4,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+TRPC5,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+TRPC6,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+TRPC7,TRP Channels,TRP Channels,Ionotropic,Ligand-gated ion channels (Na⁺/Ca²⁺)
+,,Ion Channels,Ionotropic,Voltage-gated ion channels (Na⁺)
+,,Ion Channels,Ionotropic,Voltage-gated ion channels (K⁺)
+,,Ion Channels,Ionotropic,Voltage-gated ion channels (Ca²⁺)

@@ -1,0 +1,19 @@
+Brain Structure,TRP Channel Density (TRPV1) (fmol/mg),TRP Channel Density (TRPM8) (fmol/mg),TRP Channel Density (TRPA1) (fmol/mg)
+Caudate Nucleus,500:1500,1000:3000,1500:3500
+Putamen,600:1600,1200:3500,1600:3600
+Nucleus Accumbens,400:1200,800:2500,1200:3000
+Globus Pallidus (External Segment),200:600,300:1000,600:1500
+Globus Pallidus (Internal Segment),200:600,300:1000,600:1500
+Substantia Nigra (Pars Compacta),100:400,100:500,300:1000
+Substantia Nigra (Pars Reticulata),100:400,100:500,300:1000
+Prefrontal Cortex,1500:3500,2000:4000,2000:5000
+Motor Cortex,1000:2500,1000:3000,1500:4000
+Somatosensory Cortex,1000:2500,1000:3000,1500:4000
+Visual Cortex,500:1500,500:2000,800:2000
+Auditory Cortex,500:1500,500:2000,800:2000
+Fusiform Gyrus,500:1500,500:2000,800:2000
+Hippocampus (CA1 and CA3),2500:5000,2500:5000,4000:8000
+Thalamus (Mediodorsal Nucleus),1000:3000,1000:3000,1500:4000
+Thalamus (Pulvinar Nucleus),1000:3000,1000:3000,1500:4000
+Amygdala,2500:5000,2500:5000,4000:8000
+Hypothalamus (Arcuate Nucleus),1000:3000,1000:3000,1500:4000
