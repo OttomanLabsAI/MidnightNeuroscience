@@ -1,0 +1,84 @@
+Region Atlas — AAL-116 parcellation
+================================================================
+62 named regions: 54 left/right pairs + 8 midline structures
+= 116 labelled parcels in the volume (plus label 0, background)
+
+FRONTAL  (14)
+   Precentral Gyrus                             L 1   R 2  
+   Superior Frontal Gyrus                       L 3   R 4  
+   Superior Frontal Gyrus, Orbital              L 5   R 6  
+   Middle Frontal Gyrus                         L 7   R 8  
+   Middle Frontal Gyrus, Orbital                L 9   R 10 
+   Inferior Frontal Gyrus, Opercular            L 11  R 12 
+   Inferior Frontal Gyrus, Triangular           L 13  R 14 
+   Inferior Frontal Gyrus, Orbital              L 15  R 16 
+   Rolandic Operculum                           L 17  R 18 
+   Supplementary Motor Area                     L 19  R 20 
+   Olfactory Cortex                             L 21  R 22 
+   Superior Frontal Gyrus, Medial               L 23  R 24 
+   Medial Orbitofrontal Cortex                  L 25  R 26 
+   Gyrus Rectus                                 L 27  R 28 
+
+INSULA & CINGULATE  (4)
+   Insula                                       L 29  R 30 
+   Anterior Cingulate                           L 31  R 32 
+   Middle Cingulate                             L 33  R 34 
+   Posterior Cingulate                          L 35  R 36 
+
+MEDIAL TEMPORAL  (3)
+   Hippocampus                                  L 37  R 38 
+   Parahippocampal Gyrus                        L 39  R 40 
+   Amygdala                                     L 41  R 42 
+
+TEMPORAL  (6)
+   Heschl's Gyrus                               L 79  R 80 
+   Superior Temporal Gyrus                      L 81  R 82 
+   Temporal Pole, Superior                      L 83  R 84 
+   Middle Temporal Gyrus                        L 85  R 86 
+   Temporal Pole, Middle                        L 87  R 88 
+   Inferior Temporal Gyrus                      L 89  R 90 
+
+PARIETAL  (7)
+   Postcentral Gyrus                            L 57  R 58 
+   Superior Parietal Lobule                     L 59  R 60 
+   Inferior Parietal Lobule                     L 61  R 62 
+   Supramarginal Gyrus                          L 63  R 64 
+   Angular Gyrus                                L 65  R 66 
+   Precuneus                                    L 67  R 68 
+   Paracentral Lobule                           L 69  R 70 
+
+OCCIPITAL  (7)
+   Calcarine Cortex                             L 43  R 44 
+   Cuneus                                       L 45  R 46 
+   Lingual Gyrus                                L 47  R 48 
+   Superior Occipital Gyrus                     L 49  R 50 
+   Middle Occipital Gyrus                       L 51  R 52 
+   Inferior Occipital Gyrus                     L 53  R 54 
+   Fusiform Gyrus                               L 55  R 56 
+
+SUBCORTICAL  (4)
+   Caudate Nucleus                              L 71  R 72 
+   Putamen                                      L 73  R 74 
+   Globus Pallidus                              L 75  R 76 
+   Thalamus                                     L 77  R 78 
+
+CEREBELLUM  (9)
+   Cerebellum Crus I                            L 91  R 92 
+   Cerebellum Crus II                           L 93  R 94 
+   Cerebellum Lobule III                        L 95  R 96 
+   Cerebellum Lobules IV–V                      L 97  R 98 
+   Cerebellum Lobule VI                         L 99  R 100
+   Cerebellum Lobule VIIb                       L 101 R 102
+   Cerebellum Lobule VIII                       L 103 R 104
+   Cerebellum Lobule IX                         L 105 R 106
+   Cerebellum Lobule X                          L 107 R 108
+
+VERMIS  (8)
+   Vermis I–II                                  midline 109
+   Vermis III                                   midline 110
+   Vermis IV–V                                  midline 111
+   Vermis VI                                    midline 112
+   Vermis VII                                   midline 113
+   Vermis VIII                                  midline 114
+   Vermis IX                                    midline 115
+   Vermis X                                     midline 116
