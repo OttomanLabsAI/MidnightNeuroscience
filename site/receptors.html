@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="assets/plotly-basic.min.js" charset="utf-8"></script>
 <style>
   /* Match the default Dash app look: unstyled body, react-select style dropdown */
   body {
@@ -87,8 +86,46 @@
 
   #receptor-graph {
     width: 100%;
-    height: 450px; /* dcc.Graph default height */
+    overflow-x: auto;
+    margin-top: 6px;
   }
+  #receptor-graph svg { display: block; }
+  #receptor-graph .axis-label {
+    font-family: 'Afacad Flux', sans-serif;
+    font-size: 10px;
+    fill: #333;
+  }
+  #receptor-graph .y-label { font-variant-numeric: tabular-nums; }
+  #receptor-graph .bar { cursor: pointer; }
+  #receptor-graph .bar:hover { opacity: .78; }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin: 4px 0 2px;
+    font-family: 'Afacad Flux', sans-serif;
+    font-size: .74rem;
+    color: #333;
+  }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+  .legend-swatch { width: 11px; height: 11px; flex: none; }
+
+  .chart-tooltip {
+    position: fixed;
+    z-index: 20;
+    pointer-events: none;
+    background: #111;
+    color: #fff;
+    font-family: 'Afacad Flux', sans-serif;
+    font-size: .72rem;
+    line-height: 1.4;
+    padding: 6px 9px;
+    max-width: 260px;
+    display: none;
+  }
+  .chart-tooltip .tt-series { opacity: .7; }
+  .chart-tooltip .tt-value { font-weight: 600; }
 
   /* Sub-tabs, matching the Region Atlas view-switcher buttons */
   .subtabs { display: flex; gap: 6px; margin: 14px 0; }
@@ -137,9 +174,13 @@
 
 <select id="structure-dropdown" aria-label="Receptor"></select>
 
-<div id="receptor-graph"></div>
+<div id="chart-pane">
+  <div id="chart-legend" class="legend"></div>
+  <div id="receptor-graph"></div>
+</div>
 <div id="density-table" class="table-wrap hidden"></div>
 <div id="types-table" class="table-wrap hidden"></div>
+<div id="chart-tooltip" class="chart-tooltip" role="tooltip"></div>
 
 <script>
 // Receptor density data from backend/data/ReceptorDensity.csv, processed the
@@ -186,18 +227,136 @@ function receptorFilter(receptor) {
   return DATA.columns.filter(col => col.name.toLowerCase().includes(keyword));
 }
 
-// Mirror of graph_index_columns(df, barmode='group', chart_type='bar').
-function updateGraph(receptor) {
-  const traces = receptorFilter(receptor).map((col, i) => ({
-    type: 'bar',
-    name: col.name,
-    x: DATA.structures,
-    y: col.values,
-    marker: { color: COLORWAY[i % COLORWAY.length] }
-  }));
+// Mirror of graph_index_columns(df, barmode='group', chart_type='bar') —
+// a self-drawn grouped SVG bar chart, no charting library required.
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const CHART = { height: 380, marginTop: 10, marginRight: 12, marginBottom: 108, marginLeft: 54 };
 
-  Plotly.react('receptor-graph', traces, { barmode: 'group' }, { responsive: true });
+function svgEl(tag, attrs) {
+  const el = document.createElementNS(SVG_NS, tag);
+  for (const [k, v] of Object.entries(attrs || {})) el.setAttribute(k, v);
+  return el;
 }
+
+// Round a max value up to a clean axis ceiling (1/2/5 * 10^n).
+function niceCeiling(value) {
+  if (value <= 0) return 1;
+  const magnitude = Math.pow(10, Math.floor(Math.log10(value)));
+  const norm = value / magnitude;
+  const step = norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 5 ? 5 : 10;
+  return step * magnitude;
+}
+
+function formatTick(v) {
+  return v >= 1000 ? (v / 1000).toFixed(v % 1000 ? 1 : 0) + 'k' : String(Math.round(v));
+}
+
+let currentCols = [];
+
+function updateGraph(receptor) {
+  currentCols = receptorFilter(receptor);
+  renderLegend(currentCols);
+  renderChart(currentCols);
+}
+
+function renderLegend(cols) {
+  const legend = document.getElementById('chart-legend');
+  legend.innerHTML = cols.map((col, i) =>
+    '<span class="legend-item"><span class="legend-swatch" style="background:' +
+    COLORWAY[i % COLORWAY.length] + '"></span>' + escapeHtml(col.name) + '</span>'
+  ).join('');
+}
+
+function renderChart(cols) {
+  const container = document.getElementById('receptor-graph');
+  container.innerHTML = '';
+  if (!cols.length) {
+    container.innerHTML = '<p class="table-note">No receptor sub-type data for this selection.</p>';
+    return;
+  }
+
+  const groupCount = DATA.structures.length;
+  const barWidth = 17;
+  const barGap = 2;
+  const groupPad = 14;
+  const groupWidth = Math.max(76, cols.length * (barWidth + barGap) + groupPad);
+  const innerW = groupCount * groupWidth;
+  const width = CHART.marginLeft + innerW + CHART.marginRight;
+  const innerH = CHART.height - CHART.marginTop - CHART.marginBottom;
+
+  const maxVal = niceCeiling(Math.max(...cols.flatMap(c => c.values.filter(v => v != null))));
+  const yOf = v => innerH - (v / maxVal) * innerH;
+
+  const svg = svgEl('svg', {
+    width, height: CHART.height, viewBox: `0 0 ${width} ${CHART.height}`,
+    role: 'img', 'aria-label': 'Receptor density by brain structure, grouped bar chart'
+  });
+  const plot = svgEl('g', { transform: `translate(${CHART.marginLeft},${CHART.marginTop})` });
+
+  const tickCount = 5;
+  for (let i = 0; i <= tickCount; i++) {
+    const v = (maxVal / tickCount) * i;
+    const y = yOf(v);
+    plot.appendChild(svgEl('line', { x1: 0, x2: innerW, y1: y, y2: y, stroke: '#e2e2e2', 'stroke-width': 1 }));
+    const label = svgEl('text', { x: -8, y: y + 3, 'text-anchor': 'end', class: 'axis-label y-label' });
+    label.textContent = formatTick(v);
+    plot.appendChild(label);
+  }
+  plot.appendChild(svgEl('line', { x1: 0, x2: innerW, y1: innerH, y2: innerH, stroke: '#111', 'stroke-width': 1 }));
+
+  const tooltip = document.getElementById('chart-tooltip');
+  const showTip = (evt, name, structure, value) => {
+    tooltip.innerHTML = '<div class="tt-series">' + escapeHtml(name) + '</div>' +
+      escapeHtml(structure) + ': <span class="tt-value">' + value.toLocaleString() + ' fmol/mg</span>';
+    tooltip.style.display = 'block';
+    moveTip(evt);
+  };
+  const moveTip = (evt) => {
+    const x = (evt.touches ? evt.touches[0].clientX : evt.clientX);
+    const y = (evt.touches ? evt.touches[0].clientY : evt.clientY);
+    tooltip.style.left = Math.min(x + 14, window.innerWidth - 270) + 'px';
+    tooltip.style.top = Math.max(y - 40, 8) + 'px';
+  };
+  const hideTip = () => { tooltip.style.display = 'none'; };
+
+  DATA.structures.forEach((structure, gi) => {
+    const groupX = gi * groupWidth + (groupWidth - (cols.length * (barWidth + barGap) - barGap)) / 2;
+    cols.forEach((col, ci) => {
+      const v = col.values[gi];
+      if (v == null) return;
+      const x = groupX + ci * (barWidth + barGap);
+      const y = yOf(v);
+      const rect = svgEl('rect', {
+        class: 'bar', x, y, width: barWidth, height: Math.max(0, innerH - y),
+        fill: COLORWAY[ci % COLORWAY.length]
+      });
+      rect.addEventListener('mouseenter', e => showTip(e, col.name, structure, v));
+      rect.addEventListener('mousemove', moveTip);
+      rect.addEventListener('mouseleave', hideTip);
+      rect.addEventListener('touchstart', e => showTip(e, col.name, structure, v), { passive: true });
+      plot.appendChild(rect);
+    });
+
+    const labelX = gi * groupWidth + groupWidth / 2;
+    const label = svgEl('text', {
+      class: 'axis-label x-label', 'text-anchor': 'end',
+      transform: `translate(${labelX},${innerH + 12}) rotate(-38)`
+    });
+    label.textContent = structure;
+    plot.appendChild(label);
+  });
+
+  svg.appendChild(plot);
+  container.appendChild(svg);
+}
+
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (!panes.chart.classList.contains('hidden')) renderChart(currentCols);
+  }, 150);
+});
 
 function escapeHtml(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -259,7 +418,7 @@ dropdown.addEventListener('change', () => {
 // The receptor dropdown applies to the chart and the density table;
 // the types table is a fixed reference, so the dropdown hides there.
 const panes = {
-  chart: document.getElementById('receptor-graph'),
+  chart: document.getElementById('chart-pane'),
   density: document.getElementById('density-table'),
   types: document.getElementById('types-table')
 };
@@ -271,7 +430,7 @@ document.querySelectorAll('.sub-btn').forEach(btn => {
     for (const [name, pane] of Object.entries(panes))
       pane.classList.toggle('hidden', name !== tab);
     dropdown.classList.toggle('hidden', tab === 'types');
-    if (tab === 'chart') Plotly.Plots.resize(panes.chart);
+    if (tab === 'chart') renderChart(currentCols);
   });
 });
 
