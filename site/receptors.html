@@ -3,7 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Receptor Density Across Brain Structures</title>
+<title>Receptor Density — MidnightNeuroscience.AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="assets/plotly-basic.min.js" charset="utf-8"></script>
 <style>
   /* Match the default Dash app look: unstyled body, react-select style dropdown */
@@ -11,6 +14,45 @@
     margin: 8px;
     background: #fff;
   }
+
+  /* Site masthead, matching the Region Atlas page */
+  .masthead {
+    text-align: center;
+    padding: clamp(26px, 4vw, 44px) 0 0;
+    color: #111;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: .3em;
+    font-family: 'Afacad Flux', sans-serif;
+    font-weight: 500;
+    font-size: clamp(2.3rem, 6vw, 3.7rem);
+    line-height: 1;
+    letter-spacing: .01em;
+    color: #111;
+    text-decoration: none;
+  }
+  .brand .sparks { width: .55em; height: .55em; margin-top: -.05em; }
+  .nav-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: .3rem clamp(1rem, 2.6vw, 2rem);
+    padding: clamp(16px, 2.6vw, 26px) 0 clamp(14px, 2.2vw, 20px);
+  }
+  .nav-row a {
+    font-family: 'Afacad Flux', sans-serif;
+    font-weight: 500;
+    font-size: .74rem;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: #111;
+    text-decoration: none;
+  }
+  .nav-row a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .nav-row a[aria-current] { border-bottom: 2px solid #111; padding-bottom: 2px; }
 
   #structure-dropdown {
     display: block;
@@ -50,6 +92,14 @@
 </style>
 </head>
 <body>
+
+<header class="masthead">
+  <a class="brand" href="index.html">MidnightNeuroscience.AI<svg class="sparks" viewBox="0 0 100 100" aria-hidden="true" fill="currentColor"><path transform="translate(52 0) scale(0.30)" d="M50 0C54 32 68 46 100 50 68 54 54 68 50 100 46 68 32 54 0 50 32 46 46 32 50 0Z"/><path transform="translate(0 22) scale(0.60)" d="M50 0C54 32 68 46 100 50 68 54 54 68 50 100 46 68 32 54 0 50 32 46 46 32 50 0Z"/><path transform="translate(60 56) scale(0.40)" d="M50 0C54 32 68 46 100 50 68 54 54 68 50 100 46 68 32 54 0 50 32 46 46 32 50 0Z"/></svg></a>
+  <nav class="nav-row" aria-label="Site">
+    <a href="index.html">Region Atlas</a>
+    <a href="receptors.html" aria-current="page">Receptor Density</a>
+  </nav>
+</header>
 
 <h1>Receptor Density Across Brain Structures</h1>
 
