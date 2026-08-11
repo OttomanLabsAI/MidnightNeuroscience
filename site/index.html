@@ -543,7 +543,7 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
         <div class="stat"><div class="k">Template</div><div class="v">MNI152 <small>0.74&thinsp;mm</small></div></div>
         <div class="stat"><div class="k">Atlas</div><div class="v">AAL <small>116 regions</small></div></div>
         <div class="stat"><div class="k">Highlighted</div><div class="v" id="statCount">0 <small>regions</small></div></div>
-        <div class="stat"><div class="k">Probe</div><div class="v probe-v"><span id="cursorRegion">—</span><small id="cursorCoords">hover a view · drag = crosshair · scroll = slice</small></div></div>
+        <div class="stat"><div class="k">Probe</div><div class="v probe-v"><span id="cursorRegion">—</span><small id="cursorCoords">hover a view · drag = crosshair</small></div></div>
       </div>
     </section>
 
@@ -666,6 +666,13 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
       camAnchor = {az: nv.scene.renderAzimuth, el: nv.scene.renderElevation};
     });
   });
+
+  /* The wheel belongs to the page. Catching it on the frame, ahead of the
+     canvas, means scrolling past a viewport no longer zooms it. */
+  document.querySelectorAll(".mri-stage").forEach(function(stage){
+    stage.addEventListener("wheel", function(e){ e.stopPropagation(); }, true);
+  });
+
   ["pointerup", "pointercancel"].forEach(function(evt){
     window.addEventListener(evt, function(){ anchor = null; camAnchor = null; dragBox = null; });
   });

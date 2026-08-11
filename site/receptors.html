@@ -188,7 +188,7 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
     display: flex;
     flex-wrap: wrap;
     gap: 6px 16px;
-    margin: 4px 0 2px;
+    margin: .6rem 0 2px;
     font-family: var(--font-brand);
     font-size: .74rem;
     color: var(--ink-60);
@@ -268,6 +268,8 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
   #receptor-graph .x-label.pickable:hover { fill: var(--ink); text-decoration: underline; }
   #receptor-graph .x-label.picked { fill: var(--ink); font-weight: 600; }
   .hidden { display: none !important; }
+  /* keeps a control's space while it does not apply, so nothing shifts */
+  .inapplicable { visibility: hidden; }
 </style>
 </head>
 <body>
@@ -310,8 +312,8 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
 </div>
 
 <div id="chart-pane">
-  <div id="chart-legend" class="legend"></div>
   <div id="receptor-graph"></div>
+  <div id="chart-legend" class="legend"></div>
   <div class="scan-panel" id="scan-panel">
     <div class="scan-head">
       <b>On the scan</b>
@@ -797,9 +799,9 @@ document.querySelectorAll('[data-tab]').forEach(btn => {
     const tab = btn.dataset.tab;
     for (const [name, pane] of Object.entries(panes))
       pane.classList.toggle('hidden', name !== tab);
-    dropdown.parentElement.classList.toggle('hidden', tab === 'types');
-    axisGroup.classList.toggle('hidden', tab === 'types');
-    modeGroup.classList.toggle('hidden', tab !== 'chart');
+    dropdown.parentElement.classList.toggle('inapplicable', tab === 'types');
+    axisGroup.classList.toggle('inapplicable', tab === 'types');
+    modeGroup.classList.toggle('inapplicable', tab !== 'chart');
     if (tab === 'chart') renderChart(currentChart);
   });
 });
@@ -942,6 +944,12 @@ function wireViewControls() {
       scanAnchor = nv.scene.crosshairPos.slice();
       scanCam = { az: nv.scene.renderAzimuth, el: nv.scene.renderElevation };
     });
+  });
+
+  /* The wheel belongs to the page. Catching it on the frame, ahead of the
+     canvas, means scrolling past a viewport no longer zooms it. */
+  document.querySelectorAll(".mri-stage").forEach(function(stage){
+    stage.addEventListener("wheel", function(e){ e.stopPropagation(); }, true);
   });
   ['pointerup', 'pointercancel'].forEach(evt => window.addEventListener(evt, () => {
     scanAnchor = null; scanCam = null; scanDragBox = null;
