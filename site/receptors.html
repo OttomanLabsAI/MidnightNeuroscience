@@ -30,6 +30,10 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
     --font-serif:'Newsreader',Georgia,serif;
     --font-display:'Prata',Georgia,serif;
 
+    /* the summed-total bar: a neutral at the palette's lightness, so it
+       stays bright against paper and against ink */
+    --total-fill:#D8D4CD;
+
     --wrap:1880px;
     --gap:14px;
   }
@@ -170,9 +174,14 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
   #receptor-graph .grid-line { stroke: var(--grid); }
   #receptor-graph .axis-line { stroke: var(--hair); }
   #receptor-graph .y-label { font-variant-numeric: tabular-nums; }
-  #receptor-graph .bar { cursor: pointer; }
-  #receptor-graph .bar:hover { opacity: .78; }
-  #receptor-graph .bar-total { fill: var(--ink); }
+  #receptor-graph .bar {
+    cursor: pointer;
+    stroke: var(--hair);
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+  }
+  #receptor-graph .bar:hover { stroke-width: 3; }
+  #receptor-graph .bar-total { fill: var(--total-fill); }
 
   .legend {
     display: flex;
@@ -184,8 +193,8 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
     color: var(--ink-60);
   }
   .legend-item { display: inline-flex; align-items: center; gap: 6px; }
-  .legend-swatch { width: 11px; height: 11px; flex: none; }
-  .legend-swatch.swatch-total { background: var(--ink); }
+  .legend-swatch { width: 11px; height: 11px; flex: none; border: 1px solid var(--hair); }
+  .legend-swatch.swatch-total { background: var(--total-fill); }
   .legend-note { font-style: italic; font-family: var(--font-serif); color: var(--ink-60); }
 
   .chart-tooltip {
@@ -226,6 +235,7 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
     white-space: nowrap; font-variant-numeric: tabular-nums;
   }
   .data-table td.name { font-weight: 600; }
+  .data-table .cell-empty { color: var(--ink-35); font-weight: 400; cursor: help; }
   .table-note { margin-top: 14px; color: var(--ink-60); font-style: italic; }
   .hidden { display: none !important; }
 </style>
@@ -303,14 +313,15 @@ const RECEPTORS = [
   'Somatostatin'
 ];
 
-// Plotly's default colorway, extended so receptor families with more than
-// ten subtypes (e.g. serotonin) don't repeat colors ("large" palette).
+// Bright, low-saturation fills that sit behind an ink outline. Generated in
+// OKLCH at a fixed chroma (0.078) and two alternating lightnesses, so no
+// sub-type shouts louder than another, and ordered so consecutive series land
+// far apart on the hue wheel. Legible on paper and on ink alike.
 const COLORWAY = [
-  '#636efa', '#EF553B', '#00cc96', '#ab63fa', '#FFA15A',
-  '#19d3f3', '#FF6692', '#B6E880', '#FF97FF', '#FECB52',
-  '#AA0DFE', '#3283FE', '#85660D', '#782AB6', '#565656',
-  '#1C8356', '#16FF32', '#F7E1A0', '#E2E2E2', '#1CBE4F',
-  '#C4451C', '#DEA0FD', '#FE00FA', '#325A9B'
+  '#B7D0FE', '#E2B18A', '#93DDF1', '#EAA8AC',
+  '#9AE1C9', '#D9AAD5', '#C2D9A2', '#B6B6ED',
+  '#E9CB95', '#8DC4E9', '#FEBEAC', '#7DCCCB',
+  '#F9BBD5', '#99CBA1', '#DDC3F8', '#C4BF84'
 ];
 
 // Mirror of BrainMapping.ReceptorFilter: keep the columns whose name
@@ -517,13 +528,21 @@ function renderDensityTable(receptor) {
   wrap.innerHTML = html + '</tbody></table>';
 }
 
+// Some rows in the source data have no sub-unit or type recorded; show a
+// dash so the gap reads as "not recorded" rather than as a broken cell.
+function cellOrDash(value) {
+  return value && value.trim()
+    ? escapeHtml(value)
+    : '<span class="cell-empty" title="not recorded in the source data">&mdash;</span>';
+}
+
 function renderTypesTable() {
   let html = '<table class="data-table"><thead><tr>';
   for (const h of TYPES.header) html += '<th>' + escapeHtml(h) + '</th>';
   html += '</tr></thead><tbody>';
   for (const row of TYPES.rows) {
-    html += '<tr><td class="name">' + escapeHtml(row[0]) + '</td>';
-    for (const cell of row.slice(1)) html += '<td>' + escapeHtml(cell) + '</td>';
+    html += '<tr><td class="name">' + cellOrDash(row[0]) + '</td>';
+    for (const cell of row.slice(1)) html += '<td>' + cellOrDash(cell) + '</td>';
     html += '</tr>';
   }
   document.getElementById('types-table').innerHTML = html + '</tbody></table>';
