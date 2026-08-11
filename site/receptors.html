@@ -267,6 +267,11 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
   <div class="selwrap">
     <select id="structure-dropdown" aria-label="Receptor family"></select>
   </div>
+  <div class="mode-group" id="axis-group" role="group" aria-label="Chart axis">
+    <span class="mode-label">View</span>
+    <button class="ts-btn active" data-axis="structure" type="button">By Receptor</button>
+    <button class="ts-btn" data-axis="region" type="button">By Region</button>
+  </div>
   <div class="mode-group" id="mode-group" role="group" aria-label="Chart detail">
     <span class="mode-label">Show</span>
     <button class="ts-btn active" data-mode="subtype" type="button">By Sub-type</button>
@@ -326,11 +331,20 @@ const COLORWAY = [
   '#F0BCEA', '#97E2C5', '#CCC8FF', '#E9CC8F'
 ];
 
+// A couple of families are named for the neurotransmitter while the columns
+// are named for the receptor: acetylcholine's are labelled nicotinic and
+// muscarinic, so nothing would match on the family name alone.
+const FAMILY_ALIASES = { 'Acetylcholine': ['nicotinic', 'muscarinic'] };
+
 // Mirror of BrainMapping.ReceptorFilter: keep the columns whose name
-// contains the receptor keyword (case-insensitive).
+// contains the receptor keyword (case-insensitive), plus any aliases.
 function receptorFilter(receptor) {
   const keyword = receptor.toLowerCase();
-  return DATA.columns.filter(col => col.name.toLowerCase().includes(keyword));
+  const aliases = FAMILY_ALIASES[receptor] || [];
+  return DATA.columns.filter(col => {
+    const name = col.name.toLowerCase();
+    return name.includes(keyword) || aliases.some(a => name.includes(a));
+  });
 }
 
 // Mirror of graph_index_columns(df, barmode='group', chart_type='bar') —
@@ -357,64 +371,149 @@ function formatTick(v) {
   return v >= 1000 ? (v / 1000).toFixed(v % 1000 ? 1 : 0) + 'k' : String(Math.round(v));
 }
 
-// 'subtype' draws one bar per receptor sub-type; 'total' sums them into one
-// bar per brain structure.
-let chartMode = 'subtype';
-let currentSeries = [];
+// The chart reads two ways. "By Receptor" takes one receptor family across
+// every brain structure; "By Region" transposes it, taking one structure
+// across every receptor. Either way "subtype" draws a bar per receptor
+// sub-type and "total" sums them.
+let axisMode = 'structure';   /* 'structure' | 'region' */
+let chartMode = 'subtype';    /* 'subtype'   | 'total'  */
+let currentChart = { categories: [], series: [], legend: [] };
 
-// The series the chart draws, from the selected receptor family and mode.
-function buildSeries(receptor, mode) {
-  const cols = receptorFilter(receptor);
-  if (!cols.length) return [];
-  if (mode === 'total') {
-    const values = DATA.structures.map((_, r) =>
-      cols.reduce((sum, col) => sum + (col.values[r] || 0), 0));
-    return [{ name: 'Total ' + receptor + ' density', values, total: true, parts: cols.length }];
+// The family a density column belongs to: the longest receptor name the column
+// mentions, so "Neuropeptide Y" wins over "Neuropeptide".
+function familyOf(colName) {
+  const lower = colName.toLowerCase();
+  let best = null;
+  for (const r of RECEPTORS) {
+    if (lower.includes(r.toLowerCase()) && (!best || r.length > best.length)) best = r;
   }
-  return cols.map((col, i) => ({
+  if (!best) {
+    for (const fam of Object.keys(FAMILY_ALIASES)) {
+      if (FAMILY_ALIASES[fam].some(a => lower.includes(a))) return fam;
+    }
+  }
+  return best;
+}
+
+const FAMILY_COLOR = {};
+RECEPTORS.forEach((r, i) => { FAMILY_COLOR[r] = COLORWAY[i % COLORWAY.length]; });
+
+// "5-HT1A Serotonin Receptor Density ..." reduces to "5-HT1A".
+function shortLabel(colName, family) {
+  if (family) {
+    // Aliased families (acetylcholine) are not named in the column at all.
+    const cut = colName.toLowerCase().indexOf(family.toLowerCase());
+    const head = cut > 0 ? colName.slice(0, cut).trim() : '';
+    if (head) return head;
+  }
+  return colName.replace(/\s*Receptor\s+Density.*$/i, '').trim() || colName;
+}
+
+function buildChart() {
+  return axisMode === 'region'
+    ? buildRegionChart(dropdown.value)
+    : buildFamilyChart(dropdown.value);
+}
+
+// One receptor family, read across the brain structures.
+function buildFamilyChart(receptor) {
+  const categories = DATA.structures;
+  const cols = receptorFilter(receptor);
+  if (!cols.length) return { categories, series: [], legend: [] };
+
+  if (chartMode === 'total') {
+    const values = categories.map((_, r) =>
+      cols.reduce((sum, col) => sum + (col.values[r] || 0), 0));
+    return {
+      categories,
+      series: [{ name: 'Total ' + receptor + ' density', values, total: true }],
+      legend: [{ name: 'Total ' + receptor + ' density', total: true,
+                 note: 'sum of ' + cols.length + ' sub-types' }]
+    };
+  }
+  const series = cols.map((col, i) => ({
     name: col.name, values: col.values, color: COLORWAY[i % COLORWAY.length]
   }));
+  return { categories, series, legend: series.map(s => ({ name: s.name, color: s.color })) };
 }
 
-function updateGraph(receptor) {
-  currentSeries = buildSeries(receptor, chartMode);
-  renderLegend(currentSeries);
-  renderChart(currentSeries);
+// One brain structure, read across the receptors — the transpose.
+function buildRegionChart(structure) {
+  const r = DATA.structures.indexOf(structure);
+  if (r < 0) return { categories: [], series: [], legend: [] };
+
+  if (chartMode === 'total') {
+    const totals = new Map();
+    for (const col of DATA.columns) {
+      const fam = familyOf(col.name);
+      if (!fam) continue;
+      totals.set(fam, (totals.get(fam) || 0) + (col.values[r] || 0));
+    }
+    const categories = Array.from(totals.keys());
+    return {
+      categories,
+      series: [{ name: 'Total density in ' + structure,
+                 values: categories.map(f => totals.get(f)), total: true }],
+      legend: [{ name: 'Total density in ' + structure, total: true,
+                 note: 'summed within each of ' + categories.length + ' families' }]
+    };
+  }
+
+  const categories = [], colors = [], values = [], labels = [], families = [];
+  for (const col of DATA.columns) {
+    const fam = familyOf(col.name);
+    if (!fam) continue;
+    categories.push(shortLabel(col.name, fam));
+    colors.push(FAMILY_COLOR[fam]);
+    values.push(col.values[r]);
+    labels.push(col.name);
+    if (!families.includes(fam)) families.push(fam);
+  }
+  return {
+    categories,
+    series: [{ name: structure, values, colors, labels }],
+    legend: families.map(f => ({ name: f, color: FAMILY_COLOR[f] }))
+  };
 }
 
-function renderLegend(series) {
-  const legend = document.getElementById('chart-legend');
-  legend.innerHTML = series.map(s =>
+function redraw() {
+  currentChart = buildChart();
+  renderLegend(currentChart.legend);
+  renderChart(currentChart);
+}
+
+function renderLegend(items) {
+  document.getElementById('chart-legend').innerHTML = items.map(item =>
     '<span class="legend-item"><span class="legend-swatch' +
-    (s.total ? ' swatch-total"' : '" style="background:' + s.color + '"') + '></span>' +
-    escapeHtml(s.name) +
-    (s.total ? ' <span class="legend-note">sum of ' + s.parts + ' sub-types</span>' : '') +
-    '</span>'
-  ).join('');
+    (item.total ? ' swatch-total"' : '" style="background:' + item.color + '"') + '></span>' +
+    escapeHtml(item.name) +
+    (item.note ? ' <span class="legend-note">' + escapeHtml(item.note) + '</span>' : '') +
+    '</span>').join('');
 }
 
-function renderChart(series) {
+function renderChart(chart) {
   const container = document.getElementById('receptor-graph');
+  const categories = chart.categories, series = chart.series;
   container.innerHTML = '';
   if (!series.length) {
     container.innerHTML = '<p class="table-note">No receptor sub-type data for this selection.</p>';
     return;
   }
 
-  const totalMode = series.length === 1 && series[0].total;
-  const groupCount = DATA.structures.length;
+  const single = series.length === 1;
+  const totalMode = single && series[0].total;
+  const groupCount = categories.length;
   const barGap = 2;
   const groupPad = 14;
-  let barWidth = totalMode ? 30 : 17;
-  let groupWidth = Math.max(totalMode ? 52 : 76, series.length * (barWidth + barGap) + groupPad);
+  let barWidth = single ? 28 : 17;
+  let groupWidth = Math.max(single ? 40 : 76, series.length * (barWidth + barGap) + groupPad);
 
   // Spread the groups to fill the container when the chart would leave dead
   // space; otherwise keep the natural width and let the container scroll.
   const room = Math.max(320, container.clientWidth) - CHART.marginLeft - CHART.marginRight;
   if (room / groupCount > groupWidth) {
     groupWidth = room / groupCount;
-    barWidth = Math.min(totalMode ? 46 : 26,
-      (groupWidth - groupPad) / series.length - barGap);
+    barWidth = Math.min(single ? 46 : 26, (groupWidth - groupPad) / series.length - barGap);
   }
   const innerW = groupCount * groupWidth;
   const width = CHART.marginLeft + innerW + CHART.marginRight;
@@ -425,9 +524,9 @@ function renderChart(series) {
 
   const svg = svgEl('svg', {
     width, height: CHART.height, viewBox: `0 0 ${width} ${CHART.height}`,
-    role: 'img', 'aria-label': totalMode
-      ? 'Total receptor density by brain structure, bar chart'
-      : 'Receptor density by brain structure, grouped bar chart'
+    role: 'img', 'aria-label': axisMode === 'region'
+      ? 'Receptor density within one brain structure, bar chart'
+      : 'Receptor density by brain structure, bar chart'
   });
   const plot = svgEl('g', { transform: `translate(${CHART.marginLeft},${CHART.marginTop})` });
 
@@ -443,10 +542,9 @@ function renderChart(series) {
   plot.appendChild(svgEl('line', { class: 'axis-line', x1: 0, x2: innerW, y1: innerH, y2: innerH, 'stroke-width': 1 }));
 
   const tooltip = document.getElementById('chart-tooltip');
-  const showTip = (evt, s, structure, value) => {
-    tooltip.innerHTML = '<div class="tt-series">' + escapeHtml(s.name) +
-      (s.total ? ' (' + s.parts + ' sub-types)' : '') + '</div>' +
-      escapeHtml(structure) + ': <span class="tt-value">' +
+  const showTip = (evt, title, category, value) => {
+    tooltip.innerHTML = '<div class="tt-series">' + escapeHtml(title) + '</div>' +
+      escapeHtml(category) + ': <span class="tt-value">' +
       Math.round(value).toLocaleString() + ' fmol/mg</span>';
     tooltip.style.display = 'block';
     moveTip(evt);
@@ -459,7 +557,7 @@ function renderChart(series) {
   };
   const hideTip = () => { tooltip.style.display = 'none'; };
 
-  DATA.structures.forEach((structure, gi) => {
+  categories.forEach((category, gi) => {
     const groupX = gi * groupWidth + (groupWidth - (series.length * (barWidth + barGap) - barGap)) / 2;
     series.forEach((s, ci) => {
       const v = s.values[gi];
@@ -470,11 +568,13 @@ function renderChart(series) {
         class: s.total ? 'bar bar-total' : 'bar',
         x, y, width: barWidth, height: Math.max(0, innerH - y)
       });
-      if (!s.total) rect.setAttribute('fill', s.color);
-      rect.addEventListener('mouseenter', e => showTip(e, s, structure, v));
+      if (!s.total) rect.setAttribute('fill', s.colors ? s.colors[gi] : s.color);
+      const title = s.labels ? s.labels[gi] : s.name;
+      const named = s.labels ? s.name : category;
+      rect.addEventListener('mouseenter', e => showTip(e, title, named, v));
       rect.addEventListener('mousemove', moveTip);
       rect.addEventListener('mouseleave', hideTip);
-      rect.addEventListener('touchstart', e => showTip(e, s, structure, v), { passive: true });
+      rect.addEventListener('touchstart', e => showTip(e, title, named, v), { passive: true });
       plot.appendChild(rect);
     });
 
@@ -483,7 +583,7 @@ function renderChart(series) {
       class: 'axis-label x-label', 'text-anchor': 'end',
       transform: `translate(${labelX},${innerH + 12}) rotate(-38)`
     });
-    label.textContent = structure;
+    label.textContent = category;
     plot.appendChild(label);
   });
 
@@ -495,7 +595,7 @@ let resizeTimer;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
-    if (!panes.chart.classList.contains('hidden')) renderChart(currentSeries);
+    if (!panes.chart.classList.contains('hidden')) renderChart(currentChart);
   }, 150);
 });
 
@@ -509,9 +609,10 @@ function formatRange(raw) {
   return m ? m[1] + '–' + m[2] : raw;
 }
 
-// The density data as a table: brain structures down, sub-types across,
-// showing the original min:max ranges from the source data.
-function renderDensityTable(receptor) {
+// The density data as a table, following the same orientation as the chart.
+function renderDensityTable() {
+  if (axisMode === 'region') { renderRegionTable(dropdown.value); return; }
+  const receptor = dropdown.value;
   const cols = receptorFilter(receptor);
   const wrap = document.getElementById('density-table');
   if (!cols.length) {
@@ -538,6 +639,24 @@ function cellOrDash(value) {
     : '<span class="cell-empty" title="not recorded in the source data">&mdash;</span>';
 }
 
+// The transpose: every receptor sub-type read within one brain structure.
+function renderRegionTable(structure) {
+  const r = DATA.structures.indexOf(structure);
+  const wrap = document.getElementById('density-table');
+  if (r < 0) { wrap.innerHTML = ''; return; }
+  let html = '<table class="data-table"><thead><tr><th>Receptor sub-type</th>' +
+    '<th>Family</th><th>Density in ' + escapeHtml(structure) + ' (fmol/mg)</th>' +
+    '</tr></thead><tbody>';
+  for (const col of DATA.columns) {
+    const fam = familyOf(col.name);
+    if (!fam) continue;
+    html += '<tr><td class="name">' + escapeHtml(shortLabel(col.name, fam)) + '</td>' +
+      '<td>' + escapeHtml(fam) + '</td>' +
+      '<td>' + escapeHtml(formatRange(col.raw[r])) + '</td></tr>';
+  }
+  wrap.innerHTML = html + '</tbody></table>';
+}
+
 function renderTypesTable() {
   let html = '<table class="data-table"><thead><tr>';
   for (const h of TYPES.header) html += '<th>' + escapeHtml(h) + '</th>';
@@ -551,16 +670,34 @@ function renderTypesTable() {
 }
 
 const dropdown = document.getElementById('structure-dropdown');
-for (const receptor of RECEPTORS) {
-  const option = document.createElement('option');
-  option.value = receptor;
-  option.textContent = receptor;
-  dropdown.appendChild(option);
+
+// The picker holds receptor families or brain structures, per the axis.
+function fillDropdown() {
+  const items = axisMode === 'region' ? DATA.structures : RECEPTORS;
+  dropdown.innerHTML = '';
+  for (const item of items) {
+    const option = document.createElement('option');
+    option.value = item;
+    option.textContent = item;
+    dropdown.appendChild(option);
+  }
+  dropdown.value = items[0];
+  dropdown.setAttribute('aria-label',
+    axisMode === 'region' ? 'Brain region' : 'Receptor family');
 }
-dropdown.value = RECEPTORS[0]; // Default value, as in the Dash app
-dropdown.addEventListener('change', () => {
-  updateGraph(dropdown.value);
-  renderDensityTable(dropdown.value);
+dropdown.addEventListener('change', () => { redraw(); renderDensityTable(); });
+
+const axisGroup = document.getElementById('axis-group');
+axisGroup.querySelectorAll('[data-axis]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (axisMode === btn.dataset.axis) return;
+    axisGroup.querySelectorAll('[data-axis]').forEach(b =>
+      b.classList.toggle('active', b === btn));
+    axisMode = btn.dataset.axis;
+    fillDropdown();
+    redraw();
+    renderDensityTable();
+  });
 });
 
 // Chart detail: one bar per sub-type, or a single summed total per structure.
@@ -570,7 +707,7 @@ modeGroup.querySelectorAll('[data-mode]').forEach(btn => {
     modeGroup.querySelectorAll('[data-mode]').forEach(b =>
       b.classList.toggle('active', b === btn));
     chartMode = btn.dataset.mode;
-    updateGraph(dropdown.value);
+    redraw();
   });
 });
 
@@ -590,13 +727,15 @@ document.querySelectorAll('[data-tab]').forEach(btn => {
     for (const [name, pane] of Object.entries(panes))
       pane.classList.toggle('hidden', name !== tab);
     dropdown.parentElement.classList.toggle('hidden', tab === 'types');
+    axisGroup.classList.toggle('hidden', tab === 'types');
     modeGroup.classList.toggle('hidden', tab !== 'chart');
-    if (tab === 'chart') renderChart(currentSeries);
+    if (tab === 'chart') renderChart(currentChart);
   });
 });
 
-updateGraph(dropdown.value);
-renderDensityTable(dropdown.value);
+fillDropdown();
+redraw();
+renderDensityTable();
 renderTypesTable();
 
 // Theme toggle — same behavior and storage key as the Region Atlas page,
