@@ -1,35 +1,28 @@
-# NeuralMapping
+# MidnightNeuroscience
 Mapping the Brain with our open-source app. At the moment, we are mapping the receptor sub-types to brain regions by analysing densities per region.
 
 ## Website
 
 The website is fully static — no server needed. It lives in the `site/` folder:
 
-- `site/index.html` — Receptor Density viewer: pick a receptor family from the dropdown and the grouped bar chart shows the density of each receptor sub-type across brain structures.
-- `site/regionatlas.html` — Region Atlas: interactive MRI brain map that highlights AAL-116 regions on the MNI152 template, in the browser.
+- `site/index.html` — Region Atlas, the homepage: interactive MRI brain map that highlights AAL-116 regions on the MNI152 template, in the browser.
+- `site/receptors.html` — Receptor Density viewer: pick a receptor family from the dropdown and the grouped bar chart shows the density of each receptor sub-type across brain structures.
 
 To preview locally, just open either file in a browser.
 
 ## Hosting on Cloudflare (auto-deploy on merge to `main`)
 
-The site deploys with Cloudflare Pages using its built-in Git integration — every merge to `main` automatically publishes the new version. One-time setup:
+The site is deployed as a Cloudflare Worker connected to this repository. The `wrangler.jsonc` file at the repo root tells Cloudflare what to deploy: the static files in `site/`, and nothing else. Every merge to `main` triggers a new build and publishes the updated site automatically; pushes to other branches get preview deployments.
 
-1. Log in to the [Cloudflare dashboard](https://dash.cloudflare.com) and go to **Workers & Pages → Create → Pages → Connect to Git**.
-2. Authorize GitHub and select the `OttomanLabsAI/NeuralMapping` repository.
-3. Configure the build:
-   - **Production branch:** `main`
-   - **Framework preset:** None
-   - **Build command:** *(leave empty)*
-   - **Build output directory:** `site`
-4. Click **Save and Deploy**.
+If a deploy ever serves the wrong thing, check the Worker's build settings in the Cloudflare dashboard (**your Worker → Settings → Build**):
 
-That's it — Cloudflare builds nothing, it just publishes the `site/` folder. From then on:
+- **Git repository:** this repo, production branch `main`
+- **Build command:** *(leave empty — there is nothing to build)*
+- **Deploy command:** `npx wrangler deploy`
+- **Root directory:** `/`
 
-- Every merge/push to `main` deploys to production automatically.
-- Every push to any other branch gets its own preview URL on the pull request.
-
-Cloudflare serves clean URLs automatically, so the pages are available at `/` (receptor viewer) and `/regionatlas` (region atlas). A custom domain can be attached under the project's **Custom domains** tab.
+Cloudflare serves clean URLs automatically, so the pages are available at `/` (Region Atlas) and `/receptors` (receptor viewer). The old `/regionatlas` link redirects to the homepage. A custom domain can be attached under the Worker's **Domains & Routes** settings.
 
 ## Backend
 
-The Python code in `backend/` is used for data processing. The chart data embedded in `site/index.html` comes from `backend/data/ReceptorDensity.csv`, processed the same way as before: each `min:max` density range is collapsed to its max value.
+The Python code in `backend/` is used for data processing. The chart data embedded in `site/receptors.html` comes from `backend/data/ReceptorDensity.csv`, processed the same way as before: each `min:max` density range is collapsed to its max value.

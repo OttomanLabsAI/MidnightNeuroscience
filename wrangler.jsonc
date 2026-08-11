@@ -1,0 +1,9 @@
+// Cloudflare Workers configuration — tells the Git-connected Worker
+// exactly what to deploy: the static website in ./site, nothing else.
+{
+  "name": "midnightneuroscience",
+  "compatibility_date": "2026-08-11",
+  "assets": {
+    "directory": "./site"
+  }
+}
