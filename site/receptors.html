@@ -6,6 +6,7 @@
 <title>Receptor Density — MidnightNeuroscience.AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/viewer.css">
 <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Prata&display=swap" rel="stylesheet">
 <script>/* restore the saved theme before first paint so pages agree */
 try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAttribute("data-theme","dark");}catch(e){}</script>
@@ -238,29 +239,29 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
   .data-table .cell-empty { color: var(--ink-35); font-weight: 400; cursor: help; }
   .table-note { margin-top: 14px; color: var(--ink-60); font-style: italic; }
 
-  /* the scan panel — the same framed radiographs as the Region Atlas */
-  .scan-panel { margin-top: var(--gap); border: 1px solid var(--hair); }
-  .scan-cap {
+  /* the scan: the Region Atlas viewports, in a row beneath the chart */
+  .scan-head {
     display: flex; flex-wrap: wrap; justify-content: space-between;
-    align-items: baseline; gap: .35rem .8rem;
-    padding: .6rem .8rem .5rem; border-bottom: 1px solid var(--hair);
+    align-items: baseline; gap: .35rem .8rem; margin: var(--gap) 0 .5rem;
   }
-  .scan-cap b {
-    font-family: var(--font-brand); font-weight: 500; font-size: .68rem;
-    letter-spacing: .28em; text-transform: uppercase;
+  .scan-head b {
+    font-family: var(--font-brand); font-weight: 600; font-size: .66rem;
+    letter-spacing: .3em; text-transform: uppercase;
   }
-  .scan-cap .scan-where {
+  .scan-head .scan-where {
     font-family: var(--font-serif); font-style: italic;
-    font-size: .82rem; color: var(--ink-60);
-  }
-  .scan-views { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--hair); }
-  .scan-views > div { position: relative; background: #111111; height: clamp(150px, 22vh, 260px); }
-  .scan-views canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
-  .scan-note {
-    padding: .7rem .8rem; font-family: var(--font-serif); font-style: italic;
     font-size: .88rem; color: var(--ink-60);
   }
-  @media (max-width: 700px) { .scan-views { grid-template-columns: 1fr; } }
+  /* the same two-up grid and stage proportions as the atlas */
+  .scan-views {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: var(--gap); min-width: 0;
+  }
+  .scan-note {
+    margin-top: .6rem; font-family: var(--font-serif); font-style: italic;
+    font-size: .88rem; color: var(--ink-60);
+  }
+  @media (max-width: 1100px) { .scan-views { grid-template-columns: 1fr; } }
 
   /* a structure label that can be clicked through to the scan */
   #receptor-graph .x-label.pickable { cursor: pointer; }
@@ -312,18 +313,34 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
   <div id="chart-legend" class="legend"></div>
   <div id="receptor-graph"></div>
   <div class="scan-panel" id="scan-panel">
-    <div class="scan-cap">
+    <div class="scan-head">
       <b>On the scan</b>
       <span class="scan-where" id="scan-where">Click a brain structure on the chart to see it highlighted</span>
     </div>
     <div class="scan-views hidden" id="scan-views">
-      <div><canvas id="rxAx"></canvas></div>
-      <div><canvas id="rxCor"></canvas></div>
-      <div><canvas id="rxSag"></canvas></div>
+      <div class="view" data-box="Ax">
+        <div class="view-cap"><b>Axial</b><span>transverse plane</span></div>
+        <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Ax" role="group" aria-label="Axial drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Horizontal only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Vertical only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="Ax" type="button">Centre planes</button></div>
+        <div class="mri-stage"><canvas id="rxAx"></canvas></div>
+      </div>
+      <div class="view" data-box="Cor">
+        <div class="view-cap"><b>Coronal</b><span>frontal plane</span></div>
+        <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Cor" role="group" aria-label="Coronal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Horizontal only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Vertical only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="Cor" type="button">Centre planes</button></div>
+        <div class="mri-stage"><canvas id="rxCor"></canvas></div>
+      </div>
+      <div class="view" data-box="Sag">
+        <div class="view-cap"><b>Sagittal</b><span>median plane</span></div>
+        <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Sag" role="group" aria-label="Sagittal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Horizontal only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Vertical only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="Sag" type="button">Centre planes</button></div>
+        <div class="mri-stage"><canvas id="rxSag"></canvas></div>
+      </div>
+      <div class="view" data-box="Ren">
+        <div class="view-cap"><b>3D</b><span>volume render</span></div>
+        <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Ren" role="group" aria-label="3D drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Horizontal only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Vertical only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="Ren" type="button">Centre planes</button></div>
+        <div class="mri-stage"><canvas id="rxRen"></canvas></div>
+      </div>
     </div>
     <p class="scan-note" id="scan-note">MNI152 template &middot; AAL-116 parcellation</p>
   </div>
-</div>
 <div id="density-table" class="table-wrap hidden"></div>
 <div id="types-table" class="table-wrap hidden"></div>
 
@@ -851,9 +868,10 @@ async function ensureScan() {
     if (typeof MN_ATLAS === 'undefined') await loadScript('assets/atlas-data.js');
 
     const planes = [
-      { id: 'rxAx',  st: niivue.SLICE_TYPE.AXIAL },
-      { id: 'rxCor', st: niivue.SLICE_TYPE.CORONAL },
-      { id: 'rxSag', st: niivue.SLICE_TYPE.SAGITTAL }
+      { id: 'rxAx',  key: 'Ax',  st: niivue.SLICE_TYPE.AXIAL },
+      { id: 'rxCor', key: 'Cor', st: niivue.SLICE_TYPE.CORONAL },
+      { id: 'rxSag', key: 'Sag', st: niivue.SLICE_TYPE.SAGITTAL },
+      { id: 'rxRen', key: 'Ren', st: niivue.SLICE_TYPE.RENDER }
     ];
     const tplUrl = b64ToUrl(MN_ATLAS.TPL_B64);
     const atlasUrl = b64ToUrl(MN_ATLAS.ATLAS_B64);
@@ -862,11 +880,14 @@ async function ensureScan() {
       const nv = new niivue.Niivue({
         backColor: [0.0667, 0.0667, 0.0667, 1],
         crosshairColor: [1, 1, 1, 1],
+        show3Dcrosshair: true,
         sliceType: p.st,
+        invertScrollDirection: true,
         dragAndDropEnabled: false,
         textHeight: 0.05
       });
       await nv.attachToCanvas(document.getElementById(p.id));
+      byKey[p.key] = nv;
       scanInstances.push(nv);
     }
     await Promise.all(scanInstances.map(nv => nv.loadVolumes([
@@ -874,6 +895,10 @@ async function ensureScan() {
       { url: atlasUrl, name: 'aal.nii.gz', opacity: 0.9 }
     ])));
     planes.forEach((p, i) => scanInstances[i].setSliceType(p.st));
+    /* keep the crosshair and camera in step across the boxes, as the atlas does */
+    scanInstances.forEach(nv => nv.broadcastTo(scanInstances.filter(o => o !== nv),
+      { '2d': true, '3d': true }));
+    wireViewControls();
     scanViews.classList.remove('hidden');
     scanState = 'ready';
     scanNote.textContent = 'MNI152 template · AAL-116 parcellation';
@@ -884,6 +909,90 @@ async function ensureScan() {
       (err && err.message ? err.message : err);
     return false;
   }
+}
+
+/* Direction locks and centring, as on the Region Atlas: the stored value is
+   the axis left free to move — "x" left-right, "y" anterior-posterior, "z"
+   superior-inferior — which is also its index into a crosshair position. The
+   render box holds the camera to a spin or a tilt instead. */
+const byKey = {};
+const LOCK_AXIS = { x: 0, y: 1, z: 2 };
+const scanLocks = { Ax: 'free', Cor: 'free', Sag: 'free', Ren: 'free' };
+let scanAnchor = null, scanCam = null, scanDragBox = null, scanCorrecting = false;
+
+function wireViewControls() {
+  document.querySelectorAll('#scan-views .seg[data-lock-for]').forEach(seg => {
+    const key = seg.dataset.lockFor;
+    seg.querySelectorAll('[data-lock]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        seg.querySelectorAll('[data-lock]').forEach(b => b.classList.toggle('active', b === btn));
+        scanLocks[key] = btn.dataset.lock;
+      });
+    });
+  });
+  document.querySelectorAll('#scan-views [data-centre]').forEach(btn => {
+    btn.addEventListener('click', centreScan);
+  });
+  document.querySelectorAll('#scan-views .view[data-box]').forEach(box => {
+    const key = box.dataset.box;
+    box.querySelector('.mri-stage').addEventListener('pointerdown', () => {
+      const nv = byKey[key];
+      if (!nv) return;
+      scanDragBox = key;
+      scanAnchor = nv.scene.crosshairPos.slice();
+      scanCam = { az: nv.scene.renderAzimuth, el: nv.scene.renderElevation };
+    });
+  });
+  ['pointerup', 'pointercancel'].forEach(evt => window.addEventListener(evt, () => {
+    scanAnchor = null; scanCam = null; scanDragBox = null;
+  }));
+  Object.keys(byKey).forEach(key => {
+    if (key === 'Ren') byKey[key].onAzimuthElevationChange = lockScanCamera;
+    else byKey[key].onLocationChange = () => applyScanLock(key);
+  });
+}
+
+/* Only the box the drag began in may impose its lock: the boxes broadcast
+   crosshair moves to each other, so otherwise one would constrain them all. */
+function applyScanLock(key) {
+  const free = scanLocks[key];
+  const nv = byKey[key];
+  if (scanCorrecting || key !== scanDragBox || free === 'free' || !nv || !scanAnchor) return;
+  const freeIdx = LOCK_AXIS[free];
+  const pos = nv.scene.crosshairPos;
+  const held = scanAnchor.slice();
+  held[freeIdx] = pos[freeIdx];
+  if (held[0] === pos[0] && held[1] === pos[1] && held[2] === pos[2]) return;
+  scanCorrecting = true;
+  try {
+    scanInstances.forEach(inst => { inst.scene.crosshairPos = held.slice(); inst.drawScene(); });
+  } catch (e) {}
+  finally { scanCorrecting = false; }
+}
+
+function lockScanCamera() {
+  const free = scanLocks.Ren, nv = byKey.Ren;
+  if (scanCorrecting || scanDragBox !== 'Ren' || free === 'free' || !nv || !scanCam) return;
+  scanCorrecting = true;
+  try {
+    if (free === 'x') nv.scene.renderElevation = scanCam.el;
+    else nv.scene.renderAzimuth = scanCam.az;
+    nv.drawScene();
+  } catch (e) {}
+  finally { scanCorrecting = false; }
+}
+
+function centreScan() {
+  if (!scanInstances.length) return;
+  scanCorrecting = true;
+  try {
+    scanInstances.forEach(inst => {
+      inst.scene.crosshairPos = [0.5, 0.5, 0.5];
+      inst.scene.pan2Dxyzmm = [0, 0, 0, 1];
+      inst.drawScene();
+    });
+  } catch (e) {}
+  finally { scanCorrecting = false; }
 }
 
 // Paint only the parcels belonging to this structure; everything else is clear.

@@ -7,6 +7,7 @@
 <meta name="description" content="Interactive MRI brain map — highlight AAL-116 regions on the MNI152 template, in the browser.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/viewer.css">
 <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Prata&display=swap" rel="stylesheet">
 <script>/* restore the saved theme before first paint so pages agree */
 try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAttribute("data-theme","dark");}catch(e){}</script>
@@ -266,48 +267,6 @@ input[type=range]{ flex:1; min-width:0; accent-color:var(--ink); height:3px; }
 .stat .v small{ font-size:.62rem; color:var(--ink-60); margin-left:.15rem; }
 
 .views{ display:grid; grid-template-columns:1fr 1fr; gap:var(--gap); min-width:0; }
-.view{ border:1px solid var(--hair); display:flex; flex-direction:column; min-width:0; }
-.view-cap{
-  display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline;
-  gap:.35rem .8rem; padding:.6rem .8rem .5rem; border-bottom:1px solid var(--hair);
-}
-.view-cap b{
-  font-family:var(--font-brand); font-weight:500; font-size:.68rem;
-  letter-spacing:.28em; text-transform:uppercase;
-}
-.view-cap span{
-  font-family:var(--font-serif); font-style:italic; font-size:.82rem; color:var(--ink-60);
-}
-
-/* per-viewport controls, sat on their own rule beneath the caption */
-.view-tools{
-  display:flex; flex-wrap:wrap; align-items:center; gap:.36rem .6rem;
-  padding:.4rem .8rem; border-bottom:1px solid var(--hair);
-}
-.tool-label{
-  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
-  letter-spacing:.22em; text-transform:uppercase; color:var(--ink-60);
-}
-.centre-btn{
-  margin-left:auto; height:1.8rem; padding:0 .6rem;
-  display:inline-flex; align-items:center;
-}
-
-/* segmented switch — one joined run of square cells, the active one inked */
-.seg{ display:inline-flex; border:1px solid var(--hair); align-self:center; }
-.seg-btn{
-  border:0; border-left:1px solid var(--hair); border-radius:0;
-  background:var(--paper); color:var(--ink);
-  font-family:var(--font-brand); font-weight:500;
-  text-transform:uppercase; cursor:pointer; line-height:1;
-  width:1.8rem; height:1.8rem; padding:0;
-  display:inline-flex; align-items:center; justify-content:center;
-}
-.seg-btn:first-child{ border-left:0; }
-.seg-btn:hover{ background:var(--ink); color:var(--paper); }
-.seg-btn.active{ background:var(--ink); color:var(--paper); }
-.seg-word{ font-size:.46rem; letter-spacing:.06em; }
-.seg-arrow{ font-size:.74rem; letter-spacing:-.04em; }
 .plot-wrap{ flex:1; min-height:0; padding:.55rem; display:flex; align-items:center; justify-content:center; }
 .plot-wrap canvas{ display:block; }
 
@@ -450,8 +409,6 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
 /* the viewports — each plane a framed radiograph: canvases stay ink-black in both themes */
 .views-wrap{ position:relative; }
 .views .view{ min-width:0; }
-.mri-stage{ position:relative; background:#111111; height:clamp(240px,36vh,430px); }
-.mri-stage canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; outline:none; }
 .view[hidden]{ display:none; }
 .views.solo{ grid-template-columns:1fr; }
 .views.solo .mri-stage{ height:clamp(420px,70vh,900px); }
