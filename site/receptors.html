@@ -6,7 +6,7 @@
 <title>Receptor Density — MidnightNeuroscience.AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Prata&display=swap" rel="stylesheet">
 <script>/* restore the saved theme before first paint so pages agree */
 try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAttribute("data-theme","dark");}catch(e){}</script>
 <style>
@@ -27,8 +27,11 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
     --grid:#E2E2E2;
 
     --font-brand:'Flux','Afacad Flux',sans-serif;
+    --font-serif:'Newsreader',Georgia,serif;
+    --font-display:'Prata',Georgia,serif;
 
     --wrap:1880px;
+    --gap:14px;
   }
 
   /* dark mode — exact inverse of the default palette, site-wide */
@@ -41,11 +44,20 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
     --grid:#333333;
   }
 
+  * { box-sizing: border-box; }
+
   body {
-    margin: 0 0 32px;
+    margin: 0 0 3rem;
     background: var(--paper);
     color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 1.62;
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
   }
+  ::selection { background: var(--ink); color: var(--paper); }
+  :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
   .wrap {
     max-width: var(--wrap);
@@ -102,35 +114,46 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
     background: linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
   }
 
-  #structure-dropdown {
-    display: block;
-    width: 100%;
-    height: 36px;
-    padding: 0 40px 0 10px;
-    font-size: 14px;
-    font-family: inherit;
-    color: var(--ink);
-    background-color: var(--paper);
-    border: 1px solid var(--ink-35);
-    border-radius: 4px;
-    cursor: pointer;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    /* gray caret like the Dash (react-select) dropdown arrow */
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0h10L5 6z' fill='%23999'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
+  /* title strip and select in the house voice, as on the Region Atlas */
+  .title-strip {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+    gap: .5rem 1.3rem; border: 1px solid var(--hair);
+    padding: .8rem 1rem; margin-bottom: var(--gap); text-align: center;
   }
-
-  #structure-dropdown:hover {
-    border-color: #b3b3b3;
+  .title-strip .name {
+    font-family: var(--font-display); font-size: 1.35rem;
+    font-weight: 400; line-height: 1.05; letter-spacing: .02em; margin: 0;
   }
+  .title-strip .anno {
+    font-family: var(--font-serif); font-style: italic;
+    font-size: .88rem; color: var(--ink-60);
+  }
+  .title-strip .ts-views { margin-left: auto; display: flex; gap: .4rem; flex-wrap: wrap; }
 
-  #structure-dropdown:focus {
-    outline: none;
-    border-color: #007eff;
-    box-shadow: 0 0 0 3px rgba(0, 126, 255, 0.1);
+  .controls {
+    display: flex; flex-wrap: wrap; align-items: center;
+    gap: .5rem .9rem; margin-bottom: var(--gap);
+  }
+  .selwrap { position: relative; flex: 1 1 16rem; min-width: 12rem; }
+  .selwrap::after {
+    content: ""; position: absolute; right: .75rem; top: 50%; transform: translateY(-35%);
+    border-left: 4px solid transparent; border-right: 4px solid transparent;
+    border-top: 5px solid var(--ink); pointer-events: none;
+  }
+  select {
+    width: 100%; appearance: none; -webkit-appearance: none; border-radius: 0;
+    border: 1px solid var(--hair); background: var(--paper); color: var(--ink);
+    font-family: var(--font-brand); font-size: .92rem;
+    padding: .55rem 1.8rem .5rem .6rem; cursor: pointer;
+  }
+  select:hover { box-shadow: 0 0 0 1px var(--ink) inset; }
+  select option { background: var(--paper); color: var(--ink); }
+
+  .mode-group { display: flex; gap: .4rem; flex-wrap: wrap; }
+  .mode-label {
+    font-family: var(--font-brand); font-weight: 500; font-size: .58rem;
+    letter-spacing: .22em; text-transform: uppercase; color: var(--ink-60);
+    align-self: center;
   }
 
   #receptor-graph {
@@ -149,6 +172,7 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
   #receptor-graph .y-label { font-variant-numeric: tabular-nums; }
   #receptor-graph .bar { cursor: pointer; }
   #receptor-graph .bar:hover { opacity: .78; }
+  #receptor-graph .bar-total { fill: var(--ink); }
 
   .legend {
     display: flex;
@@ -161,6 +185,8 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
   }
   .legend-item { display: inline-flex; align-items: center; gap: 6px; }
   .legend-swatch { width: 11px; height: 11px; flex: none; }
+  .legend-swatch.swatch-total { background: var(--ink); }
+  .legend-note { font-style: italic; font-family: var(--font-serif); color: var(--ink-60); }
 
   .chart-tooltip {
     position: fixed;
@@ -178,15 +204,14 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
   .chart-tooltip .tt-series { opacity: .7; }
   .chart-tooltip .tt-value { font-weight: 600; }
 
-  /* Sub-tabs, matching the Region Atlas view-switcher buttons */
-  .subtabs { display: flex; gap: 6px; margin: 14px 0; }
-  .sub-btn {
+  /* view-switcher buttons, identical to the Region Atlas */
+  .ts-btn {
     border: 1px solid var(--hair); background: var(--paper); color: var(--ink);
     font-family: var(--font-brand); font-weight: 500; font-size: .62rem;
     letter-spacing: .2em; text-transform: uppercase; cursor: pointer;
-    padding: .5rem .7rem .42rem; line-height: 1;
+    padding: .5rem .7rem .42rem; text-decoration: none; line-height: 1;
   }
-  .sub-btn:hover, .sub-btn.active { background: var(--ink); color: var(--paper); }
+  .ts-btn:hover, .ts-btn.active { background: var(--ink); color: var(--paper); }
 
   /* Data tables */
   .table-wrap { overflow-x: auto; margin-top: 14px; }
@@ -218,15 +243,26 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
 
 <main class="wrap">
 
-<h1>Receptor Density Across Brain Structures</h1>
-
-<div class="subtabs" role="group" aria-label="View">
-  <button class="sub-btn active" data-tab="chart" type="button">Chart</button>
-  <button class="sub-btn" data-tab="density" type="button">Density Table</button>
-  <button class="sub-btn" data-tab="types" type="button">Receptor Types</button>
+<div class="title-strip">
+  <h1 class="name">Receptor Density</h1>
+  <span class="anno">across brain structures &middot; fmol&thinsp;/&thinsp;mg tissue</span>
+  <div class="ts-views" role="group" aria-label="View">
+    <button class="ts-btn active" data-tab="chart" type="button">Chart</button>
+    <button class="ts-btn" data-tab="density" type="button">Density Table</button>
+    <button class="ts-btn" data-tab="types" type="button">Receptor Types</button>
+  </div>
 </div>
 
-<select id="structure-dropdown" aria-label="Receptor"></select>
+<div class="controls">
+  <div class="selwrap">
+    <select id="structure-dropdown" aria-label="Receptor family"></select>
+  </div>
+  <div class="mode-group" id="mode-group" role="group" aria-label="Chart detail">
+    <span class="mode-label">Show</span>
+    <button class="ts-btn active" data-mode="subtype" type="button">By Sub-type</button>
+    <button class="ts-btn" data-mode="total" type="button">Total</button>
+  </div>
+</div>
 
 <div id="chart-pane">
   <div id="chart-legend" class="legend"></div>
@@ -308,45 +344,77 @@ function formatTick(v) {
   return v >= 1000 ? (v / 1000).toFixed(v % 1000 ? 1 : 0) + 'k' : String(Math.round(v));
 }
 
-let currentCols = [];
+// 'subtype' draws one bar per receptor sub-type; 'total' sums them into one
+// bar per brain structure.
+let chartMode = 'subtype';
+let currentSeries = [];
 
-function updateGraph(receptor) {
-  currentCols = receptorFilter(receptor);
-  renderLegend(currentCols);
-  renderChart(currentCols);
+// The series the chart draws, from the selected receptor family and mode.
+function buildSeries(receptor, mode) {
+  const cols = receptorFilter(receptor);
+  if (!cols.length) return [];
+  if (mode === 'total') {
+    const values = DATA.structures.map((_, r) =>
+      cols.reduce((sum, col) => sum + (col.values[r] || 0), 0));
+    return [{ name: 'Total ' + receptor + ' density', values, total: true, parts: cols.length }];
+  }
+  return cols.map((col, i) => ({
+    name: col.name, values: col.values, color: COLORWAY[i % COLORWAY.length]
+  }));
 }
 
-function renderLegend(cols) {
+function updateGraph(receptor) {
+  currentSeries = buildSeries(receptor, chartMode);
+  renderLegend(currentSeries);
+  renderChart(currentSeries);
+}
+
+function renderLegend(series) {
   const legend = document.getElementById('chart-legend');
-  legend.innerHTML = cols.map((col, i) =>
-    '<span class="legend-item"><span class="legend-swatch" style="background:' +
-    COLORWAY[i % COLORWAY.length] + '"></span>' + escapeHtml(col.name) + '</span>'
+  legend.innerHTML = series.map(s =>
+    '<span class="legend-item"><span class="legend-swatch' +
+    (s.total ? ' swatch-total"' : '" style="background:' + s.color + '"') + '></span>' +
+    escapeHtml(s.name) +
+    (s.total ? ' <span class="legend-note">sum of ' + s.parts + ' sub-types</span>' : '') +
+    '</span>'
   ).join('');
 }
 
-function renderChart(cols) {
+function renderChart(series) {
   const container = document.getElementById('receptor-graph');
   container.innerHTML = '';
-  if (!cols.length) {
+  if (!series.length) {
     container.innerHTML = '<p class="table-note">No receptor sub-type data for this selection.</p>';
     return;
   }
 
+  const totalMode = series.length === 1 && series[0].total;
   const groupCount = DATA.structures.length;
-  const barWidth = 17;
   const barGap = 2;
   const groupPad = 14;
-  const groupWidth = Math.max(76, cols.length * (barWidth + barGap) + groupPad);
+  let barWidth = totalMode ? 30 : 17;
+  let groupWidth = Math.max(totalMode ? 52 : 76, series.length * (barWidth + barGap) + groupPad);
+
+  // Spread the groups to fill the container when the chart would leave dead
+  // space; otherwise keep the natural width and let the container scroll.
+  const room = Math.max(320, container.clientWidth) - CHART.marginLeft - CHART.marginRight;
+  if (room / groupCount > groupWidth) {
+    groupWidth = room / groupCount;
+    barWidth = Math.min(totalMode ? 46 : 26,
+      (groupWidth - groupPad) / series.length - barGap);
+  }
   const innerW = groupCount * groupWidth;
   const width = CHART.marginLeft + innerW + CHART.marginRight;
   const innerH = CHART.height - CHART.marginTop - CHART.marginBottom;
 
-  const maxVal = niceCeiling(Math.max(...cols.flatMap(c => c.values.filter(v => v != null))));
+  const maxVal = niceCeiling(Math.max(...series.flatMap(s => s.values.filter(v => v != null))));
   const yOf = v => innerH - (v / maxVal) * innerH;
 
   const svg = svgEl('svg', {
     width, height: CHART.height, viewBox: `0 0 ${width} ${CHART.height}`,
-    role: 'img', 'aria-label': 'Receptor density by brain structure, grouped bar chart'
+    role: 'img', 'aria-label': totalMode
+      ? 'Total receptor density by brain structure, bar chart'
+      : 'Receptor density by brain structure, grouped bar chart'
   });
   const plot = svgEl('g', { transform: `translate(${CHART.marginLeft},${CHART.marginTop})` });
 
@@ -362,9 +430,11 @@ function renderChart(cols) {
   plot.appendChild(svgEl('line', { class: 'axis-line', x1: 0, x2: innerW, y1: innerH, y2: innerH, 'stroke-width': 1 }));
 
   const tooltip = document.getElementById('chart-tooltip');
-  const showTip = (evt, name, structure, value) => {
-    tooltip.innerHTML = '<div class="tt-series">' + escapeHtml(name) + '</div>' +
-      escapeHtml(structure) + ': <span class="tt-value">' + value.toLocaleString() + ' fmol/mg</span>';
+  const showTip = (evt, s, structure, value) => {
+    tooltip.innerHTML = '<div class="tt-series">' + escapeHtml(s.name) +
+      (s.total ? ' (' + s.parts + ' sub-types)' : '') + '</div>' +
+      escapeHtml(structure) + ': <span class="tt-value">' +
+      Math.round(value).toLocaleString() + ' fmol/mg</span>';
     tooltip.style.display = 'block';
     moveTip(evt);
   };
@@ -377,20 +447,21 @@ function renderChart(cols) {
   const hideTip = () => { tooltip.style.display = 'none'; };
 
   DATA.structures.forEach((structure, gi) => {
-    const groupX = gi * groupWidth + (groupWidth - (cols.length * (barWidth + barGap) - barGap)) / 2;
-    cols.forEach((col, ci) => {
-      const v = col.values[gi];
+    const groupX = gi * groupWidth + (groupWidth - (series.length * (barWidth + barGap) - barGap)) / 2;
+    series.forEach((s, ci) => {
+      const v = s.values[gi];
       if (v == null) return;
       const x = groupX + ci * (barWidth + barGap);
       const y = yOf(v);
       const rect = svgEl('rect', {
-        class: 'bar', x, y, width: barWidth, height: Math.max(0, innerH - y),
-        fill: COLORWAY[ci % COLORWAY.length]
+        class: s.total ? 'bar bar-total' : 'bar',
+        x, y, width: barWidth, height: Math.max(0, innerH - y)
       });
-      rect.addEventListener('mouseenter', e => showTip(e, col.name, structure, v));
+      if (!s.total) rect.setAttribute('fill', s.color);
+      rect.addEventListener('mouseenter', e => showTip(e, s, structure, v));
       rect.addEventListener('mousemove', moveTip);
       rect.addEventListener('mouseleave', hideTip);
-      rect.addEventListener('touchstart', e => showTip(e, col.name, structure, v), { passive: true });
+      rect.addEventListener('touchstart', e => showTip(e, s, structure, v), { passive: true });
       plot.appendChild(rect);
     });
 
@@ -411,7 +482,7 @@ let resizeTimer;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
-    if (!panes.chart.classList.contains('hidden')) renderChart(currentCols);
+    if (!panes.chart.classList.contains('hidden')) renderChart(currentSeries);
   }, 150);
 });
 
@@ -471,23 +542,35 @@ dropdown.addEventListener('change', () => {
   renderDensityTable(dropdown.value);
 });
 
+// Chart detail: one bar per sub-type, or a single summed total per structure.
+const modeGroup = document.getElementById('mode-group');
+modeGroup.querySelectorAll('[data-mode]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    modeGroup.querySelectorAll('[data-mode]').forEach(b =>
+      b.classList.toggle('active', b === btn));
+    chartMode = btn.dataset.mode;
+    updateGraph(dropdown.value);
+  });
+});
+
 // Sub-tab switching: Chart | Density Table | Receptor Types.
-// The receptor dropdown applies to the chart and the density table;
-// the types table is a fixed reference, so the dropdown hides there.
+// The receptor dropdown applies to the chart and the density table; the types
+// table is a fixed reference, and the detail buttons only govern the chart.
 const panes = {
   chart: document.getElementById('chart-pane'),
   density: document.getElementById('density-table'),
   types: document.getElementById('types-table')
 };
-document.querySelectorAll('.sub-btn').forEach(btn => {
+document.querySelectorAll('[data-tab]').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.sub-btn').forEach(b =>
+    document.querySelectorAll('[data-tab]').forEach(b =>
       b.classList.toggle('active', b === btn));
     const tab = btn.dataset.tab;
     for (const [name, pane] of Object.entries(panes))
       pane.classList.toggle('hidden', name !== tab);
-    dropdown.classList.toggle('hidden', tab === 'types');
-    if (tab === 'chart') renderChart(currentCols);
+    dropdown.parentElement.classList.toggle('hidden', tab === 'types');
+    modeGroup.classList.toggle('hidden', tab !== 'chart');
+    if (tab === 'chart') renderChart(currentSeries);
   });
 });
 

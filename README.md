@@ -6,7 +6,7 @@ Mapping the Brain with our open-source app. At the moment, we are mapping the re
 The website is fully static — no server needed. It lives in the `site/` folder:
 
 - `site/index.html` — Region Atlas, the homepage: interactive MRI brain map that highlights AAL-116 regions on the MNI152 template, in the browser.
-- `site/receptors.html` — Receptor Density viewer: pick a receptor family from the dropdown and the grouped bar chart shows the density of each receptor sub-type across brain structures.
+- `site/receptors.html` — Receptor Density viewer: pick a receptor family from the dropdown and read it as a chart, as a table of measured density ranges, or against the full receptor-type reference. The chart shows either one bar per receptor sub-type or a single summed total per brain structure.
 
 To preview locally, just open either file in a browser.
 
