@@ -313,15 +313,17 @@ const RECEPTORS = [
   'Somatostatin'
 ];
 
-// Bright, low-saturation fills that sit behind an ink outline. Generated in
-// OKLCH at a fixed chroma (0.078) and two alternating lightnesses, so no
-// sub-type shouts louder than another, and ordered so consecutive series land
-// far apart on the hue wheel. Legible on paper and on ink alike.
+// Bright, low-saturation fills that sit behind an ink outline, running in the
+// familiar order: red, yellow, green, light blue, purple, orange, and on.
+// Generated in OKLCH at one lightness and one chroma, so mostly only the hue
+// changes down the list and no sub-type shouts louder than another; yellow
+// alone is given a little more of both, since a desaturated yellow reads as
+// khaki. Legible on paper and on ink alike.
 const COLORWAY = [
-  '#B7D0FE', '#E2B18A', '#93DDF1', '#EAA8AC',
-  '#9AE1C9', '#D9AAD5', '#C2D9A2', '#B6B6ED',
-  '#E9CB95', '#8DC4E9', '#FEBEAC', '#7DCCCB',
-  '#F9BBD5', '#99CBA1', '#DDC3F8', '#C4BF84'
+  '#FEBDB4', '#EBD97C', '#AADFB0', '#9CD8FE',
+  '#E1C0FA', '#F8C396', '#89E1E1', '#FCB9D5',
+  '#B9CFFF', '#BFDB9F', '#FEBFA6', '#8CDEF2',
+  '#F0BCEA', '#97E2C5', '#CCC8FF', '#E9CC8F'
 ];
 
 // Mirror of BrainMapping.ReceptorFilter: keep the columns whose name
