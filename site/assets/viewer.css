@@ -77,3 +77,12 @@ select{
   font-family:var(--font-brand); font-size:.92rem; padding:.55rem 1.8rem .5rem .6rem;
   cursor:pointer;
 }
+
+/* the view-switch button, used in title strips, rails and viewport rules */
+.ts-btn{
+  border:1px solid var(--hair); background:var(--paper); color:var(--ink);
+  font-family:var(--font-brand); font-weight:500; font-size:.62rem;
+  letter-spacing:.2em; text-transform:uppercase; cursor:pointer;
+  padding:.5rem .7rem .42rem; text-decoration:none; line-height:1;
+}
+.ts-btn:hover, .ts-btn.active{ background:var(--ink); color:var(--paper); }

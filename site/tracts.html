@@ -107,16 +107,20 @@ svg{ display:block; }
 }
 .title-strip .ts-views{ margin-left:auto; display:flex; gap:.4rem; flex-wrap:wrap; }
 
-/* ── the tractogram stage: one tall viewport ── */
-.tract-view .mri-stage{ height:clamp(360px,64vh,820px); }
-.tract-tools{ gap:.36rem .9rem; }
-.tract-tools .spacer{ margin-left:auto; }
-.btn-pair{ display:inline-flex; gap:.4rem; }
-.slider-wrap{ display:flex; align-items:center; gap:.5rem; }
-.slider-wrap input[type=range]{ width:clamp(80px,10vw,140px); accent-color:var(--ink); }
+/* ── the rail's inputs ── */
+.rail-row{ display:flex; align-items:center; gap:.5rem; margin:.5rem 0; }
+.rail-row .tool-label{ flex:none; }
+.rail input[type=range]{ flex:1; min-width:0; accent-color:var(--ink); }
+.rail .mode-group{ display:flex; gap:.4rem; }
+.rail .mode-group .ts-btn{ flex:1; text-align:center; }
+.btn-wide{ width:100%; text-align:center; margin-top:.35rem; }
 .slider-val{
   font-family:var(--font-brand); font-size:.6rem; letter-spacing:.1em;
-  font-variant-numeric:tabular-nums; color:var(--ink-60); min-width:2.6rem;
+  font-variant-numeric:tabular-nums; color:var(--ink-60); min-width:2.9rem; text-align:right;
+}
+.rail-note{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.8rem; color:var(--ink-60); margin:.6rem 0 0;
 }
 
 /* loading and failure states, drawn over the black stage */
@@ -144,7 +148,8 @@ svg{ display:block; }
 .progress i{ display:block; height:100%; width:0%; background:#FFFFFF; }
 
 /* ── the caption and credits below ── */
-.prose{ max-width:44rem; margin-top:var(--gap); }
+.below{ margin-top:var(--gap); }
+.prose{ max-width:44rem; }
 .prose h2{
   font-family:var(--font-brand); font-weight:600; font-size:.66rem;
   letter-spacing:.3em; text-transform:uppercase; color:var(--ink);
@@ -189,35 +194,85 @@ svg{ display:block; }
     </div>
   </div>
 
-  <div class="view tract-view">
-    <div class="view-cap"><b>Whole brain</b><span>diffusion MRI fibre tracking</span></div>
-    <div class="view-tools tract-tools">
-      <span class="tool-label">Colour</span>
-      <span class="btn-pair" role="group" aria-label="Streamline colour">
-        <button class="ts-btn active" data-colour="Local" type="button" title="Colour each segment by the direction it runs">Direction</button>
-        <button class="ts-btn" data-colour="accent" type="button" title="A single accent colour">Single</button>
-      </span>
-      <span class="slider-wrap">
-        <span class="tool-label">Thickness</span>
-        <input type="range" id="radius" min="0.05" max="0.9" step="0.05" value="0.3" aria-label="Streamline thickness">
-        <span class="slider-val" id="radiusVal">0.30</span>
-      </span>
-      <span class="slider-wrap spacer">
-        <span class="tool-label">Zoom</span>
-        <input type="range" id="zoom" min="0.4" max="2.4" step="0.05" value="1.4" aria-label="Zoom">
-        <span class="slider-val" id="zoomVal">1.40&times;</span>
-      </span>
-    </div>
-    <div class="mri-stage">
-      <canvas id="glTract"></canvas>
-      <div class="stage-msg" id="stageMsg">
-        <span class="caps" id="msgTitle">Loading the tractogram</span>
-        <div class="progress"><i id="msgBar"></i></div>
-        <p id="msgText">Several megabytes of streamlines are on their way.</p>
+  <div class="studio">
+
+    <aside class="rail" aria-label="Controls">
+      <h2 class="sec-h">Tracts <small>how to draw them</small></h2>
+
+      <div class="card">
+        <h2>Streamlines</h2>
+        <div class="mode-group" role="group" aria-label="Streamline colour">
+          <button class="ts-btn active" data-colour="Local" type="button" title="Colour each segment by the direction it runs">Direction</button>
+          <button class="ts-btn" data-colour="accent" type="button" title="A single accent colour">Single</button>
+        </div>
+        <div class="rail-row">
+          <span class="tool-label">Thick</span>
+          <input type="range" id="radius" min="0.05" max="0.9" step="0.05" value="0.3" aria-label="Streamline thickness">
+          <span class="slider-val" id="radiusVal">0.30</span>
+        </div>
+        <div class="rail-row">
+          <span class="tool-label">Zoom</span>
+          <input type="range" id="zoom" min="0.4" max="2.4" step="0.05" value="1.4" aria-label="Zoom">
+          <span class="slider-val" id="zoomVal">1.40&times;</span>
+        </div>
       </div>
-    </div>
+
+      <div class="card">
+        <h2>Section</h2>
+        <p class="rail-note">Cut the tractogram open along a plane, to see the fibres inside it.</p>
+        <div class="mode-group" role="group" aria-label="Cut plane">
+          <button class="ts-btn active" data-cut="none" type="button">Whole</button>
+          <button class="ts-btn" data-cut="x" type="button">Sagittal</button>
+          <button class="ts-btn" data-cut="y" type="button">Coronal</button>
+          <button class="ts-btn" data-cut="z" type="button">Axial</button>
+        </div>
+        <div class="rail-row">
+          <span class="tool-label">Depth</span>
+          <input type="range" id="cutDepth" min="-0.5" max="0.5" step="0.01" value="0" aria-label="Cut depth" disabled>
+          <span class="slider-val" id="cutVal">&mdash;</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Anatomy</h2>
+        <div class="mode-group" role="group" aria-label="Anatomy in the 3D view">
+          <button class="ts-btn" data-scan="on" type="button">In 3D</button>
+          <button class="ts-btn active" data-scan="off" type="button">Fibres only</button>
+        </div>
+        <button class="btn-wide ts-btn" id="resetBtn" type="button">Reset view</button>
+        <button class="btn-wide ts-btn active" id="spinBtn" type="button" aria-pressed="true">Auto-rotate</button>
+        <p class="rail-note">The three planes always show the MNI152 template with the fibres running through it. The 3D box holds the tractogram alone unless you bring the anatomy in.</p>
+      </div>
+    </aside>
+
+    <section class="centre" aria-label="Tractogram viewports">
+      <div class="views">
+      <div class="view" data-box="Ax">
+        <div class="view-cap"><b>Axial</b><span>transverse plane</span></div>
+        <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Ax" role="group" aria-label="Axial drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Horizontal only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Vertical only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="Ax" type="button">Centre planes</button></div>
+        <div class="mri-stage"><canvas id="tkAx"></canvas></div>
+      </div>
+      <div class="view" data-box="Cor">
+        <div class="view-cap"><b>Coronal</b><span>frontal plane</span></div>
+        <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Cor" role="group" aria-label="Coronal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Horizontal only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Vertical only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="Cor" type="button">Centre planes</button></div>
+        <div class="mri-stage"><canvas id="tkCor"></canvas></div>
+      </div>
+      <div class="view" data-box="Sag">
+        <div class="view-cap"><b>Sagittal</b><span>median plane</span></div>
+        <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Sag" role="group" aria-label="Sagittal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Horizontal only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Vertical only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="Sag" type="button">Centre planes</button></div>
+        <div class="mri-stage"><canvas id="tkSag"></canvas></div>
+      </div>
+      <div class="view" data-box="Ren">
+        <div class="view-cap"><b>3D</b><span>whole tractogram</span></div>
+        <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Ren" role="group" aria-label="3D drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Horizontal only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Vertical only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="Ren" type="button">Centre planes</button></div>
+        <div class="mri-stage"><canvas id="tkRen"></canvas><div class="stage-msg" id="stageMsg"><span class="caps" id="msgTitle">Loading the tractogram</span><div class="progress"><i id="msgBar"></i></div><p id="msgText">Several megabytes of streamlines are on their way.</p></div></div>
+      </div>
+      </div>
+    </section>
+
   </div>
 
+  <section class="below">
   <section class="prose">
     <h2>What you are looking at</h2>
     <p>A <em>tractogram</em> is a reconstruction of the brain's wiring, built from diffusion MRI: the scanner measures which way water molecules are free to move in each voxel, and since water travels more easily along a nerve fibre than across it, those measurements trace out the paths that bundles of axons follow. Each thread here is a <em>streamline</em>, an estimate of one such path through the white matter.</p>
@@ -234,6 +289,7 @@ svg{ display:block; }
     <p>Tractography: HCP1065 atlas, Yeh FC, <em>Nat Commun</em> 13:4933 (2022), CC BY-SA 4.0.</p>
     <p>Data were provided in part by the Human Connectome Project, WU-Minn Consortium (Principal Investigators: David Van Essen and Kamil Ugurbil; 1U54MH091657) funded by the 16 NIH Institutes and Centers that support the NIH Blueprint for Neuroscience Research; and by the McDonnell Center for Systems Neuroscience at Washington University.</p>
   </section>
+  </section>
 
 </main>
 
@@ -244,13 +300,12 @@ svg{ display:block; }
   /* .trx is what ships; a rebuild from the published atlas writes .trk,
      so accept either rather than breaking on the file that is there. */
   var TRACT_URLS = ["assets/tracts/hcp1065.trx", "assets/tracts/hcp1065.trk"];
-  var ACCENT = [0.93, 0.62, 0.42, 1.0];   /* a warm single colour, for the plain view */
+  var ACCENT = [237, 158, 107, 255];   /* a warm single colour, for the plain view */
 
   var stageMsg = document.getElementById("stageMsg");
   var msgTitle = document.getElementById("msgTitle");
   var msgText = document.getElementById("msgText");
   var msgBar = document.getElementById("msgBar");
-  var canvas = document.getElementById("glTract");
 
   function showMessage(title, text, withBar){
     msgTitle.textContent = title;
@@ -286,11 +341,18 @@ svg{ display:block; }
     });
   }
 
+  function b64ToUrl(b64){
+    var bin = atob(b64);
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return URL.createObjectURL(new Blob([bytes], {type: "application/gzip"}));
+  }
+
   /* Fetch the streamlines ourselves so the wait can be reported: the viewer's
      own loader gives no progress, and this is a multi-megabyte file. */
   function fetchWithProgress(url){
     return fetch(url).then(function(res){
-      if (!res.ok) { var e = new Error("HTTP " + res.status); e.status = res.status; throw e; }
+      if (!res.ok){ var e = new Error("HTTP " + res.status); e.status = res.status; throw e; }
       var total = Number(res.headers.get("content-length")) || 0;
       if (!res.body || !total) return res.arrayBuffer();
       var reader = res.body.getReader();
@@ -313,17 +375,110 @@ svg{ display:block; }
     });
   }
 
-  var nv = null, meshId = null, colourMode = "Local";
+  /* ── four viewports, as on the other pages ── */
+  var PLANES = [
+    {key:"Ax",  canvasId:"tkAx",  st:"AXIAL"},
+    {key:"Cor", canvasId:"tkCor", st:"CORONAL"},
+    {key:"Sag", canvasId:"tkSag", st:"SAGITTAL"},
+    {key:"Ren", canvasId:"tkRen", st:"RENDER"}
+  ];
+  var byKey = {}, instances = [], meshIds = {};
+  var colourMode = "Local", scanShown = true;
 
-  /* ── idle rotation: turns slowly, yields the moment anyone takes hold ── */
-  var spinning = true, lastTouch = 0, rafId = null;
+  /* ── direction locks and centring, as on the other pages ── */
+  var LOCK_AXIS = {x:0, y:1, z:2};
+  var locks = {Ax:"free", Cor:"free", Sag:"free", Ren:"free"};
+  var anchor = null, camAnchor = null, dragBox = null, correcting = false;
+
+  function wireViewControls(){
+    document.querySelectorAll(".seg[data-lock-for]").forEach(function(seg){
+      var key = seg.getAttribute("data-lock-for");
+      seg.querySelectorAll("[data-lock]").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          seg.querySelectorAll("[data-lock]").forEach(function(b){
+            b.classList.toggle("active", b === btn);
+          });
+          locks[key] = btn.getAttribute("data-lock");
+        });
+      });
+    });
+    document.querySelectorAll("[data-centre]").forEach(function(btn){
+      btn.addEventListener("click", centrePlanes);
+    });
+    document.querySelectorAll(".view[data-box]").forEach(function(box){
+      var key = box.getAttribute("data-box");
+      var stage = box.querySelector(".mri-stage");
+      stage.addEventListener("pointerdown", function(){
+        var nv = byKey[key];
+        if (!nv) return;
+        dragBox = key;
+        anchor = nv.scene.crosshairPos.slice();
+        camAnchor = {az: nv.scene.renderAzimuth, el: nv.scene.renderElevation};
+      });
+      /* The wheel belongs to the page, as everywhere else on the site. */
+      stage.addEventListener("wheel", function(e){ e.stopPropagation(); }, true);
+    });
+    ["pointerup", "pointercancel"].forEach(function(evt){
+      window.addEventListener(evt, function(){ anchor = null; camAnchor = null; dragBox = null; });
+    });
+    Object.keys(byKey).forEach(function(key){
+      if (key === "Ren") byKey[key].onAzimuthElevationChange = lockCamera;
+      else byKey[key].onLocationChange = function(){ applyLock(key); };
+    });
+  }
+
+  /* Only the box the drag began in may impose its lock: the boxes broadcast
+     crosshair moves to each other, so otherwise one would constrain them all. */
+  function applyLock(key){
+    var free = locks[key], nv = byKey[key];
+    if (correcting || key !== dragBox || free === "free" || !nv || !anchor) return;
+    var idx = LOCK_AXIS[free];
+    var pos = nv.scene.crosshairPos;
+    var held = anchor.slice();
+    held[idx] = pos[idx];
+    if (held[0] === pos[0] && held[1] === pos[1] && held[2] === pos[2]) return;
+    correcting = true;
+    try{
+      instances.forEach(function(inst){ inst.scene.crosshairPos = held.slice(); inst.drawScene(); });
+    } catch(e){}
+    finally{ correcting = false; }
+  }
+
+  function lockCamera(){
+    var free = locks.Ren, nv = byKey.Ren;
+    if (correcting || dragBox !== "Ren" || free === "free" || !nv || !camAnchor) return;
+    correcting = true;
+    try{
+      if (free === "x") nv.scene.renderElevation = camAnchor.el;
+      else nv.scene.renderAzimuth = camAnchor.az;
+      nv.drawScene();
+    } catch(e){}
+    finally{ correcting = false; }
+  }
+
+  function centrePlanes(){
+    if (!instances.length) return;
+    correcting = true;
+    try{
+      instances.forEach(function(inst){
+        inst.scene.crosshairPos = [0.5, 0.5, 0.5];
+        inst.scene.pan2Dxyzmm = [0, 0, 0, 1];
+        inst.drawScene();
+      });
+    } catch(e){}
+    finally{ correcting = false; }
+  }
+
+  /* ── idle rotation of the 3D box ── */
+  var spinning = true, lastTouch = 0;
   var IDLE_MS = 2500, DEG_PER_SEC = 6;
   var spinBtn = document.getElementById("spinBtn");
 
   function tick(now){
-    rafId = requestAnimationFrame(tick);
+    requestAnimationFrame(tick);
+    var nv = byKey.Ren;
     if (!nv || !spinning) return;
-    if (now - lastTouch < IDLE_MS) return;          /* someone is interacting */
+    if (now - lastTouch < IDLE_MS) return;
     if (tick.prev === undefined) tick.prev = now;
     var dt = Math.min(now - tick.prev, 100) / 1000;
     tick.prev = now;
@@ -331,9 +486,6 @@ svg{ display:block; }
     nv.drawScene();
   }
   function touched(){ lastTouch = performance.now(); tick.prev = undefined; }
-  ["pointerdown", "pointermove", "wheel"].forEach(function(evt){
-    canvas.addEventListener(evt, touched, { passive: true });
-  });
   spinBtn.addEventListener("click", function(){
     spinning = !spinning;
     spinBtn.classList.toggle("active", spinning);
@@ -341,110 +493,179 @@ svg{ display:block; }
     tick.prev = undefined;
   });
 
-  /* The page owns the wheel, as it does on the other pages; hold shift to
-     zoom the brain instead. */
+  /* ── the rail's controls ── */
   var zoomEl = document.getElementById("zoom");
   var zoomVal = document.getElementById("zoomVal");
   function applyZoom(v){
     zoomVal.textContent = Number(v).toFixed(2) + "×";
-    if (!nv) return;
-    nv.scene.volScaleMultiplier = Number(v);
-    nv.drawScene();
+    if (!byKey.Ren) return;
+    byKey.Ren.scene.volScaleMultiplier = Number(v);
+    byKey.Ren.drawScene();
   }
   zoomEl.addEventListener("input", function(){ applyZoom(zoomEl.value); });
-  canvas.parentElement.addEventListener("wheel", function(e){
-    if (!e.shiftKey){ e.stopPropagation(); return; }   /* let the page scroll */
-    e.preventDefault();
-    e.stopPropagation();
-    /* inverted, to match the convention the atlas viewer was built on:
-       scrolling down draws the brain closer */
-    var next = Number(zoomEl.value) + (e.deltaY > 0 ? 0.06 : -0.06);
-    next = Math.min(Number(zoomEl.max), Math.max(Number(zoomEl.min), next));
-    zoomEl.value = next;
-    applyZoom(next);
-  }, true);
 
-  document.getElementById("resetBtn").addEventListener("click", function(){
-    if (!nv) return;
-    nv.scene.renderAzimuth = 120;
-    nv.scene.renderElevation = 15;
-    zoomEl.value = 1.4;
-    applyZoom(1.4);
-  });
-
-  /* ── streamline appearance ── */
   var radiusEl = document.getElementById("radius");
   var radiusVal = document.getElementById("radiusVal");
   function applyRadius(v){
     radiusVal.textContent = Number(v).toFixed(2);
-    if (nv && meshId !== null) nv.setMeshProperty(meshId, "fiberRadius", Number(v));
+    instances.forEach(function(nv){
+      if (meshIds[nv.canvas.id] !== undefined) nv.setMeshProperty(meshIds[nv.canvas.id], "fiberRadius", Number(v));
+    });
   }
   radiusEl.addEventListener("input", function(){ applyRadius(radiusEl.value); });
 
   document.querySelectorAll("[data-colour]").forEach(function(btn){
     btn.addEventListener("click", function(){
-      document.querySelectorAll("[data-colour]").forEach(function(b){
-        b.classList.toggle("active", b === btn);
+      document.querySelectorAll("[data-colour]").forEach(function(b){ b.classList.toggle("active", b === btn); });
+      colourMode = btn.getAttribute("data-colour");
+      instances.forEach(function(nv){
+        var id = meshIds[nv.canvas.id];
+        if (id === undefined) return;
+        if (colourMode === "accent"){
+          nv.setMeshProperty(id, "fiberColor", "Fixed");
+          nv.setMeshProperty(id, "rgba255", ACCENT);
+        } else {
+          nv.setMeshProperty(id, "fiberColor", "Local");
+        }
+        nv.drawScene();
       });
-      colourMode = btn.dataset.colour;
-      if (!nv || meshId === null) return;
-      if (colourMode === "accent"){
-        /* a fixed colour reads the shape rather than the orientation */
-        nv.setMeshProperty(meshId, "fiberColor", "Fixed");
-        nv.setMeshProperty(meshId, "colormap", "");
-        nv.setMeshProperty(meshId, "rgba255", ACCENT.map(function(c){ return Math.round(c * 255); }));
-      } else {
-        nv.setMeshProperty(meshId, "fiberColor", "Local");
-      }
-      nv.drawScene();
     });
+  });
+
+  /* the anatomy underneath can be taken away, leaving the fibres alone */
+  document.querySelectorAll("[data-scan]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      document.querySelectorAll("[data-scan]").forEach(function(b){ b.classList.toggle("active", b === btn); });
+      scanShown = btn.getAttribute("data-scan") === "on";
+      var nv = byKey.Ren;
+      if (nv && nv.volumes && nv.volumes.length){
+        nv.setOpacity(0, scanShown ? 0.6 : 0);
+        nv.drawScene();
+      }
+    });
+  });
+
+  /* ── sectioning: a clip plane through the 3D view ── */
+  var cutAxis = "none";
+  var cutDepth = document.getElementById("cutDepth");
+  var cutVal = document.getElementById("cutVal");
+  /* NiiVue takes [depth, azimuth, elevation]; these angles face the plane
+     down each anatomical axis in turn. */
+  var CUT_ANGLES = { x: [0, 0], y: [90, 0], z: [0, 90] };
+
+  function applyCut(){
+    var nv = byKey.Ren;
+    if (!nv) return;
+    if (cutAxis === "none"){
+      nv.setClipPlane([2, 0, 0]);             /* depth beyond the volume = no cut */
+      cutVal.textContent = "—";
+      cutDepth.disabled = true;
+    } else {
+      var a = CUT_ANGLES[cutAxis];
+      nv.setClipPlane([Number(cutDepth.value), a[0], a[1]]);
+      cutVal.textContent = Number(cutDepth.value).toFixed(2);
+      cutDepth.disabled = false;
+    }
+    nv.drawScene();
+  }
+  document.querySelectorAll("[data-cut]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      document.querySelectorAll("[data-cut]").forEach(function(b){ b.classList.toggle("active", b === btn); });
+      cutAxis = btn.getAttribute("data-cut");
+      applyCut();
+    });
+  });
+  cutDepth.addEventListener("input", applyCut);
+
+  document.getElementById("resetBtn").addEventListener("click", function(){
+    if (!byKey.Ren) return;
+    byKey.Ren.scene.renderAzimuth = 120;
+    byKey.Ren.scene.renderElevation = 15;
+    zoomEl.value = 1.4;
+    applyZoom(1.4);
+    centrePlanes();
   });
 
   async function boot(){
     try{
       showMessage("Loading the viewer", "Fetching the rendering library.", true);
       if (typeof niivue === "undefined") await loadScript("assets/niivue.js");
+      if (typeof MN_ATLAS === "undefined") await loadScript("assets/atlas-data.js");
 
       showMessage("Loading the tractogram", "Several megabytes of streamlines are on their way.", true);
       var url = null, buffer = null, lastErr = null;
       for (var i = 0; i < TRACT_URLS.length; i++){
         try { buffer = await fetchWithProgress(TRACT_URLS[i]); url = TRACT_URLS[i]; break; }
-        catch (e) { lastErr = e; }
+        catch (e){ lastErr = e; }
       }
       if (!buffer) throw lastErr || new Error("no tractogram found");
 
-      nv = new niivue.Niivue({
-        backColor: [0.0667, 0.0667, 0.0667, 1],   /* ink #111111, as the other viewports */
-        show3Dcrosshair: false,
-        isColorbar: false,
-        dragAndDropEnabled: false,
-        invertScrollDirection: true,
-        textHeight: 0.0
+      showMessage("Drawing", "Placing the streamlines against the anatomy.", false);
+      var tplUrl = b64ToUrl(MN_ATLAS.TPL_B64);
+
+      for (var p = 0; p < PLANES.length; p++){
+        var plane = PLANES[p];
+        var nv = new niivue.Niivue({
+          backColor: [0.0667, 0.0667, 0.0667, 1],
+          crosshairColor: [1, 1, 1, 1],
+          show3Dcrosshair: false,
+          isColorbar: false,
+          dragAndDropEnabled: false,
+          invertScrollDirection: true,
+          sliceType: niivue.SLICE_TYPE[plane.st],
+          /* the cut plane itself is a faint pane of glass, not a magenta slab */
+          clipPlaneColor: [1, 1, 1, 0.04],
+          textHeight: 0.04
+        });
+        await nv.attachToCanvas(document.getElementById(plane.canvasId));
+        byKey[plane.key] = nv;
+        instances.push(nv);
+      }
+
+      /* anatomy first so the streamlines are drawn through it */
+      await Promise.all(instances.map(function(nv){
+        return nv.loadVolumes([{url: tplUrl, name: "mni152.nii.gz", colormap: "gray", opacity: 1}]);
+      }));
+      await Promise.all(instances.map(function(nv){
+        return nv.addMeshFromUrl({url: url, buffer: buffer.slice(0)});
+      }));
+
+      PLANES.forEach(function(plane){
+        var nv = byKey[plane.key];
+        nv.setSliceType(niivue.SLICE_TYPE[plane.st]);
+        if (plane.key === "Ren") nv.setOpacity(0, 0);   /* fibres, not a grey shell */
+        if (nv.meshes && nv.meshes.length){
+          meshIds[nv.canvas.id] = nv.meshes[0].id;
+          nv.setMeshProperty(nv.meshes[0].id, "fiberColor", "Local");
+          nv.setMeshProperty(nv.meshes[0].id, "fiberDither", 0.1);
+        }
       });
-      await nv.attachToCanvas(canvas);
-      nv.setSliceType(niivue.SLICE_TYPE.RENDER);
+      instances.forEach(function(nv){
+        nv.broadcastTo(instances.filter(function(o){ return o !== nv; }), {"2d": true, "3d": true});
+      });
 
-      await nv.addMeshFromUrl({ url: url, buffer: buffer });
-      if (!nv.meshes || !nv.meshes.length) throw new Error("the file held no streamlines");
-      meshId = nv.meshes[0].id;
+      wireViewControls();
+      document.querySelectorAll(".mri-stage").forEach(function(stage){
+        ["pointerdown", "pointermove", "wheel"].forEach(function(evt){
+          stage.addEventListener(evt, touched, {passive: true});
+        });
+      });
 
-      nv.setMeshProperty(meshId, "fiberColor", "Local");
-      nv.setMeshProperty(meshId, "fiberDither", 0.1);   /* a little scatter reads as dense, not stripey */
       applyRadius(radiusEl.value);
-      nv.scene.renderAzimuth = 120;
-      nv.scene.renderElevation = 15;
+      byKey.Ren.scene.renderAzimuth = 120;
+      byKey.Ren.scene.renderElevation = 15;
       applyZoom(zoomEl.value);
-      nv.drawScene();
+      applyCut();
+      instances.forEach(function(nv){ nv.drawScene(); });
 
       hideMessage();
-      rafId = requestAnimationFrame(tick);
+      requestAnimationFrame(tick);
     } catch (err){
       var missing = err && (err.status === 404 || /HTTP 40/.test(err.message || ""));
       if (missing){
         showMessage("Tractogram not installed",
           "This page expects <code>site/assets/tracts/hcp1065.trx</code> (or <code>.trk</code>). " +
-          "Build it from the published atlas with " +
-          "<code>python3 scripts/make_tractogram.py --input &lt;atlas&gt;</code> " +
+          "Build it with <code>python3 scripts/make_tractogram.py --input &lt;atlas&gt;</code> " +
           "— see <code>scripts/README.md</code>.", false);
       } else {
         showMessage("The tractogram could not be shown",
