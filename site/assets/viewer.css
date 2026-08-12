@@ -86,3 +86,35 @@ select{
   padding:.5rem .7rem .42rem; text-decoration:none; line-height:1;
 }
 .ts-btn:hover, .ts-btn.active{ background:var(--ink); color:var(--paper); }
+
+/* ── narrow screens ──────────────────────────────────────────────────────
+   A 300px rail beside the viewports needs a wide window. Below that the
+   studio becomes one column with the viewports still on top, and the rail
+   reads as a row of cards beneath them. */
+@media (max-width:1100px){
+  .studio{ grid-template-columns:1fr; }
+  .centre{ order:-1; }
+  .title-strip .ts-views{ margin-left:0; width:100%; }
+  .rail{ display:grid; grid-template-columns:1fr 1fr; align-items:start; }
+  .rail .sec-h{ grid-column:1 / -1; }
+}
+@media (max-width:760px){
+  .rail{ grid-template-columns:1fr; }
+  /* On a phone each viewport is most of a screen, so leading with them would
+     bury the controls. Here the rail comes first and the brain follows. */
+  .centre{ order:0; }
+  /* keep the boxes two-up: stacking all four puts the controls a screen and
+     a half below the fold. The chrome sheds its wordier parts to fit. */
+  .views{ grid-template-columns:1fr 1fr; }
+  .mri-stage{ height:clamp(150px,38vw,240px); }
+  .view-cap{ padding:.45rem .55rem .35rem; }
+  .view-cap span{ display:none; }
+  .view-tools{ padding:.3rem .5rem; gap:.3rem; }
+  .view-tools .tool-label{ display:none; }
+  .centre-btn{ margin-left:auto; height:1.6rem; padding:0 .45rem; font-size:.5rem; }
+  .seg-btn{ width:1.6rem; height:1.6rem; }
+}
+@media (max-width:430px){
+  .views{ grid-template-columns:1fr; }
+  .mri-stage{ height:clamp(190px,54vw,280px); }
+}
