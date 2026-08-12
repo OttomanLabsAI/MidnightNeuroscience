@@ -241,29 +241,23 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
   .data-table .cell-empty { color: var(--ink-35); font-weight: 400; cursor: help; }
   .table-note { margin-top: 14px; color: var(--ink-60); font-style: italic; }
 
-  /* the scan: the Region Atlas viewports, in a row beneath the chart */
-  .scan-head {
-    display: flex; flex-wrap: wrap; justify-content: space-between;
-    align-items: baseline; gap: .35rem .8rem; margin: var(--gap) 0 .5rem;
-  }
-  .scan-head b {
-    font-family: var(--font-brand); font-weight: 600; font-size: .66rem;
-    letter-spacing: .3em; text-transform: uppercase;
-  }
-  .scan-head .scan-where {
+  /* the rail's inputs, stacked to the card's width */
+  .rail-select { margin: .55rem 0; }
+  .rail .mode-group { display: flex; gap: .4rem; }
+  .rail .mode-group .ts-btn { flex: 1; text-align: center; }
+  .btn-wide { width: 100%; text-align: center; margin-top: .3rem; }
+  .card .scan-where {
     font-family: var(--font-serif); font-style: italic;
-    font-size: .88rem; color: var(--ink-60);
+    font-size: .92rem; line-height: 1.45; color: var(--ink-60); margin: 0;
   }
-  /* the same two-up grid and stage proportions as the atlas */
-  .scan-views {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: var(--gap); min-width: 0;
+  .card .scan-where.named { font-style: normal; color: var(--ink); font-weight: 600; }
+  .card .scan-note {
+    font-family: var(--font-serif); font-style: italic;
+    font-size: .78rem; color: var(--ink-60); margin: .7rem 0 0;
   }
-  .scan-note {
-    margin-top: .6rem; font-family: var(--font-serif); font-style: italic;
-    font-size: .88rem; color: var(--ink-60);
-  }
-  @media (max-width: 1100px) { .scan-views { grid-template-columns: 1fr; } }
+
+  /* the graphs sit below the brain, full width */
+  .below { margin-top: var(--gap); }
 
   /* a structure label that can be clicked through to the scan */
   #receptor-graph .x-label.pickable { cursor: pointer; }
@@ -298,31 +292,36 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
   </div>
 </div>
 
-<div class="controls">
-  <div class="selwrap">
-    <select id="structure-dropdown" aria-label="Receptor family"></select>
-  </div>
-  <div class="mode-group" id="axis-group" role="group" aria-label="Chart axis">
-    <span class="mode-label">View</span>
-    <button class="ts-btn active" data-axis="structure" type="button">By Receptor</button>
-    <button class="ts-btn" data-axis="region" type="button">By Region</button>
-  </div>
-  <div class="mode-group" id="mode-group" role="group" aria-label="Chart detail">
-    <span class="mode-label">Show</span>
-    <button class="ts-btn active" data-mode="subtype" type="button">By Sub-type</button>
-    <button class="ts-btn" data-mode="total" type="button">Total</button>
-  </div>
-</div>
+<div class="studio">
 
-<div id="chart-pane">
-  <div id="receptor-graph"></div>
-  <div id="chart-legend" class="legend"></div>
-  <div class="scan-panel" id="scan-panel">
-    <div class="scan-head">
-      <b>On the scan</b>
-      <span class="scan-where" id="scan-where">Click a brain structure on the chart to see it highlighted</span>
+  <aside class="rail" aria-label="Controls">
+    <h2 class="sec-h">Receptors <small>what to plot</small></h2>
+
+    <div class="card">
+      <h2>Read the data</h2>
+      <div class="mode-group" id="axis-group" role="group" aria-label="Chart axis">
+        <button class="ts-btn active" data-axis="structure" type="button">By Receptor</button>
+        <button class="ts-btn" data-axis="region" type="button">By Region</button>
+      </div>
+      <div class="selwrap rail-select">
+        <select id="structure-dropdown" aria-label="Receptor family"></select>
+      </div>
+      <div class="mode-group" id="mode-group" role="group" aria-label="Chart detail">
+        <button class="ts-btn active" data-mode="subtype" type="button">By Sub-type</button>
+        <button class="ts-btn" data-mode="total" type="button">Total</button>
+      </div>
     </div>
-    <div class="scan-views hidden" id="scan-views">
+
+    <div class="card">
+      <h2>On the scan</h2>
+      <p class="scan-where" id="scan-where">Nothing highlighted yet &mdash; click a brain structure on the chart.</p>
+      <button class="btn-wide ts-btn" id="clearRegion" type="button">Clear</button>
+      <p class="scan-note" id="scan-note">MNI152 template &middot; AAL-116 parcellation</p>
+    </div>
+  </aside>
+
+  <section class="centre" aria-label="Brain viewports">
+<div class="views" id="scan-views">
       <div class="view" data-box="Ax">
         <div class="view-cap"><b>Axial</b><span>transverse plane</span></div>
         <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Ax" role="group" aria-label="Axial drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Horizontal only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Vertical only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="Ax" type="button">Centre planes</button></div>
@@ -344,10 +343,18 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
         <div class="mri-stage"><canvas id="rxRen"></canvas></div>
       </div>
     </div>
-    <p class="scan-note" id="scan-note">MNI152 template &middot; AAL-116 parcellation</p>
+      </section>
+
+</div>
+
+<section class="below">
+  <div id="chart-pane">
+    <div id="receptor-graph"></div>
+    <div id="chart-legend" class="legend"></div>
   </div>
 <div id="density-table" class="table-wrap hidden"></div>
 <div id="types-table" class="table-wrap hidden"></div>
+</section>
 
 </main>
 
@@ -805,6 +812,7 @@ document.querySelectorAll('[data-tab]').forEach(btn => {
     dropdown.parentElement.classList.toggle('inapplicable', tab === 'types');
     axisGroup.classList.toggle('inapplicable', tab === 'types');
     modeGroup.classList.toggle('inapplicable', tab !== 'chart');
+    scanViews.classList.remove('hidden');       /* the brain stays, whatever the tab */
     if (tab === 'chart') renderChart(currentChart);
   });
 });
@@ -862,8 +870,8 @@ function b64ToUrl(b64) {
   return URL.createObjectURL(new Blob([bytes], { type: 'application/gzip' }));
 }
 
-// The scans are several megabytes, so they are fetched the first time someone
-// actually asks for a structure rather than on every visit to the page.
+// The viewports are part of the page, so the scans load with it; the file is
+// several megabytes, so the panel says what it is doing meanwhile.
 async function ensureScan() {
   if (scanState === 'ready' || scanState === 'loading') return scanState === 'ready';
   scanState = 'loading';
@@ -900,6 +908,7 @@ async function ensureScan() {
       { url: atlasUrl, name: 'aal.nii.gz', opacity: 0.9 }
     ])));
     planes.forEach((p, i) => scanInstances[i].setSliceType(p.st));
+    paintRegion([]);   /* nothing picked yet: plain anatomy, no parcel colours */
     /* keep the crosshair and camera in step across the boxes, as the atlas does */
     scanInstances.forEach(nv => nv.broadcastTo(scanInstances.filter(o => o !== nv),
       { '2d': true, '3d': true }));
@@ -1044,12 +1053,23 @@ function centreOn(indices) {
   for (const inst of scanInstances) { inst.scene.crosshairPos = frac.slice(); inst.drawScene(); }
 }
 
+function clearStructure() {
+  shownStructure = null;
+  pendingStructure = null;
+  markPickedLabel();
+  scanWhere.textContent = 'Nothing highlighted yet — click a brain structure on the chart.';
+  scanWhere.classList.remove('named');
+  scanNote.textContent = 'MNI152 template · AAL-116 parcellation';
+  if (scanState === 'ready') paintRegion([]);
+}
+
 async function showStructure(structure) {
   const map = STRUCTURE_TO_AAL[structure];
   shownStructure = structure;
   markPickedLabel();
+  scanWhere.classList.add('named');
   if (!map || !map.bases.length) {
-    scanWhere.textContent = structure + ' — no matching region in this atlas';
+    scanWhere.textContent = structure;
     scanNote.textContent = 'AAL-116 does not parcellate this structure, so it cannot be drawn.';
     if (scanState === 'ready') paintRegion([]);
     return;
@@ -1077,8 +1097,11 @@ function markPickedLabel() {
   });
 }
 
+document.getElementById('clearRegion').addEventListener('click', clearStructure);
+
 fillDropdown();
 redraw();
+ensureScan();          /* the viewports belong to the page, empty until picked */
 renderDensityTable();
 renderTypesTable();
 

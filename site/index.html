@@ -221,13 +221,6 @@ a.box:hover{ text-decoration:none; box-shadow:0 0 0 1px var(--ink) inset; }
 .tab:hover{ color:var(--ink); }
 .tab.active{ color:var(--ink); border-bottom-color:var(--ink); }
 
-.rail{ display:flex; flex-direction:column; gap:var(--gap); }
-.card{ border:1px solid var(--hair); padding:1rem 1.05rem 1.1rem; background:var(--paper); }
-.card h2{
-  font-family:var(--font-brand); font-weight:500; font-size:.68rem;
-  letter-spacing:.3em; text-transform:uppercase; text-align:center;
-  border-bottom:1px solid var(--hair); padding-bottom:.55rem; margin-bottom:.75rem;
-}
 .row{ display:flex; align-items:center; gap:.6rem; margin:.5rem 0; }
 .row[hidden]{ display:none; }   /* display:flex would otherwise defeat the hidden attribute */
 .row label{
@@ -260,7 +253,6 @@ input[type=range]{ flex:1; min-width:0; accent-color:var(--ink); height:3px; }
 }
 .stat .v small{ font-size:.62rem; color:var(--ink-60); margin-left:.15rem; }
 
-.views{ display:grid; grid-template-columns:1fr 1fr; gap:var(--gap); min-width:0; }
 .plot-wrap{ flex:1; min-height:0; padding:.55rem; display:flex; align-items:center; justify-content:center; }
 .plot-wrap canvas{ display:block; }
 
@@ -338,13 +330,6 @@ table.dtable td.num{ font-size:.84rem; }
 <style>
 /* ════════ Region Atlas — page chrome in the boxed-mosaic voice ════════ */
 .masthead .brand{ font-size:clamp(1.55rem,4.6vw,2.8rem); }
-.studio{ display:grid; grid-template-columns:300px minmax(0,1fr); gap:var(--gap); align-items:start; }
-.sec-h{
-  font-family:var(--font-brand); font-weight:600; font-size:.66rem;
-  letter-spacing:.3em; text-transform:uppercase; color:var(--ink);
-  border-bottom:1px solid var(--ink); padding:.2rem .1rem .45rem; margin:0 0 var(--gap);
-  display:flex; align-items:baseline; justify-content:space-between; gap:.6rem;
-}
 .sec-h small{ font-family:var(--font-serif); font-style:italic; font-weight:400;
   font-size:.72rem; letter-spacing:0; text-transform:none; color:var(--ink-60); }
 
@@ -365,18 +350,6 @@ table.dtable td.num{ font-size:.84rem; }
 .title-strip .ts-views{ margin-left:auto; display:flex; gap:.4rem; flex-wrap:wrap; }
 
 /* select in the house voice */
-.selwrap{ position:relative; width:100%; }
-.selwrap::after{
-  content:""; position:absolute; right:.75rem; top:50%; transform:translateY(-35%);
-  border-left:4px solid transparent; border-right:4px solid transparent;
-  border-top:5px solid var(--ink); pointer-events:none;
-}
-select{
-  width:100%; appearance:none; -webkit-appearance:none; border-radius:0;
-  border:1px solid var(--hair); background:var(--paper); color:var(--ink);
-  font-family:var(--font-brand); font-size:.92rem; padding:.55rem 1.8rem .5rem .6rem;
-  cursor:pointer;
-}
 select:hover{ box-shadow:0 0 0 1px var(--ink) inset; }
 select option, select optgroup{ background:var(--paper); color:var(--ink); }
 select optgroup{ font-family:var(--font-brand); font-style:normal;
