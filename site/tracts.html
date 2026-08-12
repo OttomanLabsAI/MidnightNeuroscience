@@ -122,7 +122,9 @@ svg{ display:block; }
 .cube-r{ grid-area:2/3; }
 .cube-k{ grid-area:3/2; }
 .cube-b{ grid-area:3/1; }
-.views .view[data-box="Ren"] .mri-stage{ height:clamp(420px,64vh,860px); }
+/* one view, so it takes the whole frame rather than half a two-up grid */
+.views{ grid-template-columns:1fr; }
+.views .view[data-box="Ren"] .mri-stage{ height:clamp(420px,68vh,900px); }
 
 /* ── the rail's inputs ── */
 .rail-row{ display:flex; align-items:center; gap:.5rem; margin:.5rem 0; }
