@@ -219,7 +219,12 @@ svg{ display:block; }
 
       <div class="card">
         <h2>Section</h2>
-        <p class="rail-note">Cut the tractogram open along a plane, to see the fibres inside it.</p>
+        <p class="rail-note">The three plane boxes cut a section through the streamlines. A thin slab shows the fibres crossing that plane; a thick one builds back towards the whole.</p>
+        <div class="rail-row">
+          <span class="tool-label">Slab</span>
+          <input type="range" id="slab" min="1" max="60" step="1" value="8" aria-label="Section thickness">
+          <span class="slider-val" id="slabVal">8 mm</span>
+        </div>
         <div class="mode-group" role="group" aria-label="Cut plane">
           <button class="ts-btn active" data-cut="none" type="button">Whole</button>
           <button class="ts-btn" data-cut="x" type="button">Sagittal</button>
@@ -234,14 +239,10 @@ svg{ display:block; }
       </div>
 
       <div class="card">
-        <h2>Anatomy</h2>
-        <div class="mode-group" role="group" aria-label="Anatomy in the 3D view">
-          <button class="ts-btn" data-scan="on" type="button">In 3D</button>
-          <button class="ts-btn active" data-scan="off" type="button">Fibres only</button>
-        </div>
+        <h2>View</h2>
         <button class="btn-wide ts-btn" id="resetBtn" type="button">Reset view</button>
         <button class="btn-wide ts-btn active" id="spinBtn" type="button" aria-pressed="true">Auto-rotate</button>
-        <p class="rail-note">The three planes always show the MNI152 template with the fibres running through it. The 3D box holds the tractogram alone unless you bring the anatomy in.</p>
+        <p class="rail-note">The 3D box holds the whole tractogram; the cut plane above opens it up.</p>
       </div>
     </aside>
 
@@ -383,7 +384,7 @@ svg{ display:block; }
     {key:"Ren", canvasId:"tkRen", st:"RENDER"}
   ];
   var byKey = {}, instances = [], meshIds = {};
-  var colourMode = "Local", scanShown = true;
+  var colourMode = "Local";
 
   /* ── direction locks and centring, as on the other pages ── */
   var LOCK_AXIS = {x:0, y:1, z:2};
@@ -532,18 +533,19 @@ svg{ display:block; }
     });
   });
 
-  /* the anatomy underneath can be taken away, leaving the fibres alone */
-  document.querySelectorAll("[data-scan]").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      document.querySelectorAll("[data-scan]").forEach(function(b){ b.classList.toggle("active", b === btn); });
-      scanShown = btn.getAttribute("data-scan") === "on";
-      var nv = byKey.Ren;
-      if (nv && nv.volumes && nv.volumes.length){
-        nv.setOpacity(0, scanShown ? 0.6 : 0);
-        nv.drawScene();
-      }
+  /* How deep a slab of streamlines each plane box draws: this is the section
+     itself, thin for a clean cut through the fibres, thicker to build back
+     towards the whole tractogram. */
+  var slabEl = document.getElementById("slab");
+  var slabVal = document.getElementById("slabVal");
+  function applySlab(mm){
+    slabVal.textContent = mm + " mm";
+    instances.forEach(function(nv){
+      if (nv === byKey.Ren) return;
+      nv.setMeshThicknessOn2D(Number(mm));
     });
-  });
+  }
+  slabEl.addEventListener("input", function(){ applySlab(slabEl.value); });
 
   /* ── sectioning: a clip plane through the 3D view ── */
   var cutAxis = "none";
@@ -633,7 +635,10 @@ svg{ display:block; }
       PLANES.forEach(function(plane){
         var nv = byKey[plane.key];
         nv.setSliceType(niivue.SLICE_TYPE[plane.st]);
-        if (plane.key === "Ren") nv.setOpacity(0, 0);   /* fibres, not a grey shell */
+        /* The template is loaded only because a 2D slice needs a volume to
+           define its geometry; it is never drawn. The section is the
+           streamlines themselves. */
+        nv.setOpacity(0, 0);
         if (nv.meshes && nv.meshes.length){
           meshIds[nv.canvas.id] = nv.meshes[0].id;
           nv.setMeshProperty(nv.meshes[0].id, "fiberColor", "Local");
@@ -652,6 +657,7 @@ svg{ display:block; }
       });
 
       applyRadius(radiusEl.value);
+      applySlab(slabEl.value);
       byKey.Ren.scene.renderAzimuth = 120;
       byKey.Ren.scene.renderElevation = 15;
       applyZoom(zoomEl.value);
