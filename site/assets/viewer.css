@@ -118,3 +118,10 @@ select{
   .views{ grid-template-columns:1fr; }
   .mri-stage{ height:clamp(190px,54vw,280px); }
 }
+
+/* ── enlarge: one box taking the whole grid ── */
+.views.solo{ grid-template-columns:1fr; }
+.views.solo .view{ display:none; }
+.views.solo .view.solo-on{ display:flex; }
+.views.solo .mri-stage{ height:clamp(420px,68vh,900px); }
+.zoom-btn{ padding:0 .5rem; height:1.8rem; display:inline-flex; align-items:center; }

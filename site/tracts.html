@@ -190,7 +190,6 @@ svg{ display:block; }
     <span class="anno">HCP1065 population average &middot; direction-coloured streamlines</span>
     <div class="ts-views" role="group" aria-label="View">
       <button class="ts-btn" id="resetBtn" type="button">Reset view</button>
-      <button class="ts-btn active" id="spinBtn" type="button" aria-pressed="true">Auto-rotate</button>
     </div>
   </div>
 
@@ -218,31 +217,9 @@ svg{ display:block; }
       </div>
 
       <div class="card">
-        <h2>Section</h2>
-        <p class="rail-note">The three plane boxes cut a section through the streamlines. A thin slab shows the fibres crossing that plane; a thick one builds back towards the whole.</p>
-        <div class="rail-row">
-          <span class="tool-label">Slab</span>
-          <input type="range" id="slab" min="1" max="60" step="1" value="8" aria-label="Section thickness">
-          <span class="slider-val" id="slabVal">8 mm</span>
-        </div>
-        <div class="mode-group" role="group" aria-label="Cut plane">
-          <button class="ts-btn active" data-cut="none" type="button">Whole</button>
-          <button class="ts-btn" data-cut="x" type="button">Sagittal</button>
-          <button class="ts-btn" data-cut="y" type="button">Coronal</button>
-          <button class="ts-btn" data-cut="z" type="button">Axial</button>
-        </div>
-        <div class="rail-row">
-          <span class="tool-label">Depth</span>
-          <input type="range" id="cutDepth" min="-0.5" max="0.5" step="0.01" value="0" aria-label="Cut depth" disabled>
-          <span class="slider-val" id="cutVal">&mdash;</span>
-        </div>
-      </div>
-
-      <div class="card">
         <h2>View</h2>
         <button class="btn-wide ts-btn" id="resetBtn" type="button">Reset view</button>
-        <button class="btn-wide ts-btn active" id="spinBtn" type="button" aria-pressed="true">Auto-rotate</button>
-        <p class="rail-note">The 3D box holds the whole tractogram; the cut plane above opens it up.</p>
+        <p class="rail-note">Each box can be enlarged to fill the frame. The 3D box revolves on its own until you take hold of it.</p>
       </div>
     </aside>
 
@@ -250,22 +227,22 @@ svg{ display:block; }
       <div class="views">
       <div class="view" data-box="Ax">
         <div class="view-cap"><b>Axial</b><span>transverse plane</span></div>
-        <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Ax" role="group" aria-label="Axial drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Horizontal only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Vertical only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="Ax" type="button">Centre planes</button></div>
+        <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Ax" role="group" aria-label="Axial drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Horizontal only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Vertical only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="Ax" type="button">Centre planes</button><button class="ts-btn" data-enlarge="Ax" type="button">Enlarge</button></div>
         <div class="mri-stage"><canvas id="tkAx"></canvas></div>
       </div>
       <div class="view" data-box="Cor">
         <div class="view-cap"><b>Coronal</b><span>frontal plane</span></div>
-        <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Cor" role="group" aria-label="Coronal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Horizontal only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Vertical only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="Cor" type="button">Centre planes</button></div>
+        <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Cor" role="group" aria-label="Coronal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Horizontal only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Vertical only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="Cor" type="button">Centre planes</button><button class="ts-btn" data-enlarge="Cor" type="button">Enlarge</button></div>
         <div class="mri-stage"><canvas id="tkCor"></canvas></div>
       </div>
       <div class="view" data-box="Sag">
         <div class="view-cap"><b>Sagittal</b><span>median plane</span></div>
-        <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Sag" role="group" aria-label="Sagittal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Horizontal only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Vertical only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="Sag" type="button">Centre planes</button></div>
+        <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Sag" role="group" aria-label="Sagittal drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="y" type="button" title="Horizontal only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Vertical only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="Sag" type="button">Centre planes</button><button class="ts-btn" data-enlarge="Sag" type="button">Enlarge</button></div>
         <div class="mri-stage"><canvas id="tkSag"></canvas></div>
       </div>
       <div class="view" data-box="Ren">
         <div class="view-cap"><b>3D</b><span>whole tractogram</span></div>
-        <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Ren" role="group" aria-label="3D drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Horizontal only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Vertical only">&uarr;&darr;</button></div><button class="ts-btn centre-btn" data-centre="Ren" type="button">Centre planes</button></div>
+        <div class="view-tools"><span class="tool-label">Direction lock</span><div class="seg" data-lock-for="Ren" role="group" aria-label="3D drag lock"><button class="seg-btn seg-word active" data-lock="free" type="button" title="Free movement">Free</button><button class="seg-btn seg-arrow" data-lock="x" type="button" title="Horizontal only">&larr;&rarr;</button><button class="seg-btn seg-arrow" data-lock="z" type="button" title="Vertical only">&uarr;&darr;</button></div><button class="ts-btn centre-btn zoom-btn" data-zoom="out" type="button" aria-label="Zoom out">&minus;</button><button class="ts-btn zoom-btn" data-zoom="in" type="button" aria-label="Zoom in">+</button><button class="ts-btn active" data-revolve type="button" aria-pressed="true">Revolve</button><button class="ts-btn" data-enlarge="Ren" type="button">Enlarge</button></div>
         <div class="mri-stage"><canvas id="tkRen"></canvas><div class="stage-msg" id="stageMsg"><span class="caps" id="msgTitle">Loading the tractogram</span><div class="progress"><i id="msgBar"></i></div><p id="msgText">Several megabytes of streamlines are on their way.</p></div></div>
       </div>
       </div>
@@ -473,7 +450,6 @@ svg{ display:block; }
   /* ── idle rotation of the 3D box ── */
   var spinning = true, lastTouch = 0;
   var IDLE_MS = 2500, DEG_PER_SEC = 6;
-  var spinBtn = document.getElementById("spinBtn");
 
   function tick(now){
     requestAnimationFrame(tick);
@@ -487,11 +463,48 @@ svg{ display:block; }
     nv.drawScene();
   }
   function touched(){ lastTouch = performance.now(); tick.prev = undefined; }
-  spinBtn.addEventListener("click", function(){
-    spinning = !spinning;
-    spinBtn.classList.toggle("active", spinning);
-    spinBtn.setAttribute("aria-pressed", String(spinning));
-    tick.prev = undefined;
+  document.querySelectorAll("[data-revolve]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      spinning = !spinning;
+      btn.classList.toggle("active", spinning);
+      btn.setAttribute("aria-pressed", String(spinning));
+      tick.prev = undefined;
+    });
+  });
+
+  /* Enlarge: the chosen box takes the whole grid, the others stand down.
+     The viewer needs telling that its canvas changed size. */
+  var grid = document.querySelector(".views");
+  var soloKey = null;
+  function setSolo(key){
+    soloKey = (soloKey === key) ? null : key;
+    grid.classList.toggle("solo", soloKey !== null);
+    document.querySelectorAll(".view[data-box]").forEach(function(box){
+      var on = box.getAttribute("data-box") === soloKey;
+      box.classList.toggle("solo-on", on);
+      var btn = box.querySelector("[data-enlarge]");
+      if (btn){ btn.classList.toggle("active", on); btn.textContent = on ? "Restore" : "Enlarge"; }
+    });
+    requestAnimationFrame(function(){
+      instances.forEach(function(nv){
+        if (nv.resizeListener) nv.resizeListener();
+        nv.drawScene();
+      });
+    });
+  }
+  document.querySelectorAll("[data-enlarge]").forEach(function(btn){
+    btn.addEventListener("click", function(){ setSolo(btn.getAttribute("data-enlarge")); });
+  });
+
+  /* the 3D box zooms from its own header, the wheel being left to the page */
+  document.querySelectorAll("[data-zoom]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var step = btn.getAttribute("data-zoom") === "in" ? 1.18 : 1 / 1.18;
+      var next = Math.min(4, Math.max(0.3, Number(zoomEl.value) * step));
+      zoomEl.value = next;
+      applyZoom(next);
+      touched();
+    });
   });
 
   /* ── the rail's controls ── */
@@ -536,48 +549,15 @@ svg{ display:block; }
   /* How deep a slab of streamlines each plane box draws: this is the section
      itself, thin for a clean cut through the fibres, thicker to build back
      towards the whole tractogram. */
-  var slabEl = document.getElementById("slab");
-  var slabVal = document.getElementById("slabVal");
+  var SLAB_MM = 8;   /* the section depth each plane box draws */
   function applySlab(mm){
-    slabVal.textContent = mm + " mm";
     instances.forEach(function(nv){
       if (nv === byKey.Ren) return;
       nv.setMeshThicknessOn2D(Number(mm));
     });
   }
-  slabEl.addEventListener("input", function(){ applySlab(slabEl.value); });
 
-  /* ── sectioning: a clip plane through the 3D view ── */
-  var cutAxis = "none";
-  var cutDepth = document.getElementById("cutDepth");
-  var cutVal = document.getElementById("cutVal");
-  /* NiiVue takes [depth, azimuth, elevation]; these angles face the plane
-     down each anatomical axis in turn. */
-  var CUT_ANGLES = { x: [0, 0], y: [90, 0], z: [0, 90] };
 
-  function applyCut(){
-    var nv = byKey.Ren;
-    if (!nv) return;
-    if (cutAxis === "none"){
-      nv.setClipPlane([2, 0, 0]);             /* depth beyond the volume = no cut */
-      cutVal.textContent = "—";
-      cutDepth.disabled = true;
-    } else {
-      var a = CUT_ANGLES[cutAxis];
-      nv.setClipPlane([Number(cutDepth.value), a[0], a[1]]);
-      cutVal.textContent = Number(cutDepth.value).toFixed(2);
-      cutDepth.disabled = false;
-    }
-    nv.drawScene();
-  }
-  document.querySelectorAll("[data-cut]").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      document.querySelectorAll("[data-cut]").forEach(function(b){ b.classList.toggle("active", b === btn); });
-      cutAxis = btn.getAttribute("data-cut");
-      applyCut();
-    });
-  });
-  cutDepth.addEventListener("input", applyCut);
 
   document.getElementById("resetBtn").addEventListener("click", function(){
     if (!byKey.Ren) return;
@@ -657,11 +637,10 @@ svg{ display:block; }
       });
 
       applyRadius(radiusEl.value);
-      applySlab(slabEl.value);
+      applySlab(SLAB_MM);
       byKey.Ren.scene.renderAzimuth = 120;
       byKey.Ren.scene.renderElevation = 15;
       applyZoom(zoomEl.value);
-      applyCut();
       instances.forEach(function(nv){ nv.drawScene(); });
 
       hideMessage();
