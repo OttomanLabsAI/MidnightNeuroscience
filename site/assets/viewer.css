@@ -125,3 +125,6 @@ select{
 .views.solo .view.solo-on{ display:flex; }
 .views.solo .mri-stage{ height:clamp(420px,68vh,900px); }
 .zoom-btn{ padding:0 .5rem; height:1.8rem; display:inline-flex; align-items:center; }
+
+/* the 3D box leads the grid; the atlas names it "render", the other two "Ren" */
+.views .view[data-box="Ren"], .views .view[data-box="render"]{ order:-1; }
