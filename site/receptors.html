@@ -251,6 +251,17 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
     font-size: .92rem; line-height: 1.45; color: var(--ink-60); margin: 0;
   }
   .card .scan-where.named { font-style: normal; color: var(--ink); font-weight: 600; }
+  .rail-row { display: flex; align-items: center; gap: .5rem; margin: .6rem 0 0; }
+  .rail-row .tool-label {
+    flex: none; font-family: var(--font-brand); font-weight: 500; font-size: .55rem;
+    letter-spacing: .22em; text-transform: uppercase; color: var(--ink-60);
+  }
+  .rail-row input[type=range] { flex: 1; min-width: 0; accent-color: var(--ink); }
+  .slider-val {
+    font-family: var(--font-brand); font-size: .6rem; letter-spacing: .1em;
+    font-variant-numeric: tabular-nums; color: var(--ink-60);
+    min-width: 2.4rem; text-align: right;
+  }
   .card .scan-note {
     font-family: var(--font-serif); font-style: italic;
     font-size: .78rem; color: var(--ink-60); margin: .7rem 0 0;
@@ -316,6 +327,11 @@ try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAtt
       <h2>On the scan</h2>
       <p class="scan-where" id="scan-where">Nothing highlighted yet &mdash; click a brain structure on the chart.</p>
       <button class="btn-wide ts-btn" id="clearRegion" type="button">Clear</button>
+      <div class="rail-row">
+        <span class="tool-label">Opacity</span>
+        <input type="range" id="overlayOpacity" min="0" max="100" step="5" value="90" aria-label="Highlight opacity">
+        <span class="slider-val" id="overlayVal">90%</span>
+      </div>
       <p class="scan-note" id="scan-note">MNI152 template &middot; AAL-116 parcellation</p>
       <p class="scan-note" id="scan-coverage"></p>
     </div>
@@ -891,6 +907,7 @@ async function ensureScan() {
     ])));
     planes.forEach((p, i) => scanInstances[i].setSliceType(p.st));
     paintRegion([]);   /* nothing picked yet: plain anatomy, no parcel colours */
+    applyOverlayOpacity();
     /* keep the crosshair and camera in step across the boxes, as the atlas does */
     scanInstances.forEach(nv => nv.broadcastTo(scanInstances.filter(o => o !== nv),
       { '2d': true, '3d': true }));
@@ -940,10 +957,11 @@ function wireViewControls() {
     });
   });
 
-  /* The wheel belongs to the page. Catching it on the frame, ahead of the
-     canvas, means scrolling past a viewport no longer zooms it. */
+  /* Over a viewport the wheel zooms it, and the page stays where it is:
+       cancelling the scroll is what keeps the two from fighting. */
   document.querySelectorAll(".mri-stage").forEach(function(stage){
-    stage.addEventListener("wheel", function(e){ e.stopPropagation(); }, true);
+    stage.addEventListener("wheel", function(e){ e.preventDefault(); },
+      {capture: true, passive: false});
   });
   ['pointerup', 'pointercancel'].forEach(evt => window.addEventListener(evt, () => {
     scanAnchor = null; scanCam = null; scanDragBox = null;
@@ -1079,6 +1097,18 @@ function markPickedLabel() {
 }
 
 document.getElementById('clearRegion').addEventListener('click', clearStructure);
+
+// how strongly the highlighted parcel sits over the anatomy
+const opacityEl = document.getElementById('overlayOpacity');
+const opacityVal = document.getElementById('overlayVal');
+function applyOverlayOpacity() {
+  const v = Number(opacityEl.value);
+  opacityVal.textContent = v + '%';
+  for (const nv of scanInstances) {
+    if (nv.volumes && nv.volumes.length > 1) { nv.setOpacity(1, v / 100); nv.drawScene(); }
+  }
+}
+opacityEl.addEventListener('input', applyOverlayOpacity);
 document.getElementById('scan-coverage').textContent =
   DATA.structures.length + ' of ' + (DATA.structures.length + UNSOURCED.length) +
   ' atlas regions carry density data; the rest are absent from the source table.';

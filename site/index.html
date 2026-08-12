@@ -626,10 +626,11 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
     });
   });
 
-  /* The wheel belongs to the page. Catching it on the frame, ahead of the
-     canvas, means scrolling past a viewport no longer zooms it. */
+  /* Over a viewport the wheel zooms it, and the page stays where it is:
+       cancelling the scroll is what keeps the two from fighting. */
   document.querySelectorAll(".mri-stage").forEach(function(stage){
-    stage.addEventListener("wheel", function(e){ e.stopPropagation(); }, true);
+    stage.addEventListener("wheel", function(e){ e.preventDefault(); },
+      {capture: true, passive: false});
   });
 
   ["pointerup", "pointercancel"].forEach(function(evt){

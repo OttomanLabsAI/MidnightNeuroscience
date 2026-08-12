@@ -393,8 +393,10 @@ svg{ display:block; }
         anchor = nv.scene.crosshairPos.slice();
         camAnchor = {az: nv.scene.renderAzimuth, el: nv.scene.renderElevation};
       });
-      /* The wheel belongs to the page, as everywhere else on the site. */
-      stage.addEventListener("wheel", function(e){ e.stopPropagation(); }, true);
+      /* Over a viewport the wheel zooms it, and the page stays where it is:
+           cancelling the scroll is what keeps the two from fighting. */
+      stage.addEventListener("wheel", function(e){ e.preventDefault(); },
+        {capture: true, passive: false});
     });
     ["pointerup", "pointercancel"].forEach(function(evt){
       window.addEventListener(evt, function(){ anchor = null; camAnchor = null; dragBox = null; });
@@ -496,7 +498,7 @@ svg{ display:block; }
     btn.addEventListener("click", function(){ setSolo(btn.getAttribute("data-enlarge")); });
   });
 
-  /* the 3D box zooms from its own header, the wheel being left to the page */
+  /* the 3D box also zooms from its header, for anyone without a wheel */
   document.querySelectorAll("[data-zoom]").forEach(function(btn){
     btn.addEventListener("click", function(){
       var step = btn.getAttribute("data-zoom") === "in" ? 1.18 : 1 / 1.18;
