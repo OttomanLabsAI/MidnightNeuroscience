@@ -579,7 +579,7 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
   var INSTANCES = {};
   function makeNV(sliceType){
     return new niivue.Niivue({
-      backColor: [0.0667, 0.0667, 0.0667, 1],   /* ink #111111 — framed radiographs stay black in both themes */
+      backColor: [0, 0, 0, 1],   /* pure black, matching the scan's own background so the two blend */
       crosshairColor: [1, 1, 1, 1],
       show3Dcrosshair: true,
       sliceType: sliceType,

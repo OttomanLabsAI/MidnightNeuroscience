@@ -45,7 +45,7 @@
 .seg-word{ font-size:.46rem; letter-spacing:.06em; }
 .seg-arrow{ font-size:.74rem; letter-spacing:-.04em; }
 
-.mri-stage{ position:relative; background:#111111; height:clamp(240px,36vh,430px); }
+.mri-stage{ position:relative; background:#000000; height:clamp(240px,36vh,430px); }
 .mri-stage canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; outline:none; }
 
 /* ── page layout: a rail of inputs beside the viewports, shared by every
