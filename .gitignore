@@ -1,0 +1,9 @@
+# editor and notebook autosaves
+.ipynb_checkpoints/
+*.py[cod]
+__pycache__/
+.DS_Store
+
+# local tooling
+node_modules/
+.wrangler/

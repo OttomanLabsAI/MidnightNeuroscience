@@ -1,29 +1,23 @@
 # MidnightNeuroscience
-Mapping the Brain with our open-source app. At the moment, we are mapping the receptor sub-types to brain regions by analysing densities per region.
 
-## Website
+Brain mapping in the browser. Two instruments, one site, no server:
 
-The website is fully static — no server needed. It lives in the `site/` folder:
+- **Region Atlas** (`site/index.html`, the homepage) — an interactive MRI brain map. Highlight any of the 62 named AAL-116 regions on the MNI152 template and study it across axial, coronal and sagittal planes and a 3D volume render, with direction locks and a shared crosshair.
+- **Receptor Density** (`site/receptors.html`) — neurotransmitter receptor densities across the brain. Read one receptor family across every brain structure, or turn the chart around and read one structure across every receptor; see sub-types individually or summed. Clicking a structure lights it up on the same MRI viewer. The measured density ranges and a reference table of all 159 receptor sub-types sit on adjacent tabs.
 
-- `site/index.html` — Region Atlas, the homepage: interactive MRI brain map that highlights AAL-116 regions on the MNI152 template, in the browser.
-- `site/receptors.html` — Receptor Density viewer: read the data as a chart, as a table of measured density ranges, or against the full receptor-type reference. The chart works either way round — one receptor family across every brain structure, or one structure across every receptor — and shows either one bar per sub-type or a summed total. Clicking a brain structure on the chart highlights it on the MRI scan beneath.
-- `site/assets/` — the viewer library and the scan payload (MNI152 template, AAL-116 parcellation), shared by both pages. They are fetched on demand: the receptor page only pulls them when a structure is first picked.
+Everything is static: open either file in a browser and it works. The pages share `site/assets/` — the viewer library, the scan payload (MNI152 template + AAL-116 parcellation) and the viewport styling — and the scans load only when first needed.
 
-To preview locally, just open either file in a browser.
+## Hosting (auto-deploy on merge to `main`)
 
-## Hosting on Cloudflare (auto-deploy on merge to `main`)
+The site deploys as a Cloudflare Worker connected to this repository. `wrangler.jsonc` at the repo root points the deploy at the static files in `site/`, and nothing else. Every merge to `main` publishes automatically; other branches get preview deployments.
 
-The site is deployed as a Cloudflare Worker connected to this repository. The `wrangler.jsonc` file at the repo root tells Cloudflare what to deploy: the static files in `site/`, and nothing else. Every merge to `main` triggers a new build and publishes the updated site automatically; pushes to other branches get preview deployments.
+If a deploy misbehaves, check the Worker's build settings (**your Worker → Settings → Build**): production branch `main`, no build command, deploy command `npx wrangler deploy`, root directory `/`.
 
-If a deploy ever serves the wrong thing, check the Worker's build settings in the Cloudflare dashboard (**your Worker → Settings → Build**):
+## Data
 
-- **Git repository:** this repo, production branch `main`
-- **Build command:** *(leave empty — there is nothing to build)*
-- **Deploy command:** `npx wrangler deploy`
-- **Root directory:** `/`
+- `backend/data/ReceptorDensity.csv` — the merged dataset behind the receptor page: density ranges (fmol/mg) for 65 receptor sub-type columns across 18 brain structures. Merged from the per-receptor sources in `backend/data/original/` by `00 - ReceptorDensityDataMerge.py`.
+- `backend/data/ReceptorTypes.csv` — the reference table of receptor sub-types with family, category and mechanism.
+- The chart data embedded in `site/receptors.html` derives from the merged CSV with each `min:max` range collapsed to its max value.
+- `docs/atlas-regions.txt` — the full AAL-116 region list the brain map carries, with each region's label number.
 
-Cloudflare serves clean URLs automatically, so the pages are available at `/` (Region Atlas) and `/receptors` (receptor viewer). The old `/regionatlas` link redirects to the homepage. A custom domain can be attached under the Worker's **Domains & Routes** settings.
-
-## Backend
-
-The Python code in `backend/` is used for data processing. The chart data embedded in `site/receptors.html` comes from `backend/data/ReceptorDensity.csv`, processed the same way as before: each `min:max` density range is collapsed to its max value.
+The Python modules in `backend/` (`BrainMapping.py`, `UniversalTools.py`) and the notebooks alongside the data are the processing and exploration tools the dataset was built with.
