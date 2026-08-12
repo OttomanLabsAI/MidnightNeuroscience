@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tractography — MidnightNeuroscience.AI</title>
+<meta name="description" content="A whole-brain tractogram you can turn in your hands: diffusion MRI fibre pathways from the HCP1065 population atlas, coloured by the direction each fibre runs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/viewer.css">
+<link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Prata&display=swap" rel="stylesheet">
+<script>/* restore the saved theme before first paint so pages agree */
+try{if(localStorage.getItem("mn-theme")==="dark")document.documentElement.setAttribute("data-theme","dark");}catch(e){}</script>
+<style>
+/* the brand face, served as a file */
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:swap;
+}
+
+:root{
+  --paper:#FFFFFF;
+  --ink:#111111;
+  --ink-60:#5A5A5A;
+  --ink-35:#A9A9A9;
+  --hair:#111111;
+
+  --font-brand:'Flux','Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+
+  --wrap:1880px;
+  --gap:14px;
+}
+
+/* dark mode — exact inverse of the default palette, site-wide */
+:root[data-theme="dark"]{
+  --paper:#111111;
+  --ink:#FFFFFF;
+  --ink-60:#A9A9A9;
+  --ink-35:#5A5A5A;
+  --hair:#FFFFFF;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-serif); font-size:1rem; line-height:1.62;
+  font-optical-sizing:auto; -webkit-font-smoothing:antialiased;
+  padding-bottom:2rem;
+}
+::selection{ background:var(--ink); color:var(--paper); }
+a{ color:var(--ink); text-decoration:none; }
+a:hover{ text-decoration:underline; text-underline-offset:3px; }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+svg{ display:block; }
+
+.wrap{ max-width:var(--wrap); margin:0 auto;
+  padding-left:clamp(14px,2.5vw,48px); padding-right:clamp(14px,2.5vw,48px); }
+
+/* ── masthead ── */
+.masthead{ text-align:center; padding:clamp(26px,4vw,44px) 0 0; }
+.masthead .brand{ font-size:clamp(1.55rem,4.6vw,2.8rem); }
+.brand{
+  display:inline-flex; align-items:flex-start; gap:.3em;
+  font-family:var(--font-brand); font-weight:500;
+  line-height:1; letter-spacing:.01em; color:var(--ink);
+}
+.brand:hover{ text-decoration:none; }
+.brand .sparks{ width:.55em; height:.55em; margin-top:-.05em; }
+.nav-row{
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:.3rem clamp(1rem,2.6vw,2rem);
+  padding:clamp(16px,2.6vw,26px) 0 clamp(14px,2.2vw,20px);
+}
+.nav-row a{
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase;
+}
+.nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
+.theme-toggle{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  background:none; border:1px solid var(--hair); cursor:pointer;
+  padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
+}
+.theme-toggle:hover{ background:var(--ink); color:var(--paper); }
+.theme-toggle .th-dot{
+  width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
+  background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
+
+/* ── title strip, as on the other pages ── */
+.title-strip{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:.5rem 1.3rem; border:1px solid var(--hair);
+  padding:.8rem 1rem; margin-bottom:var(--gap); text-align:center;
+}
+.title-strip .name{
+  font-family:var(--font-display); font-size:1.35rem;
+  font-weight:400; line-height:1.05; letter-spacing:.02em; margin:0;
+}
+.title-strip .anno{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.88rem; color:var(--ink-60);
+}
+.title-strip .ts-views{ margin-left:auto; display:flex; gap:.4rem; flex-wrap:wrap; }
+
+/* ── the tractogram stage: one tall viewport ── */
+.tract-view .mri-stage{ height:clamp(360px,64vh,820px); }
+.tract-tools{ gap:.36rem .9rem; }
+.tract-tools .spacer{ margin-left:auto; }
+.btn-pair{ display:inline-flex; gap:.4rem; }
+.slider-wrap{ display:flex; align-items:center; gap:.5rem; }
+.slider-wrap input[type=range]{ width:clamp(80px,10vw,140px); accent-color:var(--ink); }
+.slider-val{
+  font-family:var(--font-brand); font-size:.6rem; letter-spacing:.1em;
+  font-variant-numeric:tabular-nums; color:var(--ink-60); min-width:2.6rem;
+}
+
+/* loading and failure states, drawn over the black stage */
+.stage-msg{
+  position:absolute; inset:0; z-index:5;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:.9rem; padding:1.5rem; text-align:center; color:#FFFFFF;
+  background:#111111;
+}
+.stage-msg.hidden{ display:none; }
+.stage-msg .caps{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.3em; text-transform:uppercase;
+}
+.stage-msg p{
+  font-family:var(--font-serif); font-style:italic; color:#A9A9A9;
+  max-width:34rem; font-size:.95rem;
+}
+.stage-msg code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-style:normal;
+  font-size:.82rem; color:#FFFFFF; background:#000000;
+  border:1px solid #3A3A3A; padding:.35rem .55rem; display:inline-block;
+}
+.progress{ width:min(280px,60%); height:2px; background:#3A3A3A; }
+.progress i{ display:block; height:100%; width:0%; background:#FFFFFF; }
+
+/* ── the caption and credits below ── */
+.prose{ max-width:44rem; margin-top:var(--gap); }
+.prose h2{
+  font-family:var(--font-brand); font-weight:600; font-size:.66rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink);
+  border-bottom:1px solid var(--ink); padding:.2rem .1rem .45rem; margin:0 0 .8rem;
+}
+.prose p{ margin:0 0 .8rem; }
+.prose .key{ display:flex; flex-wrap:wrap; gap:.4rem 1.4rem; margin:.2rem 0 1rem; }
+.key-item{
+  display:inline-flex; align-items:center; gap:.5rem;
+  font-family:var(--font-brand); font-size:.7rem;
+  letter-spacing:.12em; text-transform:uppercase;
+}
+.key-swatch{ width:22px; height:3px; flex:none; }
+.credits{
+  border-top:1px solid var(--hair); margin-top:2rem; padding-top:1rem;
+  font-family:var(--font-serif); font-size:.82rem; color:var(--ink-60);
+  max-width:52rem;
+}
+.credits p{ margin:0 0 .5rem; }
+</style>
+</head>
+<body>
+
+<header class="masthead wrap">
+  <a class="brand" href="index.html">MidnightNeuroscience.AI<svg class="sparks" viewBox="0 0 100 100" aria-hidden="true" fill="currentColor"><path transform="translate(52 0) scale(0.30)" d="M50 0C54 32 68 46 100 50 68 54 54 68 50 100 46 68 32 54 0 50 32 46 46 32 50 0Z"/><path transform="translate(0 22) scale(0.60)" d="M50 0C54 32 68 46 100 50 68 54 54 68 50 100 46 68 32 54 0 50 32 46 46 32 50 0Z"/><path transform="translate(60 56) scale(0.40)" d="M50 0C54 32 68 46 100 50 68 54 54 68 50 100 46 68 32 54 0 50 32 46 46 32 50 0Z"/></svg></a>
+  <nav class="nav-row" aria-label="Site">
+    <a href="index.html">Region Atlas</a>
+    <a href="receptors.html">Receptor Density</a>
+    <a href="tracts.html" aria-current="page">Tractography</a>
+    <button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <div class="title-strip">
+    <h1 class="name">Tractography</h1>
+    <span class="anno">HCP1065 population average &middot; direction-coloured streamlines</span>
+    <div class="ts-views" role="group" aria-label="View">
+      <button class="ts-btn" id="resetBtn" type="button">Reset view</button>
+      <button class="ts-btn active" id="spinBtn" type="button" aria-pressed="true">Auto-rotate</button>
+    </div>
+  </div>
+
+  <div class="view tract-view">
+    <div class="view-cap"><b>Whole brain</b><span>diffusion MRI fibre tracking</span></div>
+    <div class="view-tools tract-tools">
+      <span class="tool-label">Colour</span>
+      <span class="btn-pair" role="group" aria-label="Streamline colour">
+        <button class="ts-btn active" data-colour="Local" type="button" title="Colour each segment by the direction it runs">Direction</button>
+        <button class="ts-btn" data-colour="accent" type="button" title="A single accent colour">Single</button>
+      </span>
+      <span class="slider-wrap">
+        <span class="tool-label">Thickness</span>
+        <input type="range" id="radius" min="0.05" max="0.9" step="0.05" value="0.3" aria-label="Streamline thickness">
+        <span class="slider-val" id="radiusVal">0.30</span>
+      </span>
+      <span class="slider-wrap spacer">
+        <span class="tool-label">Zoom</span>
+        <input type="range" id="zoom" min="0.4" max="2.4" step="0.05" value="1" aria-label="Zoom">
+        <span class="slider-val" id="zoomVal">1.00&times;</span>
+      </span>
+    </div>
+    <div class="mri-stage">
+      <canvas id="glTract"></canvas>
+      <div class="stage-msg" id="stageMsg">
+        <span class="caps" id="msgTitle">Loading the tractogram</span>
+        <div class="progress"><i id="msgBar"></i></div>
+        <p id="msgText">Several megabytes of streamlines are on their way.</p>
+      </div>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>What you are looking at</h2>
+    <p>A <em>tractogram</em> is a reconstruction of the brain's wiring, built from diffusion MRI: the scanner measures which way water molecules are free to move in each voxel, and since water travels more easily along a nerve fibre than across it, those measurements trace out the paths that bundles of axons follow. Each thread here is a <em>streamline</em>, an estimate of one such path through the white matter.</p>
+    <p>The colours are not tissue types or measurements — they say which way a fibre is running at that point, the standard convention in the field:</p>
+    <div class="key">
+      <span class="key-item"><span class="key-swatch" style="background:#E1554C"></span>left &ndash; right</span>
+      <span class="key-item"><span class="key-swatch" style="background:#4FB06A"></span>front &ndash; back</span>
+      <span class="key-item"><span class="key-swatch" style="background:#4C7FE1"></span>up &ndash; down</span>
+    </div>
+    <p>Drag to turn the brain; use the zoom slider, or hold <kbd>Shift</kbd> and scroll over the view. It rotates on its own until you touch it. This is a population average rather than any one person's brain, so it shows the pathways people generally share.</p>
+  </section>
+
+  <section class="credits">
+    <p>Tractography: HCP1065 atlas, Yeh FC, <em>Nat Commun</em> 13:4933 (2022), CC BY-SA 4.0.</p>
+    <p>Data were provided in part by the Human Connectome Project, WU-Minn Consortium (Principal Investigators: David Van Essen and Kamil Ugurbil; 1U54MH091657) funded by the 16 NIH Institutes and Centers that support the NIH Blueprint for Neuroscience Research; and by the McDonnell Center for Systems Neuroscience at Washington University.</p>
+  </section>
+
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  var TRACT_URL = "assets/tracts/hcp1065.trk";
+  var ACCENT = [0.93, 0.62, 0.42, 1.0];   /* a warm single colour, for the plain view */
+
+  var stageMsg = document.getElementById("stageMsg");
+  var msgTitle = document.getElementById("msgTitle");
+  var msgText = document.getElementById("msgText");
+  var msgBar = document.getElementById("msgBar");
+  var canvas = document.getElementById("glTract");
+
+  function showMessage(title, text, withBar){
+    msgTitle.textContent = title;
+    msgText.innerHTML = text;
+    msgBar.parentElement.style.display = withBar ? "" : "none";
+    stageMsg.classList.remove("hidden");
+  }
+  function hideMessage(){ stageMsg.classList.add("hidden"); }
+
+  /* ── theme, shared with the rest of the site ── */
+  var themeBtn = document.getElementById("themeBtn");
+  var themeLbl = document.getElementById("themeLbl");
+  if (document.documentElement.getAttribute("data-theme") === "dark"){
+    themeLbl.textContent = "Light";
+    themeBtn.setAttribute("aria-pressed", "true");
+  }
+  themeBtn.addEventListener("click", function(){
+    var root = document.documentElement;
+    var dark = root.getAttribute("data-theme") === "dark";
+    if (dark){ root.removeAttribute("data-theme"); themeLbl.textContent = "Dark"; }
+    else { root.setAttribute("data-theme", "dark"); themeLbl.textContent = "Light"; }
+    themeBtn.setAttribute("aria-pressed", String(!dark));
+    try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
+  });
+
+  function loadScript(src){
+    return new Promise(function(resolve, reject){
+      var el = document.createElement("script");
+      el.src = src;
+      el.onload = resolve;
+      el.onerror = function(){ reject(new Error("could not load " + src)); };
+      document.head.appendChild(el);
+    });
+  }
+
+  /* Fetch the streamlines ourselves so the wait can be reported: the viewer's
+     own loader gives no progress, and this is a multi-megabyte file. */
+  function fetchWithProgress(url){
+    return fetch(url).then(function(res){
+      if (!res.ok) { var e = new Error("HTTP " + res.status); e.status = res.status; throw e; }
+      var total = Number(res.headers.get("content-length")) || 0;
+      if (!res.body || !total) return res.arrayBuffer();
+      var reader = res.body.getReader();
+      var chunks = [], received = 0;
+      return (function pump(){
+        return reader.read().then(function(step){
+          if (step.done){
+            var out = new Uint8Array(received), at = 0;
+            chunks.forEach(function(c){ out.set(c, at); at += c.length; });
+            return out.buffer;
+          }
+          chunks.push(step.value);
+          received += step.value.length;
+          var pct = Math.round(received / total * 100);
+          msgBar.style.width = pct + "%";
+          msgText.textContent = pct + "% of " + (total / 1048576).toFixed(1) + " MB";
+          return pump();
+        });
+      })();
+    });
+  }
+
+  var nv = null, meshId = null, colourMode = "Local";
+
+  /* ── idle rotation: turns slowly, yields the moment anyone takes hold ── */
+  var spinning = true, lastTouch = 0, rafId = null;
+  var IDLE_MS = 2500, DEG_PER_SEC = 6;
+  var spinBtn = document.getElementById("spinBtn");
+
+  function tick(now){
+    rafId = requestAnimationFrame(tick);
+    if (!nv || !spinning) return;
+    if (now - lastTouch < IDLE_MS) return;          /* someone is interacting */
+    if (tick.prev === undefined) tick.prev = now;
+    var dt = Math.min(now - tick.prev, 100) / 1000;
+    tick.prev = now;
+    nv.scene.renderAzimuth = (nv.scene.renderAzimuth + DEG_PER_SEC * dt) % 360;
+    nv.drawScene();
+  }
+  function touched(){ lastTouch = performance.now(); tick.prev = undefined; }
+  ["pointerdown", "pointermove", "wheel"].forEach(function(evt){
+    canvas.addEventListener(evt, touched, { passive: true });
+  });
+  spinBtn.addEventListener("click", function(){
+    spinning = !spinning;
+    spinBtn.classList.toggle("active", spinning);
+    spinBtn.setAttribute("aria-pressed", String(spinning));
+    tick.prev = undefined;
+  });
+
+  /* The page owns the wheel, as it does on the other pages; hold shift to
+     zoom the brain instead. */
+  var zoomEl = document.getElementById("zoom");
+  var zoomVal = document.getElementById("zoomVal");
+  function applyZoom(v){
+    zoomVal.textContent = Number(v).toFixed(2) + "×";
+    if (!nv) return;
+    nv.scene.volScaleMultiplier = Number(v);
+    nv.drawScene();
+  }
+  zoomEl.addEventListener("input", function(){ applyZoom(zoomEl.value); });
+  canvas.parentElement.addEventListener("wheel", function(e){
+    if (!e.shiftKey){ e.stopPropagation(); return; }   /* let the page scroll */
+    e.preventDefault();
+    e.stopPropagation();
+    /* inverted, to match the convention the atlas viewer was built on:
+       scrolling down draws the brain closer */
+    var next = Number(zoomEl.value) + (e.deltaY > 0 ? 0.06 : -0.06);
+    next = Math.min(Number(zoomEl.max), Math.max(Number(zoomEl.min), next));
+    zoomEl.value = next;
+    applyZoom(next);
+  }, true);
+
+  document.getElementById("resetBtn").addEventListener("click", function(){
+    if (!nv) return;
+    nv.scene.renderAzimuth = 120;
+    nv.scene.renderElevation = 15;
+    zoomEl.value = 1;
+    applyZoom(1);
+  });
+
+  /* ── streamline appearance ── */
+  var radiusEl = document.getElementById("radius");
+  var radiusVal = document.getElementById("radiusVal");
+  function applyRadius(v){
+    radiusVal.textContent = Number(v).toFixed(2);
+    if (nv && meshId !== null) nv.setMeshProperty(meshId, "fiberRadius", Number(v));
+  }
+  radiusEl.addEventListener("input", function(){ applyRadius(radiusEl.value); });
+
+  document.querySelectorAll("[data-colour]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      document.querySelectorAll("[data-colour]").forEach(function(b){
+        b.classList.toggle("active", b === btn);
+      });
+      colourMode = btn.dataset.colour;
+      if (!nv || meshId === null) return;
+      if (colourMode === "accent"){
+        /* a fixed colour reads the shape rather than the orientation */
+        nv.setMeshProperty(meshId, "fiberColor", "Fixed");
+        nv.setMeshProperty(meshId, "colormap", "");
+        nv.setMeshProperty(meshId, "rgba255", ACCENT.map(function(c){ return Math.round(c * 255); }));
+      } else {
+        nv.setMeshProperty(meshId, "fiberColor", "Local");
+      }
+      nv.drawScene();
+    });
+  });
+
+  async function boot(){
+    try{
+      showMessage("Loading the viewer", "Fetching the rendering library.", true);
+      if (typeof niivue === "undefined") await loadScript("assets/niivue.js");
+
+      showMessage("Loading the tractogram", "Several megabytes of streamlines are on their way.", true);
+      var buffer = await fetchWithProgress(TRACT_URL);
+
+      nv = new niivue.Niivue({
+        backColor: [0.0667, 0.0667, 0.0667, 1],   /* ink #111111, as the other viewports */
+        show3Dcrosshair: false,
+        isColorbar: false,
+        dragAndDropEnabled: false,
+        invertScrollDirection: true,
+        textHeight: 0.0
+      });
+      await nv.attachToCanvas(canvas);
+      nv.setSliceType(niivue.SLICE_TYPE.RENDER);
+
+      await nv.addMeshFromUrl({ url: TRACT_URL, buffer: buffer });
+      if (!nv.meshes || !nv.meshes.length) throw new Error("the file held no streamlines");
+      meshId = nv.meshes[0].id;
+
+      nv.setMeshProperty(meshId, "fiberColor", "Local");
+      nv.setMeshProperty(meshId, "fiberDither", 0.1);   /* a little scatter reads as dense, not stripey */
+      applyRadius(radiusEl.value);
+      nv.scene.renderAzimuth = 120;
+      nv.scene.renderElevation = 15;
+      applyZoom(zoomEl.value);
+      nv.drawScene();
+
+      hideMessage();
+      rafId = requestAnimationFrame(tick);
+    } catch (err){
+      var missing = err && (err.status === 404 || /HTTP 40/.test(err.message || ""));
+      if (missing){
+        showMessage("Tractogram not installed",
+          "This page expects <code>site/assets/tracts/hcp1065.trk</code>. " +
+          "Build it from the published atlas with " +
+          "<code>python3 scripts/make_tractogram.py --input &lt;atlas&gt;</code> " +
+          "— see <code>scripts/README.md</code>.", false);
+      } else {
+        showMessage("The tractogram could not be shown",
+          (err && err.message ? err.message : String(err)) +
+          " — this page needs WebGL2 and a modern browser.", false);
+      }
+    }
+  }
+  boot();
+})();
+</script>
+
+</body>
+</html>
