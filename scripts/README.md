@@ -2,11 +2,16 @@
 
 The Tractography page (`site/tracts.html`) draws a single file:
 
-    site/assets/tracts/hcp1065.trk
+    site/assets/tracts/hcp1065.trx
 
-That file is not in the repository as shipped — it is derived from a published
-atlas that is a few hundred megabytes, and the web copy has to fit inside
-Cloudflare's 25 MiB per-asset ceiling. `make_tractogram.py` produces it.
+The page ships with `site/assets/tracts/hcp1065.trx` already committed: the
+HCP1065 atlas at 24,208 streamlines, 6.1 MB, taken from the subsampled
+redistribution in NiiVue's demo images. Nothing needs building to run the site.
+
+This script is for rebuilding that asset from the full published atlas — when
+you want a different streamline count, a subset of bundles, or a refresh from
+the primary source. The published atlas is a few hundred megabytes and the web
+copy has to fit inside Cloudflare's 25 MiB per-asset ceiling.
 
 ## 1. Get the atlas
 
@@ -23,7 +28,8 @@ attribution on the page must stay as it is.
 ## 2. Build the web copy
 
     pip install nibabel numpy
-    python3 scripts/make_tractogram.py --input ~/Downloads/HCP1065_trk
+    python3 scripts/make_tractogram.py --input ~/Downloads/HCP1065_trk \
+        --out site/assets/tracts/hcp1065.trk
 
 Which does, in order:
 

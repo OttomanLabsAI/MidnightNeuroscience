@@ -1,12 +1,15 @@
 # Tract assets
 
-`hcp1065.trk` belongs here — the web-sized copy of the HCP1065
-population-averaged tractography atlas that `site/tracts.html` loads.
+`hcp1065.trx` is the whole-brain tractogram the Tractography page draws:
+the HCP1065 population-averaged tractography atlas, 24,208 streamlines across
+87 named bundles, 6.1 MB — comfortably inside Cloudflare's 25 MiB per-asset
+ceiling, so it is committed rather than built at deploy time.
 
-It is not committed with the source: build it once with
+Provenance: HCP1065 atlas, Yeh FC, *Nat Commun* 13:4933 (2022), CC BY-SA 4.0,
+derived from Human Connectome Project data. This copy is the subsampled
+redistribution that ships with NiiVue (`packages/niivue/demos/images/yeh2022.trx`),
+which is already at the streamline count the page wants. The attribution on the
+page is required by the licence — leave it in place.
 
-    python3 scripts/make_tractogram.py --input <the downloaded atlas>
-
-and see `scripts/README.md` for where to get the atlas and how the file is
-kept under Cloudflare's 25 MiB per-asset ceiling. Until it is present the page
-says so and explains this, rather than failing silently.
+To rebuild from the full published atlas instead — if you want a different
+streamline count, or the bundles filtered — see `scripts/README.md`.

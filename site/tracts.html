@@ -204,8 +204,8 @@ svg{ display:block; }
       </span>
       <span class="slider-wrap spacer">
         <span class="tool-label">Zoom</span>
-        <input type="range" id="zoom" min="0.4" max="2.4" step="0.05" value="1" aria-label="Zoom">
-        <span class="slider-val" id="zoomVal">1.00&times;</span>
+        <input type="range" id="zoom" min="0.4" max="2.4" step="0.05" value="1.4" aria-label="Zoom">
+        <span class="slider-val" id="zoomVal">1.40&times;</span>
       </span>
     </div>
     <div class="mri-stage">
@@ -241,7 +241,9 @@ svg{ display:block; }
 (function(){
   "use strict";
 
-  var TRACT_URL = "assets/tracts/hcp1065.trk";
+  /* .trx is what ships; a rebuild from the published atlas writes .trk,
+     so accept either rather than breaking on the file that is there. */
+  var TRACT_URLS = ["assets/tracts/hcp1065.trx", "assets/tracts/hcp1065.trk"];
   var ACCENT = [0.93, 0.62, 0.42, 1.0];   /* a warm single colour, for the plain view */
 
   var stageMsg = document.getElementById("stageMsg");
@@ -366,8 +368,8 @@ svg{ display:block; }
     if (!nv) return;
     nv.scene.renderAzimuth = 120;
     nv.scene.renderElevation = 15;
-    zoomEl.value = 1;
-    applyZoom(1);
+    zoomEl.value = 1.4;
+    applyZoom(1.4);
   });
 
   /* ── streamline appearance ── */
@@ -404,7 +406,12 @@ svg{ display:block; }
       if (typeof niivue === "undefined") await loadScript("assets/niivue.js");
 
       showMessage("Loading the tractogram", "Several megabytes of streamlines are on their way.", true);
-      var buffer = await fetchWithProgress(TRACT_URL);
+      var url = null, buffer = null, lastErr = null;
+      for (var i = 0; i < TRACT_URLS.length; i++){
+        try { buffer = await fetchWithProgress(TRACT_URLS[i]); url = TRACT_URLS[i]; break; }
+        catch (e) { lastErr = e; }
+      }
+      if (!buffer) throw lastErr || new Error("no tractogram found");
 
       nv = new niivue.Niivue({
         backColor: [0.0667, 0.0667, 0.0667, 1],   /* ink #111111, as the other viewports */
@@ -417,7 +424,7 @@ svg{ display:block; }
       await nv.attachToCanvas(canvas);
       nv.setSliceType(niivue.SLICE_TYPE.RENDER);
 
-      await nv.addMeshFromUrl({ url: TRACT_URL, buffer: buffer });
+      await nv.addMeshFromUrl({ url: url, buffer: buffer });
       if (!nv.meshes || !nv.meshes.length) throw new Error("the file held no streamlines");
       meshId = nv.meshes[0].id;
 
@@ -435,7 +442,7 @@ svg{ display:block; }
       var missing = err && (err.status === 404 || /HTTP 40/.test(err.message || ""));
       if (missing){
         showMessage("Tractogram not installed",
-          "This page expects <code>site/assets/tracts/hcp1065.trk</code>. " +
+          "This page expects <code>site/assets/tracts/hcp1065.trx</code> (or <code>.trk</code>). " +
           "Build it from the published atlas with " +
           "<code>python3 scripts/make_tractogram.py --input &lt;atlas&gt;</code> " +
           "— see <code>scripts/README.md</code>.", false);
