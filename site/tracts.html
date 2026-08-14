@@ -124,6 +124,8 @@ svg{ display:block; }
 .cube-b{ grid-area:3/1; }
 /* one view, so it takes the whole frame rather than half a two-up grid */
 .views{ grid-template-columns:1fr; }
+/* no frame around it: the tractogram sits on the page, unboxed */
+.views .view{ border:0; }
 .views .view[data-box="Ren"] .mri-stage{ height:clamp(420px,68vh,900px); }
 
 /* ── the rail's inputs ── */
