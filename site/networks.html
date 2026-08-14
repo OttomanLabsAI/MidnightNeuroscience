@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Networks — MidnightNeuroscience.AI</title>
+<meta name="description" content="The flow state as a circular network graph: which couplings between brain regions strengthen when challenge meets skill, and which fall quiet.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/viewer.css">
+<link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Prata&display=swap" rel="stylesheet">
+<meta name="color-scheme" content="dark light">
+<script>/* Dark is the default; only an explicit choice of light overrides it.
+   Set before first paint so no page flashes white on its way in. */
+(function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
+if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</script>
+<style>
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:swap;
+}
+
+:root{
+  --paper:#FFFFFF;
+  --ink:#111111;
+  --ink-60:#5A5A5A;
+  --ink-35:#A9A9A9;
+  --hair:#111111;
+  --quiet:#8A8A8A;
+
+  --font-brand:'Flux','Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+
+  --wrap:1880px;
+  --gap:14px;
+}
+:root[data-theme="dark"]{
+  --paper:#111111;
+  --ink:#FFFFFF;
+  --ink-60:#A9A9A9;
+  --ink-35:#5A5A5A;
+  --hair:#FFFFFF;
+  --quiet:#8A8A8A;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-serif); font-size:1rem; line-height:1.62;
+  font-optical-sizing:auto; -webkit-font-smoothing:antialiased;
+  margin:0 0 3rem;
+}
+::selection{ background:var(--ink); color:var(--paper); }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+a{ color:var(--ink); }
+svg{ display:block; }
+
+.wrap{ max-width:var(--wrap); margin:0 auto;
+  padding-left:clamp(14px,2.5vw,48px); padding-right:clamp(14px,2.5vw,48px); }
+
+/* masthead, shared with the rest of the site */
+.masthead{ text-align:center; padding:clamp(26px,4vw,44px) 0 0; }
+.masthead .brand{ font-size:clamp(1.55rem,4.6vw,2.8rem); }
+.brand{
+  display:inline-flex; align-items:flex-start; gap:.3em;
+  font-family:var(--font-brand); font-weight:500;
+  line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
+}
+.brand:hover{ text-decoration:none; }
+.brand .sparks{ width:.55em; height:.55em; margin-top:-.05em; }
+.nav-row{
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:.3rem clamp(1rem,2.6vw,2rem);
+  padding:clamp(16px,2.6vw,26px) 0 clamp(14px,2.2vw,20px);
+}
+.nav-row a{
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink); text-decoration:none;
+}
+.nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; }
+.nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
+.theme-toggle{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  background:none; border:1px solid var(--hair); cursor:pointer;
+  padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
+}
+.theme-toggle:hover{ background:var(--ink); color:var(--paper); }
+.theme-toggle .th-dot{
+  width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
+  background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
+
+.title-strip{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:.5rem 1.3rem; border:1px solid var(--hair);
+  padding:.8rem 1rem; margin-bottom:var(--gap); text-align:center;
+}
+.title-strip .name{
+  font-family:var(--font-display); font-size:1.35rem;
+  font-weight:400; line-height:1.05; letter-spacing:.02em; margin:0;
+}
+.title-strip .anno{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.88rem; color:var(--ink-60);
+}
+.title-strip .ts-views{ margin-left:auto; display:flex; gap:.4rem; flex-wrap:wrap; }
+
+/* rail */
+.rail-note{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.8rem; color:var(--ink-60); margin:.6rem 0 0;
+}
+.rail-row{ display:flex; align-items:center; gap:.5rem; margin:.6rem 0 0; }
+.rail-row .tool-label{
+  flex:none; font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink-60);
+}
+.rail-row input[type=range]{ flex:1; min-width:0; accent-color:var(--ink); }
+
+.key-list{ display:flex; flex-direction:column; gap:.45rem; }
+.key-list span{
+  display:inline-flex; align-items:center; gap:.6rem;
+  font-family:var(--font-brand); font-size:.55rem;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--ink-60);
+}
+.key{ display:inline-block; width:28px; height:3px; flex:none; }
+.key.grad{ background:linear-gradient(90deg,#9CD8FE,#AADFB0); }
+.key.quiet{ height:0; border-top:2px dashed var(--quiet); }
+.key.dot{ width:10px; height:10px; border-radius:50%; background:var(--ink-35); }
+.key.hollow{ width:10px; height:10px; border-radius:50%;
+  background:var(--paper); border:1.7px solid var(--ink-35); }
+
+/* the reading panel */
+.panel-kicker{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink-60);
+}
+.panel-title{ font-family:var(--font-display); font-size:1.15rem; line-height:1.15; margin:.25rem 0 .35rem; }
+.panel p{ font-size:.94rem; line-height:1.55; }
+
+/* the ring */
+.ring-stage{ border:1px solid var(--hair); padding:.6rem; background:var(--paper); }
+#ring{ width:100%; height:auto; }
+.regionarc{ fill:none; stroke-width:11; stroke-linecap:butt; cursor:pointer; }
+.grouplabel{
+  font-family:var(--font-brand); font-size:9.5px; font-weight:500;
+  letter-spacing:.26em; text-transform:uppercase; fill:var(--ink-35);
+}
+.chord{ fill:none; stroke-linecap:butt; transition:opacity .25s ease; }
+.chord.quiet{ stroke:var(--quiet); }
+.nodedot{ stroke-width:1.8; pointer-events:none; }
+.nodelabel{
+  font-family:var(--font-brand); font-size:11.5px; font-weight:500;
+  letter-spacing:.12em; cursor:pointer; transition:fill .25s ease;
+}
+.dim{ opacity:.07 !important; }
+.lit{ opacity:1 !important; }
+.dimarc{ opacity:.16; }
+
+.below{ margin-top:var(--gap); }
+.attrib{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.85rem; color:var(--ink-60); max-width:78ch;
+  border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:1.4rem;
+}
+/* the ring scales with the column, so the lettering has to grow back */
+@media (max-width:1100px){
+  .nodelabel{ font-size:13px; }
+  .grouplabel{ font-size:10.5px; letter-spacing:.2em; }
+}
+@media (max-width:760px){
+  .ring-stage{ padding:.25rem; }
+  .nodelabel{ font-size:17px; letter-spacing:.08em; }
+  .grouplabel{ font-size:13px; letter-spacing:.16em; }
+}
+@media (prefers-reduced-motion: reduce){
+  .chord,.nodedot,.nodelabel,.regionarc{ transition:none !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="masthead wrap">
+  <a class="brand" href="index.html">MidnightNeuroscience.AI<svg class="sparks" viewBox="0 0 100 100" aria-hidden="true" fill="currentColor"><path transform="translate(52 0) scale(0.30)" d="M50 0C54 32 68 46 100 50 68 54 54 68 50 100 46 68 32 54 0 50 32 46 46 32 50 0Z"/><path transform="translate(0 22) scale(0.60)" d="M50 0C54 32 68 46 100 50 68 54 54 68 50 100 46 68 32 54 0 50 32 46 46 32 50 0Z"/><path transform="translate(60 56) scale(0.40)" d="M50 0C54 32 68 46 100 50 68 54 54 68 50 100 46 68 32 54 0 50 32 46 46 32 50 0Z"/></svg></a>
+  <nav class="nav-row" aria-label="Site">
+    <a href="index.html">Region Atlas</a>
+    <a href="receptors.html">Receptor Density</a>
+    <a href="tracts.html">Tractography</a>
+    <a href="hallucinations.html">Hallucinations</a>
+    <a href="networks.html" aria-current="page">Networks</a>
+    <button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button>
+  </nav>
+</header>
+
+<main class="wrap">
+
+<div class="title-strip">
+  <h1 class="name">The Flow State</h1>
+  <span class="anno">network graphs &middot; N&ordm;&thinsp;02</span>
+</div>
+
+<div class="studio">
+
+  <aside class="rail" aria-label="Controls">
+    <h2 class="sec-h">Flow <small>a state, not a network</small></h2>
+
+    <div class="card">
+      <h2>What this is</h2>
+      <p class="rail-note" style="font-style:normal;color:var(--ink);">Not a network but a state — a reconfiguration across networks when challenge meets skill. The threads show which couplings strengthen and which fall quiet, composited from the fMRI flow literature.</p>
+    </div>
+
+    <div class="card">
+      <h2>Key</h2>
+      <div class="key-list">
+        <span><i class="key grad"></i>Strengthens in flow</span>
+        <span><i class="key quiet"></i>Quiets in flow</span>
+        <span><i class="key dot"></i>More active</span>
+        <span><i class="key hollow"></i>Less active</span>
+      </div>
+      <div class="rail-row">
+        <span class="tool-label">Thread</span>
+        <input type="range" id="wt" min="0.28" max="1" step="0.04" value="1" aria-label="Thread weight">
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Reading</h2>
+      <div class="panel-kicker" id="hintKicker">The ring</div>
+      <div class="panel-title" id="hintName">Explore the ring</div>
+      <p id="hintNote">Hover or tap a region — coloured threads strengthen in flow, grey dashed threads fall quiet, and hollow markers power down.</p>
+    </div>
+  </aside>
+
+  <section class="centre" aria-label="Network ring">
+    <div class="ring-stage">
+      <svg id="ring" viewBox="0 0 720 720" role="img" aria-label="Circular graph of brain network coupling changes in the flow state"></svg>
+    </div>
+  </section>
+
+</div>
+
+<section class="below">
+  <p class="attrib">Composite after Ulrich et&nbsp;al. (2014), Huskey et&nbsp;al. (2018) and Dietrich's transient-hypofrontality account (2004). Schematic: flow has no canonical connectome, and the couplings drawn here are illustrative rather than measured. Regions are placed for legibility around the ring, not by anatomical position — for that, see the Region Atlas.</p>
+</section>
+
+</main>
+
+<script>
+"use strict";
+
+/* ── the state, as a ring of regions and the threads between them ──────── */
+const GROUPS = [
+  {id:"dmn",     label:"Default mode"},
+  {id:"exec",    label:"Executive"},
+  {id:"sal",     label:"Salience"},
+  {id:"attn",    label:"Attention"},
+  {id:"reward",  label:"Reward"},
+  {id:"arousal", label:"Arousal · Limbic"},
+  {id:"motor",   label:"Motor"}
+];
+
+const NODES = [
+  {id:"mPFC", group:"dmn", down:true, full:"Medial prefrontal cortex", note:"Quiets in flow — Ulrich et al. found reduced medial prefrontal activity; the inner narrator stands down."},
+  {id:"PCC",  group:"dmn", down:true, full:"Posterior cingulate cortex", note:"The default-mode core decouples — self-referential mind-wandering drops away with the sense of self-consciousness."},
+  {id:"dlPFC",group:"exec",down:true, full:"Dorsolateral prefrontal cortex", note:"Dietrich's transient hypofrontality — explicit self-monitoring goes offline as practised skill takes over."},
+  {id:"AI",   group:"sal",            full:"Anterior insula", note:"The salience switchboard — holds the task in focus and gates the default mode down."},
+  {id:"dACC", group:"sal",            full:"Dorsal anterior cingulate", note:"Effort and monitoring — frontal-midline theta rises with deep task absorption."},
+  {id:"FEF",  group:"attn",           full:"Frontal eye fields", note:"Top-down attention locks to the task — the dorsal attention network stays engaged throughout."},
+  {id:"IPS",  group:"attn",           full:"Intraparietal sulcus", note:"Spatial and feature attention — external focus replaces internal chatter."},
+  {id:"VStr", group:"reward",         full:"Ventral striatum / accumbens", note:"Intrinsic reward — Huskey's work ties flow to frontostriatal coupling; the task becomes its own payoff."},
+  {id:"Put",  group:"reward",         full:"Putamen", note:"Ulrich's other key finding — putamen activity rises as performance turns automatic."},
+  {id:"VTA",  group:"reward",         full:"Ventral tegmental area", note:"Dopamine source — tonic motivation feeding the autotelic quality of flow."},
+  {id:"LC",   group:"arousal",        full:"Locus coeruleus", note:"Noradrenaline tuned to the sweet spot — moderate arousal at the edge of challenge, neither bored nor anxious."},
+  {id:"Amy",  group:"arousal",down:true, full:"Amygdala", note:"Threat response quiets — reduced amygdala activity; performance anxiety switches off."},
+  {id:"SMA",  group:"motor",          full:"Supplementary motor area", note:"Action runs in fluent, pre-assembled sequences rather than deliberate steps."},
+  {id:"Cb",   group:"motor",          full:"Cerebellum", note:"Automaticity's engine — practised movement executed without conscious correction."}
+];
+
+/* w drives stroke weight; quiet threads are couplings that attenuate in flow */
+const LINKS = [
+  {s:"AI",t:"dACC",w:.55},{s:"AI",t:"VStr",w:.50},{s:"dACC",t:"FEF",w:.45},
+  {s:"FEF",t:"IPS",w:.55},{s:"IPS",t:"SMA",w:.40},{s:"SMA",t:"Cb",w:.50},
+  {s:"Put",t:"SMA",w:.50},{s:"VTA",t:"VStr",w:.55},{s:"VTA",t:"Put",w:.40},
+  {s:"LC",t:"dACC",w:.40},{s:"VStr",t:"Put",w:.35},{s:"AI",t:"IPS",w:.35},
+  {s:"mPFC",t:"PCC",w:.55,quiet:true},{s:"AI",t:"mPFC",w:.45,quiet:true},
+  {s:"mPFC",t:"Amy",w:.45,quiet:true},{s:"Amy",t:"LC",w:.35,quiet:true},
+  {s:"dlPFC",t:"SMA",w:.40,quiet:true},{s:"dlPFC",t:"mPFC",w:.35,quiet:true},
+  {s:"PCC",t:"IPS",w:.30,quiet:true}
+];
+
+/* the site palette: bright, low-saturation, in the familiar hue order */
+const PALETTE = [
+  "#FEBDB4","#EBD97C","#AADFB0","#9CD8FE","#E1C0FA","#F8C396","#89E1E1",
+  "#FCB9D5","#B9CFFF","#BFDB9F","#FEBFA6","#8CDEF2","#F0BCEA","#97E2C5"
+];
+
+/* ── geometry ──────────────────────────────────────────────────────────── */
+const SIZE = 720, CX = SIZE/2, CY = SIZE/2;
+const ARC_R = 236, ARC_W = 11;
+const ER = ARC_R + ARC_W/2;          /* chord ends sit under the ring */
+const DOT_R = 254, LABEL_R = 266, GROUP_R = 328;
+const deg = d => d*Math.PI/180;
+const GAP = deg(6);
+const norm = a => { while(a > Math.PI) a -= 2*Math.PI; while(a < -Math.PI) a += 2*Math.PI; return a; };
+
+const byGroup = GROUPS.map(g => ({...g, nodes: NODES.filter(n => n.group === g.id)}));
+const per = (2*Math.PI - GAP*byGroup.length) / NODES.length;
+
+let a = -Math.PI/2 + GAP/2;          /* start at the top */
+const RING = [];
+for (const g of byGroup){
+  g.a0 = a;
+  for (const n of g.nodes){ n.angle = a + per/2; RING.push(n); a += per; }
+  g.a1 = a;
+  a += GAP;
+}
+RING.forEach((n, i) => { n.color = PALETTE[i % PALETTE.length]; });
+const N = Object.fromEntries(NODES.map(n => [n.id, n]));
+
+/* fan each region's chord ends out along its own arc, ordered by where the
+   other end sits, so threads leave the ring without crossing themselves */
+const ARC_SPAN = per*0.80;
+for (const n of NODES){
+  const mine = LINKS.filter(l => l.s === n.id || l.t === n.id);
+  mine.sort((p, q) => {
+    const pa = N[p.s === n.id ? p.t : p.s].angle, qa = N[q.s === n.id ? q.t : q.s].angle;
+    return norm(pa - n.angle) - norm(qa - n.angle);
+  });
+  const k = mine.length, spread = ARC_SPAN*0.66;
+  mine.forEach((l, i) => {
+    const t = k === 1 ? 0 : (i/(k - 1) - 0.5);
+    const ang = n.angle + t*spread;
+    (l.pts = l.pts || {})[n.id] = {x: CX + ER*Math.cos(ang), y: CY + ER*Math.sin(ang)};
+  });
+}
+
+/* ── drawing, by hand: this is trigonometry and paths, not a charting library ── */
+const SVG_NS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById("ring");
+const el = (tag, attrs) => {
+  const node = document.createElementNS(SVG_NS, tag);
+  for (const k in attrs) if (attrs[k] !== null && attrs[k] !== undefined) node.setAttribute(k, attrs[k]);
+  return node;
+};
+const defs = el("defs");
+svg.appendChild(defs);
+
+/* each live thread runs from one region's colour into the other's */
+LINKS.forEach((l, i) => {
+  if (l.quiet) return;
+  l.grad = "ng" + i;
+  const p = l.pts[l.s], q = l.pts[l.t];
+  const g = el("linearGradient", {id:l.grad, gradientUnits:"userSpaceOnUse",
+                                 x1:p.x, y1:p.y, x2:q.x, y2:q.y});
+  g.appendChild(el("stop", {offset:"0%",   "stop-color":N[l.s].color}));
+  g.appendChild(el("stop", {offset:"100%", "stop-color":N[l.t].color}));
+  defs.appendChild(g);
+});
+
+/* group labels, set outside the ring and turned to follow it */
+for (const g of byGroup){
+  const mid = (g.a0 + g.a1)/2;
+  const gx = CX + GROUP_R*Math.cos(mid), gy = CY + GROUP_R*Math.sin(mid);
+  let rot = mid*180/Math.PI + 90;
+  if (mid > 0 && mid < Math.PI) rot += 180;
+  const t = el("text", {class:"grouplabel", x:gx, y:gy, "text-anchor":"middle",
+                        transform:`rotate(${rot},${gx},${gy})`, dy:"0.35em"});
+  t.textContent = g.label;
+  svg.appendChild(t);
+}
+
+/* chords first, so the ring paints over their ends */
+const chordPath = l => {
+  const p = l.pts[l.s], q = l.pts[l.t], k = 0.22;
+  return `M${p.x},${p.y} C${CX + (p.x - CX)*k},${CY + (p.y - CY)*k} ` +
+         `${CX + (q.x - CX)*k},${CY + (q.y - CY)*k} ${q.x},${q.y}`;
+};
+const chordLayer = el("g");
+svg.appendChild(chordLayer);
+const chords = LINKS.map(l => {
+  const path = el("path", {class:"chord" + (l.quiet ? " quiet" : ""), d:chordPath(l),
+                           stroke: l.quiet ? null : `url(#${l.grad})`});
+  path.style.opacity = Math.min(1, 0.58 + l.w*0.8);
+  chordLayer.appendChild(path);
+  return {l, path};
+});
+
+/* one arc per region, drawn as a thick stroked wedge */
+const arcPath = (r, a0, a1) => {
+  const x0 = CX + r*Math.cos(a0), y0 = CY + r*Math.sin(a0);
+  const x1 = CX + r*Math.cos(a1), y1 = CY + r*Math.sin(a1);
+  const large = (a1 - a0) > Math.PI ? 1 : 0;
+  return `M${x0},${y0} A${r},${r} 0 ${large} 1 ${x1},${y1}`;
+};
+const arcLayer = el("g");
+svg.appendChild(arcLayer);
+const arcs = NODES.map(n => {
+  const path = el("path", {class:"regionarc", stroke:n.color,
+    d: arcPath(ARC_R, n.angle - ARC_SPAN/2, n.angle + ARC_SPAN/2)});
+  arcLayer.appendChild(path);
+  return {n, path};
+});
+
+/* markers and labels */
+const nodeLayer = el("g");
+svg.appendChild(nodeLayer);
+const labels = NODES.map(n => {
+  const dot = el("circle", {class:"nodedot",
+    cx: CX + DOT_R*Math.cos(n.angle), cy: CY + DOT_R*Math.sin(n.angle), r:4,
+    fill: n.down ? "var(--paper)" : n.color, stroke:n.color});
+  nodeLayer.appendChild(dot);
+
+  const lx = CX + LABEL_R*Math.cos(n.angle), ly = CY + LABEL_R*Math.sin(n.angle);
+  let rot = n.angle*180/Math.PI, anchor = "start";
+  if (n.angle > Math.PI/2 || n.angle < -Math.PI/2){ rot += 180; anchor = "end"; }
+  const text = el("text", {class:"nodelabel", fill:n.color, x:lx, y:ly,
+    "text-anchor":anchor, transform:`rotate(${rot},${lx},${ly})`, dy:"0.35em"});
+  text.textContent = n.id;
+  nodeLayer.appendChild(text);
+  return {n, text};
+});
+
+/* ── thread weight ─────────────────────────────────────────────────────── */
+const weightOf = l => 1.9 + l.w*3.8;
+function setWeight(k){
+  for (const {l, path} of chords){
+    const w = weightOf(l)*k;
+    path.setAttribute("stroke-width", w);
+    if (l.quiet){
+      const d = Math.max(2.2, w*1.5);
+      path.setAttribute("stroke-dasharray", `${d} ${d}`);
+    }
+  }
+}
+const slider = document.getElementById("wt");
+setWeight(+slider.value);
+slider.addEventListener("input", e => setWeight(+e.target.value));
+
+/* ── interaction ───────────────────────────────────────────────────────── */
+const hintKicker = document.getElementById("hintKicker");
+const hintName = document.getElementById("hintName");
+const hintNote = document.getElementById("hintNote");
+const DEFAULTS = {
+  kicker: "The ring",
+  name: "Explore the ring",
+  note: "Hover or tap a region — coloured threads strengthen in flow, grey dashed threads fall quiet, and hollow markers power down."
+};
+let locked = null;
+const linked = (a, b) => LINKS.some(l => (l.s === a && l.t === b) || (l.t === a && l.s === b));
+
+function focusOn(n){
+  for (const {l, path} of chords){
+    const on = l.s === n.id || l.t === n.id;
+    path.classList.toggle("dim", !on);
+    path.classList.toggle("lit", on);
+  }
+  for (const {n: m, path} of arcs){
+    path.classList.toggle("dimarc", m.id !== n.id && !linked(n.id, m.id));
+  }
+  for (const {n: m, text} of labels){
+    text.setAttribute("fill", (m.id === n.id || linked(n.id, m.id)) ? m.color : "var(--ink-35)");
+  }
+  hintKicker.textContent = GROUPS.find(g => g.id === n.group).label +
+    (n.down ? " · quiets in flow" : "");
+  hintName.textContent = n.full;
+  hintNote.textContent = n.note;
+}
+function clearFocus(){
+  for (const {path} of chords){ path.classList.remove("dim", "lit"); }
+  for (const {path} of arcs){ path.classList.remove("dimarc"); }
+  for (const {n, text} of labels){ text.setAttribute("fill", n.color); }
+  hintKicker.textContent = DEFAULTS.kicker;
+  hintName.textContent = DEFAULTS.name;
+  hintNote.textContent = DEFAULTS.note;
+}
+
+function bind(node, n){
+  node.addEventListener("mouseenter", () => { if (!locked) focusOn(n); });
+  node.addEventListener("mouseleave", () => { if (!locked) clearFocus(); });
+  node.addEventListener("click", e => {
+    e.stopPropagation();
+    if (locked === n.id){ locked = null; clearFocus(); }
+    else { locked = n.id; focusOn(n); }
+  });
+}
+arcs.forEach(({n, path}) => bind(path, n));
+labels.forEach(({n, text}) => bind(text, n));
+svg.addEventListener("click", () => { locked = null; clearFocus(); });
+
+/* theme, shared with the rest of the site */
+const themeBtn = document.getElementById("themeBtn");
+const themeLbl = document.getElementById("themeLbl");
+if (document.documentElement.getAttribute("data-theme") === "dark"){
+  themeLbl.textContent = "Light";
+  themeBtn.setAttribute("aria-pressed", "true");
+}
+themeBtn.addEventListener("click", () => {
+  const root = document.documentElement;
+  const dark = root.getAttribute("data-theme") === "dark";
+  if (dark){ root.removeAttribute("data-theme"); themeLbl.textContent = "Dark"; }
+  else { root.setAttribute("data-theme", "dark"); themeLbl.textContent = "Light"; }
+  themeBtn.setAttribute("aria-pressed", String(!dark));
+  try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
+});
+</script>
+
+</body>
+</html>
