@@ -55,8 +55,8 @@ var NODES = [
 
 /* the site palette: bright, low-saturation, in the familiar hue order */
 var PALETTE = [
-  "#FEAEA4","#E6CF51","#85DD93","#85D0FE","#DCB2FB","#FBB476","#3ADFE0",
-  "#FCA9CD","#ABC5FE","#ACD774","#FEB192","#40DBFB","#F7A5EF","#5AE2B5"
+  "#915AD8","#CD5AD8","#E250A9","#FF507A","#FF704E","#F89F3A","#DAD358",
+  "#AFF05B","#6BF75C","#41F186","#4AE8C3","#4DCAE5","#4E95E4","#5A61D8"
 ];
 
 var STATES = [
