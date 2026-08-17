@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Network Atlas — MidnightNeuroscience.AI</title>
+<meta name="description" content="The flow state's network ring beside the MNI152 scan: click a region on the ring and the same region lights up on the brain, in the same colour.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/viewer.css">
+<link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Prata&display=swap" rel="stylesheet">
+<meta name="color-scheme" content="dark light">
+<script>/* Dark is the default; only an explicit choice of light overrides it.
+   Set before first paint so no page flashes white on its way in. */
+(function(){var t="dark";try{if(localStorage.getItem("mn-theme")==="light")t="light";}catch(e){}
+if(t==="dark")document.documentElement.setAttribute("data-theme","dark");})();</script>
+<style>
+@font-face{
+  font-family:'Flux';
+  src:url('fonts/Flux-Regular.woff2') format('woff2');
+  font-weight:400 700; font-display:swap;
+}
+
+:root{
+  --paper:#FFFFFF;
+  --ink:#111111;
+  --ink-60:#5A5A5A;
+  --ink-35:#A9A9A9;
+  --hair:#111111;
+  --quiet:#8A8A8A;
+
+  --font-brand:'Flux','Afacad Flux',sans-serif;
+  --font-serif:'Newsreader',Georgia,serif;
+  --font-display:'Prata',Georgia,serif;
+
+  --wrap:1880px;
+  --gap:14px;
+}
+:root[data-theme="dark"]{
+  --paper:#111111;
+  --ink:#FFFFFF;
+  --ink-60:#A9A9A9;
+  --ink-35:#5A5A5A;
+  --hair:#FFFFFF;
+  --quiet:#8A8A8A;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-serif); font-size:1rem; line-height:1.62;
+  font-optical-sizing:auto; -webkit-font-smoothing:antialiased;
+  margin:0 0 3rem;
+}
+::selection{ background:var(--ink); color:var(--paper); }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+a{ color:var(--ink); }
+svg{ display:block; }
+
+.wrap{ max-width:var(--wrap); margin:0 auto;
+  padding-left:clamp(14px,2.5vw,48px); padding-right:clamp(14px,2.5vw,48px); }
+
+/* masthead, shared with the rest of the site */
+.masthead{ text-align:center; padding:clamp(26px,4vw,44px) 0 0; }
+.masthead .brand{ font-size:clamp(1.55rem,4.6vw,2.8rem); }
+.brand{
+  display:inline-flex; align-items:flex-start; gap:.3em;
+  font-family:var(--font-brand); font-weight:500;
+  line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
+}
+.brand:hover{ text-decoration:none; }
+.brand .sparks{ width:.55em; height:.55em; margin-top:-.05em; }
+.nav-row{
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:.3rem clamp(1rem,2.6vw,2rem);
+  padding:clamp(16px,2.6vw,26px) 0 clamp(14px,2.2vw,20px);
+}
+.nav-row a{
+  font-family:var(--font-brand); font-weight:500; font-size:.74rem;
+  letter-spacing:.3em; text-transform:uppercase; color:var(--ink); text-decoration:none;
+}
+.nav-row a:hover{ text-decoration:underline; text-underline-offset:3px; }
+.nav-row a[aria-current]{ border-bottom:2px solid var(--ink); padding-bottom:2px; }
+.theme-toggle{
+  font-family:var(--font-brand); font-weight:500; font-size:.66rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink);
+  background:none; border:1px solid var(--hair); cursor:pointer;
+  padding:.28rem .6rem; display:inline-flex; align-items:center; gap:.42rem;
+}
+.theme-toggle:hover{ background:var(--ink); color:var(--paper); }
+.theme-toggle .th-dot{
+  width:.66rem; height:.66rem; border:1px solid currentColor; border-radius:50%;
+  background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
+
+.title-strip{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:.5rem 1.3rem; border:1px solid var(--hair);
+  padding:.8rem 1rem; margin-bottom:var(--gap); text-align:center;
+}
+.title-strip .name{
+  font-family:var(--font-display); font-size:1.35rem;
+  font-weight:400; line-height:1.05; letter-spacing:.02em; margin:0;
+}
+.title-strip .anno{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.88rem; color:var(--ink-60);
+}
+
+/* rail */
+.rail-note{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.8rem; color:var(--ink-60); margin:.6rem 0 0;
+}
+.rail-row{ display:flex; align-items:center; gap:.5rem; margin:.6rem 0 0; }
+.rail-row .tool-label{
+  flex:none; font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink-60);
+}
+.rail-row input[type=range]{ flex:1; min-width:0; accent-color:var(--ink); }
+.rail-row .val{
+  flex:none; font-family:var(--font-brand); font-size:.62rem;
+  letter-spacing:.1em; color:var(--ink-60); min-width:2.6em; text-align:right;
+}
+
+.key-list{ display:flex; flex-direction:column; gap:.45rem; }
+.key-list span{
+  display:inline-flex; align-items:center; gap:.6rem;
+  font-family:var(--font-brand); font-size:.55rem;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--ink-60);
+}
+.key{ display:inline-block; width:28px; height:3px; flex:none; }
+.key.grad{ background:linear-gradient(90deg,#85D0FE,#85DD93); }
+.key.quiet{ height:0; border-top:2px dashed var(--quiet); }
+.key.dot{ width:10px; height:10px; border-radius:50%; background:var(--ink-35); }
+.key.hollow{ width:10px; height:10px; border-radius:50%;
+  background:var(--paper); border:1.7px solid var(--ink-35); }
+.key.solidarc{ height:5px; background:var(--ink-35); }
+.key.dasharc{ height:5px; background:repeating-linear-gradient(
+  90deg, var(--ink-35) 0 5px, transparent 5px 10px); }
+
+/* the reading panel */
+.panel-kicker{
+  font-family:var(--font-brand); font-weight:500; font-size:.55rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--ink-60);
+}
+.panel-title{ font-family:var(--font-display); font-size:1.15rem; line-height:1.15; margin:.25rem 0 .35rem; }
+.panel p{ font-size:.94rem; line-height:1.55; }
+.where{
+  border-top:1px solid var(--ink-35); margin-top:.7rem; padding-top:.6rem;
+  font-size:.86rem; color:var(--ink-60);
+}
+.where b{
+  display:block; font-family:var(--font-brand); font-weight:500;
+  font-size:.55rem; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--ink-60); margin-bottom:.25rem;
+}
+.fit{
+  display:inline-block; font-family:var(--font-brand); font-size:.52rem;
+  letter-spacing:.18em; text-transform:uppercase;
+  border:1px solid var(--ink-35); padding:.12rem .38rem; margin-left:.4rem;
+  vertical-align:.08em; color:var(--ink-60);
+}
+.fit.exact{ border-color:var(--ink); color:var(--ink); }
+
+/* the ring, sat under the viewports */
+.ring-stage{
+  border:1px solid var(--hair); padding:.6rem; background:var(--paper);
+  margin-top:var(--gap);
+}
+#ring{ width:100%; height:auto; max-width:780px; margin:0 auto; }
+.regionarc{ fill:none; stroke-width:11; stroke-linecap:butt; cursor:pointer; }
+.regionarc.nomap{ stroke-dasharray:7 6; }
+.grouplabel{
+  font-family:var(--font-brand); font-size:9.5px; font-weight:500;
+  letter-spacing:.26em; text-transform:uppercase; fill:var(--ink-35);
+}
+.chord{ fill:none; stroke-linecap:butt; transition:opacity .25s ease; }
+.chord.quiet{ stroke:var(--quiet); }
+.nodedot{ stroke-width:1.8; pointer-events:none; }
+.nodelabel{
+  font-family:var(--font-brand); font-size:11.5px; font-weight:500;
+  letter-spacing:.12em; cursor:pointer; transition:fill .25s ease;
+}
+.dim{ opacity:.07 !important; }
+.lit{ opacity:1 !important; }
+.dimarc{ opacity:.16; }
+
+.below{ margin-top:var(--gap); }
+.attrib{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.85rem; color:var(--ink-60); max-width:78ch;
+  border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:1.4rem;
+}
+
+/* On a wide screen the four boxes run in one band across the top, which
+   leaves the ring in view beneath them — the whole point of the page is
+   seeing both at once. Below that the shared two-up grid takes over. */
+@media (min-width:1101px){
+  .views{ grid-template-columns:repeat(4,1fr); }
+  .mri-stage{ height:clamp(190px,21vh,270px); }
+}
+/* the ring scales with the column, so the lettering has to grow back */
+@media (max-width:1100px){
+  .nodelabel{ font-size:13px; }
+  .grouplabel{ font-size:10.5px; letter-spacing:.2em; }
+}
+@media (max-width:760px){
+  .ring-stage{ padding:.25rem; }
+  .nodelabel{ font-size:17px; letter-spacing:.08em; }
+  .grouplabel{ font-size:13px; letter-spacing:.16em; }
+}
+@media (prefers-reduced-motion: reduce){
+  .chord,.nodedot,.nodelabel,.regionarc{ transition:none !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="masthead wrap">
+  <a class="brand" href="index.html">MidnightNeuroscience.AI<svg class="sparks" viewBox="0 0 100 100" aria-hidden="true" fill="currentColor"><path transform="translate(52 0) scale(0.30)" d="M50 0C54 32 68 46 100 50 68 54 54 68 50 100 46 68 32 54 0 50 32 46 46 32 50 0Z"/><path transform="translate(0 22) scale(0.60)" d="M50 0C54 32 68 46 100 50 68 54 54 68 50 100 46 68 32 54 0 50 32 46 46 32 50 0Z"/><path transform="translate(60 56) scale(0.40)" d="M50 0C54 32 68 46 100 50 68 54 54 68 50 100 46 68 32 54 0 50 32 46 46 32 50 0Z"/></svg></a>
+  <nav class="nav-row" aria-label="Site">
+    <a href="index.html">Region Atlas</a>
+    <a href="receptors.html">Receptor Density</a>
+    <a href="tracts.html">Tractography</a>
+    <a href="hallucinations.html">Hallucinations</a>
+    <a href="networks.html">Networks</a>
+    <a href="network-atlas.html" aria-current="page">Network Atlas</a>
+    <button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button>
+  </nav>
+</header>
+
+<main class="wrap">
+
+<div class="title-strip">
+  <h1 class="name" id="stTitle">Networks on the Brain</h1>
+  <span class="anno" id="stAnno">network atlas &middot; N&ordm;&thinsp;03</span>
+</div>
+
+<div class="studio">
+
+  <aside class="rail" aria-label="Controls">
+    <h2 class="sec-h">Networks <small id="secSub">ring and scan</small></h2>
+
+    <div class="card">
+      <h2>Brain state</h2>
+      <div class="selwrap">
+        <select id="stateSel" aria-label="Brain state"></select>
+      </div>
+      <p class="rail-note" id="stBlurb" style="font-style:normal;color:var(--ink);"></p>
+      <p class="rail-note">Click a region on the ring and the same region lights up on the brain in its own colour, with the regions it couples to held at half strength. Move the crosshair on the scan and the ring follows it back.</p>
+    </div>
+
+    <div class="card">
+      <h2>Reading</h2>
+      <div class="panel-kicker" id="hintKicker">The ring</div>
+      <div class="panel-title" id="hintName">Explore the ring</div>
+      <p id="hintNote">Click a region — coloured threads strengthen, grey dashed threads fall quiet, and hollow markers power down.</p>
+      <div class="where" id="whereBox" hidden>
+        <b>On the scan</b>
+        <span id="whereText"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>On the scan</h2>
+      <button class="ts-btn" id="clearBtn" type="button" style="width:100%">Clear selection</button>
+      <div class="rail-row">
+        <span class="tool-label">Overlay</span>
+        <input type="range" id="overlayOpacity" min="0" max="100" step="5" value="85" aria-label="Overlay opacity">
+        <span class="val" id="overlayVal">85%</span>
+      </div>
+      <p class="rail-note" id="scan-note">MNI152 template &middot; AAL-116 parcellation</p>
+    </div>
+
+    <div class="card">
+      <h2>Key</h2>
+      <div class="key-list">
+        <span><i class="key grad"></i>Strengthens in this state</span>
+        <span><i class="key quiet"></i>Falls quiet in this state</span>
+        <span><i class="key dot"></i>More active</span>
+        <span><i class="key hollow"></i>Less active</span>
+        <span><i class="key solidarc"></i>Drawn on the atlas</span>
+        <span><i class="key dasharc"></i>No atlas parcel</span>
+      </div>
+      <div class="rail-row">
+        <span class="tool-label">Thread</span>
+        <input type="range" id="wt" min="0.28" max="1" step="0.04" value="1" aria-label="Thread weight">
+      </div>
+    </div>
+  </aside>
+
+  <section class="centre" aria-label="Brain viewports and network ring">
+    <div class="views" id="scan-views">
+      <div class="view" data-box="Ren">
+        <div class="view-cap"><b>3D</b><span>volume render</span></div>
+        <div class="view-tools"><span class="tool-label">Drag to turn</span><button class="ts-btn centre-btn" data-centre="Ren" type="button">Centre planes</button></div>
+        <div class="mri-stage"><canvas id="naRen"></canvas></div>
+      </div>
+      <div class="view" data-box="Ax">
+        <div class="view-cap"><b>Axial</b><span>transverse plane</span></div>
+        <div class="view-tools"><span class="tool-label">Drag to move</span><button class="ts-btn centre-btn" data-centre="Ax" type="button">Centre planes</button></div>
+        <div class="mri-stage"><canvas id="naAx"></canvas></div>
+      </div>
+      <div class="view" data-box="Cor">
+        <div class="view-cap"><b>Coronal</b><span>frontal plane</span></div>
+        <div class="view-tools"><span class="tool-label">Drag to move</span><button class="ts-btn centre-btn" data-centre="Cor" type="button">Centre planes</button></div>
+        <div class="mri-stage"><canvas id="naCor"></canvas></div>
+      </div>
+      <div class="view" data-box="Sag">
+        <div class="view-cap"><b>Sagittal</b><span>median plane</span></div>
+        <div class="view-tools"><span class="tool-label">Drag to move</span><button class="ts-btn centre-btn" data-centre="Sag" type="button">Centre planes</button></div>
+        <div class="mri-stage"><canvas id="naSag"></canvas></div>
+      </div>
+    </div>
+
+    <div class="ring-stage">
+      <svg id="ring" viewBox="0 0 720 720" role="img" aria-label="Circular graph of how brain regions couple in the chosen state, linked to the scan"></svg>
+    </div>
+  </section>
+
+</div>
+
+<section class="below">
+  <p class="attrib"><span id="stSource"></span> The couplings are illustrative rather than measured; regions keep their place and colour in every state, so switching states moves the threads and nothing else. The scan is the MNI152 template under the AAL-116 parcellation. Functional regions and anatomical parcels are not the same objects: eleven of the fourteen regions here are drawn on the parcels they sit inside, seven of those only approximately, and three have no parcel at all. The ring says which is which.</p>
+</section>
+
+</main>
+
+<script src="assets/network-states.js"></script>
+<script src="assets/network-ring.js"></script>
+<script>
+"use strict";
+
+const $ = id => document.getElementById(id);
+const DATA = window.MN_NET;
+
+/* Where each region lands on the atlas. The ring is drawn from the functional
+   literature; AAL-116 is drawn from anatomy, and the two carve the brain up
+   differently. Three kinds of entry, and the page shows which is which:
+
+     exact   — the parcel is the region
+     approx  — the parcel contains the region but is larger, or the boundary
+               the region needs is one AAL does not draw
+     (mni)   — no parcel exists at all. Nothing is painted; the crosshair is
+               parked at the published coordinate instead. */
+const MAP = {
+  mPFC: {fit:"approx", bases:["Frontal_Sup_Medial","Frontal_Med_Orb"],
+         where:"Medial superior frontal gyrus and medial orbitofrontal cortex — the medial wall the mPFC occupies, drawn wider than the functional region."},
+  PCC:  {fit:"approx", bases:["Cingulum_Post","Precuneus"],
+         where:"Posterior cingulate and precuneus, taken together as the default-mode core."},
+  dlPFC:{fit:"approx", bases:["Frontal_Mid"],
+         where:"Middle frontal gyrus. The dorsolateral surface is most of it, but the parcel runs further forward and down than the functional region."},
+  AI:   {fit:"approx", bases:["Insula"],
+         where:"The whole insula. AAL-116 draws no anterior/posterior boundary, so the posterior insula is lit along with it."},
+  dACC: {fit:"approx", bases:["Cingulum_Ant","Cingulum_Mid"],
+         where:"Anterior and middle cingulate. The dorsal band the literature means straddles the boundary between the two parcels."},
+  FEF:  {fit:"approx", bases:["Precentral"],
+         where:"Precentral gyrus. The frontal eye fields sit at its junction with the middle frontal gyrus, and AAL draws no line there — this is the nearest whole parcel, and a much larger one."},
+  IPS:  {fit:"approx", bases:["Parietal_Sup","Parietal_Inf"],
+         where:"Superior and inferior parietal lobules. The sulcus itself is the border between them, so both are lit."},
+  VStr: {fit:"none", mni:[9, 9, -8],
+         where:"No parcel. The ventral striatum is not split out of AAL-116 — the caudate and putamen parcels run straight through it. The crosshair is at MNI (9, 9, −8), a coordinate commonly reported for the accumbens."},
+  Put:  {fit:"exact", bases:["Putamen"], where:"Putamen."},
+  VTA:  {fit:"none", mni:[0, -16, -13],
+         where:"No parcel. AAL-116 stops above the midbrain and does not parcellate it. The crosshair is at MNI (0, −16, −13), in the tegmentum."},
+  LC:   {fit:"none", mni:[5, -37, -22],
+         where:"No parcel. The pons is outside AAL-116 altogether. The crosshair is at MNI (5, −37, −22), after the locus coeruleus coordinates of Keren et al. (2009)."},
+  Amy:  {fit:"exact", bases:["Amygdala"], where:"Amygdala."},
+  SMA:  {fit:"exact", bases:["Supp_Motor_Area"], where:"Supplementary motor area."},
+  Cb:   {fit:"exact", bases:["Cerebelum_"], prefix:true,
+         where:"All nine cerebellar lobules, left and right."}
+};
+DATA.NODES.forEach(n => Object.assign(n, MAP[n.id]));
+
+/* How present a region is on the scan. Colour says which region; how far the
+   colour is carried says how much it matters to what is being shown.
+
+   Emphasis rides on the colour rather than on transparency because the label
+   colormap's alpha is all or nothing here — a parcel at alpha 60 renders
+   exactly as one at 255, and only alpha 0 hides it. Mixing each colour down
+   towards the black behind the scan gives the grades that alpha cannot. */
+const EMPH = { full: 1, mid: 0.52, faint: 0.2 };
+
+/* ── the scan ──────────────────────────────────────────────────────────── */
+let scanState = "idle", scanInstances = [], byKey = {}, parcelToNode = {};
+
+function loadScript(src){
+  return new Promise((res, rej) => {
+    const s = document.createElement("script");
+    s.src = src; s.onload = res;
+    s.onerror = () => rej(new Error("could not load " + src));
+    document.head.appendChild(s);
+  });
+}
+function b64ToUrl(b64){
+  const bin = atob(b64), bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return URL.createObjectURL(new Blob([bytes], {type:"application/gzip"}));
+}
+function hexToRgb(h){
+  return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
+}
+/* the same hue, carried k of the way from black */
+function shade(h, k){
+  return hexToRgb(h).map(v => Math.round(v*k));
+}
+
+/* Which atlas parcels a region owns. */
+function parcelsOf(n){
+  if (!n.bases) return [];
+  const out = [];
+  for (const r of MN_ATLAS.REGIONS){
+    const hit = n.prefix
+      ? n.bases.some(b => r.base.indexOf(b) === 0)
+      : n.bases.indexOf(r.base) >= 0;
+    if (!hit) continue;
+    if (r.L !== undefined) out.push(r.L, r.R);
+    if (r.S !== undefined) out.push(r.S);
+  }
+  return out;
+}
+
+/* Paint the atlas: one colour per parcel, everything else clear. */
+function paint(colouring){
+  if (scanState !== "ready") return;
+  const labelNames = MN_ATLAS.RAW_LABELS, n = labelNames.length;
+  const R = new Array(n).fill(0), G = new Array(n).fill(0),
+        B = new Array(n).fill(0), A = new Array(n).fill(0), I = [];
+  for (let i = 0; i < n; i++) I.push(i);
+  for (const [idx, rgb, alpha] of colouring){
+    if (idx >= n) continue;
+    R[idx] = rgb[0]; G[idx] = rgb[1]; B[idx] = rgb[2];
+    A[idx] = alpha === undefined ? 255 : alpha;
+  }
+  const cm = {R, G, B, A, I, labels: labelNames};
+  for (const nv of scanInstances){
+    if (nv.volumes && nv.volumes.length > 1){
+      nv.volumes[1].setColormapLabel(cm);
+      nv.updateGLVolume();
+    }
+  }
+}
+
+/* Every mapped region is drawn, always, in its ring colour. What changes is
+   emphasis: the picked region comes forward, the ones it couples to in the
+   state now showing hold at half strength, and the rest fall back. */
+function emphasisFor(n){
+  if (!selected){
+    /* nothing picked: the state itself is the reading — the regions it powers
+       down sit back from the ones it drives */
+    const down = ring.state && ring.state.down || [];
+    return down.indexOf(n.id) >= 0 ? EMPH.mid : EMPH.full;
+  }
+  if (n.id === selected) return EMPH.full;
+  return ring.isLinked(selected, n.id) ? EMPH.mid : EMPH.faint;
+}
+function repaint(){
+  if (scanState !== "ready") return;
+  const colouring = [];
+  for (const n of DATA.NODES){
+    if (!n.bases) continue;
+    const rgb = shade(n.color, emphasisFor(n));
+    for (const idx of parcelsOf(n)) colouring.push([idx, rgb, 255]);
+  }
+  paint(colouring);
+}
+
+/* Put the planes through the region that was picked, so the highlight is
+   actually on screen rather than three slices away. */
+function centreOnRegion(n){
+  if (scanState !== "ready" || !n.bases) return;
+  const want = new Set(parcelsOf(n));
+  const vol = scanInstances[0].volumes[1], dims = vol.hdr.dims, img = vol.img;
+  let sx = 0, sy = 0, sz = 0, count = 0;
+  for (let k = 0; k < dims[3]; k++)
+    for (let j = 0; j < dims[2]; j++)
+      for (let i = 0; i < dims[1]; i++)
+        if (want.has(img[i + j*dims[1] + k*dims[1]*dims[2]])){ sx+=i; sy+=j; sz+=k; count++; }
+  if (!count) return;
+  const frac = [sx/count/dims[1], sy/count/dims[2], sz/count/dims[3]];
+  for (const inst of scanInstances){ inst.scene.crosshairPos = frac.slice(); inst.drawScene(); }
+}
+
+/* Regions with no parcel get the crosshair instead of a colour. */
+function gotoMni(mm){
+  for (const nv of scanInstances){
+    try{
+      nv.scene.crosshairPos = nv.mm2frac(mm);
+      nv.drawScene();
+    }catch(e){ /* a viewport that has not finished loading simply stays put */ }
+  }
+}
+
+async function ensureScan(){
+  if (scanState === "ready" || scanState === "loading") return;
+  scanState = "loading";
+  $("scan-note").textContent = "Loading the MNI152 scan…";
+  try{
+    if (typeof niivue === "undefined") await loadScript("assets/niivue.js");
+    if (typeof MN_ATLAS === "undefined") await loadScript("assets/atlas-data.js");
+    const planes = [
+      {id:"naRen", key:"Ren", st:niivue.SLICE_TYPE.RENDER},
+      {id:"naAx",  key:"Ax",  st:niivue.SLICE_TYPE.AXIAL},
+      {id:"naCor", key:"Cor", st:niivue.SLICE_TYPE.CORONAL},
+      {id:"naSag", key:"Sag", st:niivue.SLICE_TYPE.SAGITTAL}
+    ];
+    const tplUrl = b64ToUrl(MN_ATLAS.TPL_B64);
+    const atlasUrl = b64ToUrl(MN_ATLAS.ATLAS_B64);
+    for (const p of planes){
+      const nv = new niivue.Niivue({
+        backColor:[0,0,0,1], crosshairColor:[1,1,1,1], show3Dcrosshair:true,
+        sliceType:p.st, invertScrollDirection:true, dragAndDropEnabled:false,
+        textHeight:0.05
+      });
+      await nv.attachToCanvas($(p.id));
+      byKey[p.key] = nv;
+      scanInstances.push(nv);
+    }
+    await Promise.all(scanInstances.map(nv => nv.loadVolumes([
+      {url:tplUrl, name:"mni152.nii.gz", colormap:"gray", opacity:1},
+      {url:atlasUrl, name:"aal.nii.gz", opacity:0.85}
+    ])));
+    planes.forEach((p, i) => scanInstances[i].setSliceType(p.st));
+    scanInstances.forEach(nv => nv.broadcastTo(
+      scanInstances.filter(o => o !== nv), {"2d":true, "3d":true}));
+
+    /* which node owns each parcel, for reading the ring back off the scan */
+    for (const n of DATA.NODES){
+      for (const idx of parcelsOf(n)) parcelToNode[idx] = n.id;
+    }
+    scanInstances.forEach(nv => { nv.onLocationChange = crosshairMoved; });
+
+    document.querySelectorAll("[data-centre]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        scanInstances.forEach(inst => {
+          inst.scene.crosshairPos = [0.5, 0.5, 0.5];
+          inst.scene.pan2Dxyzmm = [0, 0, 0, 1];
+          inst.drawScene();
+        });
+      });
+    });
+    document.querySelectorAll(".mri-stage").forEach(stage => {
+      stage.addEventListener("wheel", e => e.preventDefault(), {capture:true, passive:false});
+    });
+    scanState = "ready";
+    $("scan-note").textContent = "MNI152 template · AAL-116 parcellation";
+    applyOpacity();
+    repaint();
+  } catch (err){
+    scanState = "failed";
+    $("scan-note").textContent = "The scan could not be loaded: " +
+      (err && err.message ? err.message : err);
+  }
+}
+
+const opacityEl = $("overlayOpacity"), opacityVal = $("overlayVal");
+function applyOpacity(){
+  const v = Number(opacityEl.value);
+  opacityVal.textContent = v + "%";
+  for (const nv of scanInstances){
+    if (nv.volumes && nv.volumes.length > 1){ nv.setOpacity(1, v/100); nv.drawScene(); }
+  }
+}
+opacityEl.addEventListener("input", applyOpacity);
+
+/* ── the two halves, kept in step ──────────────────────────────────────── */
+const DEFAULTS = {
+  kicker: "The ring",
+  name: "Explore the ring",
+  note: "Click a region — coloured threads strengthen, grey dashed threads fall quiet, and hollow markers power down."
+};
+const FIT_LABEL = { exact:"Measured parcel", approx:"Approximate", none:"Not in the atlas" };
+let selected = null;
+
+const ring = MN_RING.create({
+  svg: $("ring"),
+  data: DATA,
+  dashed: n => n.fit === "none",
+  onHover: n => { if (!selected) read(n); },
+  onLeave: () => { if (!selected) unread(); },
+  onSelect: n => { if (selected === n.id) deselect(); else select(n); },
+  onBackground: () => { if (selected) deselect(); }
+});
+
+/* what the rail says about a region, in the state now showing */
+function read(n){
+  ring.focus(n.id);
+  const st = ring.state, down = (st.down || []).indexOf(n.id) >= 0;
+  $("hintKicker").textContent = DATA.GROUPS.find(g => g.id === n.group).label +
+    (down ? " · quiets here" : "");
+  $("hintName").textContent = n.full;
+  $("hintNote").textContent = (st.notes && st.notes[n.id]) || n.role;
+
+  const box = $("whereText");
+  box.innerHTML = "";
+  box.append(n.where);
+  const badge = document.createElement("span");
+  badge.className = "fit" + (n.fit === "exact" ? " exact" : "");
+  badge.textContent = FIT_LABEL[n.fit];
+  box.append(badge);
+  $("whereBox").hidden = false;
+}
+function unread(){
+  ring.clear();
+  $("hintKicker").textContent = DEFAULTS.kicker;
+  $("hintName").textContent = DEFAULTS.name;
+  $("hintNote").textContent = DEFAULTS.note;
+  $("whereBox").hidden = true;
+}
+
+/* clicking a region drives the scan as well as the ring */
+function select(n){
+  selected = n.id;
+  read(n);
+  repaint();
+  if (n.mni) gotoMni(n.mni); else centreOnRegion(n);
+}
+function deselect(){
+  selected = null;
+  unread();
+  repaint();
+}
+$("clearBtn").addEventListener("click", () => { if (selected) deselect(); });
+
+/* …and the ring follows the crosshair back, while nothing is pinned. Only the
+   ring moves: repainting the scan on every drag frame would cost more than the
+   feedback is worth. */
+let lastParcel = -1;
+function crosshairMoved(d){
+  if (selected) return;
+  let parcel = -1;
+  try{
+    const vals = d && d.values;
+    if (vals && vals.length > 1) parcel = Math.round(vals[1].value);
+  }catch(e){ return; }
+  if (parcel === lastParcel) return;
+  lastParcel = parcel;
+  const id = parcelToNode[parcel];
+  if (id) read(ring.byId[id]); else unread();
+}
+
+/* ── the state picker ──────────────────────────────────────────────────── */
+const sel = $("stateSel");
+DATA.STATES.forEach(s => {
+  const o = document.createElement("option");
+  o.value = s.id; o.textContent = s.label;
+  sel.appendChild(o);
+});
+function showState(id){
+  const st = DATA.STATES.find(s => s.id === id) || DATA.STATES[0];
+  selected = null;
+  ring.setState(st);
+  $("stTitle").textContent = st.title + " on the Brain";
+  $("stAnno").textContent = st.anno;
+  $("secSub").textContent = st.anno;
+  $("stBlurb").textContent = st.blurb;
+  $("stSource").textContent = st.source;
+  document.title = st.title + " — MidnightNeuroscience.AI";
+  unread();
+  repaint();
+}
+sel.addEventListener("change", () => showState(sel.value));
+showState(DATA.STATES[0].id);
+
+const slider = $("wt");
+ring.setWeight(+slider.value);
+slider.addEventListener("input", e => ring.setWeight(+e.target.value));
+
+/* theme, shared with the rest of the site */
+const themeBtn = $("themeBtn"), themeLbl = $("themeLbl");
+if (document.documentElement.getAttribute("data-theme") === "dark"){
+  themeLbl.textContent = "Light";
+  themeBtn.setAttribute("aria-pressed", "true");
+}
+themeBtn.addEventListener("click", () => {
+  const root = document.documentElement;
+  const dark = root.getAttribute("data-theme") === "dark";
+  if (dark){ root.removeAttribute("data-theme"); themeLbl.textContent = "Dark"; }
+  else { root.setAttribute("data-theme", "dark"); themeLbl.textContent = "Light"; }
+  themeBtn.setAttribute("aria-pressed", String(!dark));
+  try{ localStorage.setItem("mn-theme", dark ? "light" : "dark"); }catch(e){}
+});
+
+ensureScan();
+</script>
+
+</body>
+</html>
