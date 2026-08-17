@@ -193,10 +193,27 @@ svg{ display:block; }
   border-top:1px solid var(--ink-35); padding-top:1rem; margin-top:1.4rem;
 }
 
-/* On a wide screen the four boxes run in one band across the top, which
-   leaves the ring in view beneath them — the whole point of the page is
-   seeing both at once. Below that the shared two-up grid takes over. */
-@media (min-width:1101px){
+/* Wide enough for two columns: the ring takes a square of its own and the
+   four boxes sit beside it, two up and two down, stretched to the same
+   height. Seeing both at once is the whole point of the page, and on a
+   desktop there is room to do it side by side rather than stacked. */
+@media (min-width:1240px){
+  .centre{
+    display:grid; gap:var(--gap); align-items:stretch;
+    grid-template-columns:minmax(0,1fr) minmax(380px,0.92fr);
+  }
+  .ring-stage{
+    order:-1; margin-top:0; aspect-ratio:1;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #ring{ max-width:100%; }
+  .views{ grid-template-columns:1fr 1fr; grid-auto-rows:1fr; }
+  .view{ min-height:0; }
+  .mri-stage{ height:auto; flex:1 1 0; min-height:180px; }
+}
+/* Between the rail folding away and there being room for two columns, the
+   boxes run in one band above the ring. */
+@media (min-width:1101px) and (max-width:1239px){
   .views{ grid-template-columns:repeat(4,1fr); }
   .mri-stage{ height:clamp(190px,21vh,270px); }
 }
