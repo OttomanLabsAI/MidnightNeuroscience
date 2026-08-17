@@ -119,6 +119,16 @@ select{
   .mri-stage{ height:clamp(190px,54vw,280px); }
 }
 
+/* ── narrow screens: the tabs stack, one to a line ──────────────────────
+   Six tabs wrapped into ragged rows on a phone, breaking mid-row and leaving
+   the current tab hard to find. Stacked, each one reads as its own line.
+   Every page declares .nav-row in its own sheet, so the class is doubled
+   here to outrank those rules whichever order the sheets land in. */
+@media (max-width:760px){
+  .nav-row.nav-row{ flex-direction:column; gap:.62rem; }
+  .nav-row.nav-row a{ display:block; }
+}
+
 /* ── enlarge: one box taking the whole grid ── */
 .views.solo{ grid-template-columns:1fr; }
 .views.solo .view{ display:none; }
