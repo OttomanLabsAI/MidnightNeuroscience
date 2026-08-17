@@ -415,6 +415,7 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
     <a href="tracts.html">Tractography</a>
     <a href="hallucinations.html">Hallucinations</a>
     <a href="networks.html">Networks</a>
+    <a href="network-atlas.html">Network Atlas</a>
     <button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button>
   </nav>
 </header>
@@ -527,7 +528,7 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
   var REGIONS = MN_ATLAS.REGIONS, RAW_LABELS = MN_ATLAS.RAW_LABELS;
   var N_LABELS = RAW_LABELS.length;
 
-  var PALETTE = ["#E8A33D","#2F80ED","#EB5757","#27AE60","#9B51E0","#F2994A","#00B8D9","#FF5C93","#79E2F2","#C0B6F2"];
+  var PALETTE = ["#FEAEA4","#E6CF51","#85DD93","#85D0FE","#DCB2FB","#FBB476","#3ADFE0","#FCA9CD","#ABC5FE","#ACD774"];
 
   var statusEl = document.getElementById("status");
   function fail(msg){
