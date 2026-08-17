@@ -7,6 +7,9 @@
 <meta name="description" content="The flow state as a circular network graph: which couplings between brain regions strengthen when challenge meets skill, and which fall quiet.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="stylesheet" href="assets/viewer.css">
 <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Prata&display=swap" rel="stylesheet">
 <meta name="color-scheme" content="dark light">
@@ -64,12 +67,16 @@ svg{ display:block; }
 .masthead{ text-align:center; padding:clamp(26px,4vw,44px) 0 0; }
 .masthead .brand{ font-size:clamp(1.55rem,4.6vw,2.8rem); }
 .brand{
-  display:inline-flex; align-items:flex-start; gap:.3em;
+  display:inline-flex; align-items:baseline; gap:.36em;
   font-family:var(--font-brand); font-weight:500;
   line-height:1; letter-spacing:.01em; color:var(--ink); text-decoration:none;
 }
 .brand:hover{ text-decoration:none; }
-.brand .sparks{ width:.55em; height:.55em; margin-top:-.05em; }
+/* the mark sits to the left of the wordmark. Flex baseline alignment
+   puts an image's bottom edge on the text baseline, so a box one cap
+   height tall lands squarely between baseline and cap line. The brand
+   face measures .647em to the cap line. */
+.brand .mark{ width:.65em; height:.65em; flex:none; }
 .nav-row{
   display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
   gap:.3rem clamp(1rem,2.6vw,2rem);
@@ -185,7 +192,7 @@ svg{ display:block; }
 
 
 <header class="masthead wrap">
-  <a class="brand" href="index.html">MidnightNeuroscience.AI<svg class="sparks" viewBox="0 0 100 100" aria-hidden="true" fill="currentColor"><path transform="translate(52 0) scale(0.30)" d="M50 0C54 32 68 46 100 50 68 54 54 68 50 100 46 68 32 54 0 50 32 46 46 32 50 0Z"/><path transform="translate(0 22) scale(0.60)" d="M50 0C54 32 68 46 100 50 68 54 54 68 50 100 46 68 32 54 0 50 32 46 46 32 50 0Z"/><path transform="translate(60 56) scale(0.40)" d="M50 0C54 32 68 46 100 50 68 54 54 68 50 100 46 68 32 54 0 50 32 46 46 32 50 0Z"/></svg></a>
+  <a class="brand" href="index.html"><img class="mark" src="assets/logo.svg" alt="" width="72" height="72" decoding="async">MidnightNeuroscience.AI</a>
   <nav class="nav-row" aria-label="Site">
     <a href="index.html">Region Atlas</a>
     <a href="receptors.html">Receptor Density</a>
