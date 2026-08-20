@@ -99,8 +99,8 @@ def chord_d(l):
 out = [
     '<svg xmlns="http://www.w3.org/2000/svg" '
     f'viewBox="{CX-BOX:.0f} {CY-BOX:.0f} {BOX*2:.0f} {BOX*2:.0f}" '
-    'role="img" aria-label="MidnightNeuroscience">',
-    "<title>MidnightNeuroscience</title>",
+    'role="img" aria-label="VisualNeuroscience">',
+    "<title>VisualNeuroscience</title>",
     "<defs>",
 ]
 for j, l in enumerate(LINKS):
