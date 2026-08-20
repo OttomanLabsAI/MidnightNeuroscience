@@ -209,6 +209,54 @@ a.box:hover{ text-decoration:none; box-shadow:0 0 0 1px var(--ink) inset; }
 .band .caps{ letter-spacing:.26em; }
 .band small{ font-family:var(--font-serif); font-style:italic; font-size:.92rem; color:var(--ink-60); }
 
+/* ── what the highlighted regions do, stacked by layer ─────────────────
+   Fixed order, always: cerebrum on top, limbic midbrain in the middle, the
+   reptilian core at the bottom, so the stack reads the same way every time
+   whichever regions happen to be lit. */
+.notes{ margin-top:var(--gap); }
+.notes-empty, .notes-caveat{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.86rem; color:var(--ink-60); max-width:78ch;
+}
+.notes-caveat{
+  border-top:1px solid var(--ink-35); padding-top:.9rem; margin-top:1.1rem;
+  font-size:.8rem; color:var(--ink-35);
+}
+.tier{ border:1px solid var(--hair); margin-bottom:var(--gap); }
+.tier-head{
+  display:flex; flex-wrap:wrap; align-items:baseline; gap:.4rem .9rem;
+  padding:.6rem .9rem .5rem; border-bottom:1px solid var(--hair);
+}
+.tier-head b{
+  font-family:var(--font-brand); font-weight:500; font-size:.68rem;
+  letter-spacing:.28em; text-transform:uppercase;
+}
+.tier-head span{
+  font-family:var(--font-serif); font-style:italic;
+  font-size:.82rem; color:var(--ink-60);
+}
+.tier-head .n{
+  margin-left:auto; font-family:var(--font-brand); font-size:.6rem;
+  letter-spacing:.2em; color:var(--ink-60); font-style:normal;
+}
+.tier-body{ display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); }
+.rnote{
+  padding:.75rem .9rem .85rem; border-right:1px solid var(--ink-35);
+  border-bottom:1px solid var(--ink-35);
+}
+.rnote h3{
+  display:flex; align-items:center; gap:.5rem;
+  font-family:var(--font-brand); font-weight:500; font-size:.78rem;
+  letter-spacing:.08em; margin-bottom:.3rem;
+}
+.rnote h3 .dot{ width:.62rem; height:.62rem; flex:none; border:1px solid var(--ink); }
+.rnote h3 .side{
+  font-size:.55rem; letter-spacing:.18em; color:var(--ink-60); margin-left:auto;
+}
+.rnote p{ font-family:var(--font-serif); font-size:.9rem; line-height:1.5; color:var(--ink-60); }
+/* the last cell's right edge would otherwise dangle into a part-filled row */
+.rnote:last-child{ border-right:0; }
+
 .estab{
   text-align:center; padding:1.4rem 0 .4rem;
   font-family:var(--font-brand); font-size:.66rem; font-weight:500;
@@ -521,6 +569,13 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
 
   </div>
 
+  <section class="notes" id="notesSec" aria-label="Highlighted regions">
+    <h2 class="sec-h">Highlighted regions <small id="notesCount"></small></h2>
+    <p class="notes-empty" id="notesEmpty">Add a region above and what it does appears here, stacked by layer: cerebrum at the top, the limbic midbrain beneath it, the reptilian core at the bottom.</p>
+    <div id="notesTiers"></div>
+    <p class="notes-caveat">The three layers are MacLean's triune scheme. It stacks a brain map tidily and it is poor evolutionary history — the &ldquo;reptilian&rdquo; structures are not reptilian, and every layer here is present in every vertebrate with a brain. The grouping is a way of reading the map, not a claim about how it was built.</p>
+  </section>
+
   <p class="estab">Runs fully offline · single file · no server</p>
   <p class="credits">© 2026 VisualNeuroscience.AI · rendered with <a href="https://github.com/niivue/niivue" target="_blank" rel="noopener">NiiVue</a> (Rorden lab) · MNI152 template · AAL atlas · set in Flux, Newsreader &amp; Prata</p>
 
@@ -528,6 +583,7 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
 
 <script src="assets/niivue.js"></script>
 <script src="assets/atlas-data.js"></script>
+<script src="assets/region-notes.js"></script>
 <script>
 "use strict";
 (function(){
@@ -749,6 +805,64 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
     });
   }
 
+
+  /* ── what the highlighted regions do ──────────────────────────────────
+     Stacked by layer in a fixed order — cerebrum, limbic midbrain,
+     reptilian core — so the stack reads the same way whichever regions are
+     lit. A layer with nothing selected in it is left out rather than shown
+     empty. */
+  var notesSec = document.getElementById("notesTiers");
+  var notesEmpty = document.getElementById("notesEmpty");
+  var notesCount = document.getElementById("notesCount");
+
+  function renderNotes(){
+    notesSec.innerHTML = "";
+    notesEmpty.classList.toggle("hidden", selections.size > 0);
+    notesCount.textContent = selections.size
+      ? selections.size + (selections.size === 1 ? " region" : " regions")
+      : "";
+    if (!selections.size || typeof MN_NOTES === "undefined") return;
+
+    var bucket = {};
+    selections.forEach(function(sel){
+      var note = MN_NOTES.NOTES[sel.base];
+      if (!note) return;
+      (bucket[note.tier] = bucket[note.tier] || []).push({sel: sel, note: note});
+    });
+
+    MN_NOTES.TIERS.forEach(function(tier){
+      var rows = bucket[tier.id];
+      if (!rows || !rows.length) return;
+
+      var box = document.createElement("div"); box.className = "tier";
+      var head = document.createElement("div"); head.className = "tier-head";
+      head.innerHTML = "<b>" + tier.label + "</b><span>" + tier.sub + "</span>" +
+        '<span class="n">' + rows.length + "</span>";
+      box.appendChild(head);
+
+      var body = document.createElement("div"); body.className = "tier-body";
+      rows.forEach(function(row){
+        var cell = document.createElement("div"); cell.className = "rnote";
+        var h = document.createElement("h3");
+        var dot = document.createElement("span");
+        dot.className = "dot"; dot.style.background = row.sel.color;
+        h.appendChild(dot);
+        h.appendChild(document.createTextNode(row.sel.name));
+        if (row.sel.sideTag){
+          var side = document.createElement("span");
+          side.className = "side"; side.textContent = row.sel.sideTag;
+          h.appendChild(side);
+        }
+        var p = document.createElement("p");
+        p.textContent = row.note.fn;
+        cell.appendChild(h); cell.appendChild(p);
+        body.appendChild(cell);
+      });
+      box.appendChild(body);
+      notesSec.appendChild(box);
+    });
+  }
+
   function renderChips(){
     chipsEl.querySelectorAll(".rchip").forEach(function(c){ c.remove(); });
     emptyMsg.classList.toggle("hidden", selections.size > 0);
@@ -767,6 +881,7 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
       chip.appendChild(dot); chip.appendChild(name); chip.appendChild(side); chip.appendChild(x);
       chipsEl.appendChild(chip);
     });
+    renderNotes();
   }
 
   function renderDropdown(){
@@ -813,10 +928,10 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
       var key = mode + ":" + base;
       if (!selections.has(key)){
         var entry = null;
-        if (mode === "P") entry = {name: r.pretty, sideTag: "L+R", indices: [r.L, r.R], color: nextColor()};
-        else if (mode === "L") entry = {name: r.pretty, sideTag: "L", indices: [r.L], color: nextColor()};
-        else if (mode === "R") entry = {name: r.pretty, sideTag: "R", indices: [r.R], color: nextColor()};
-        else if (mode === "S") entry = {name: r.pretty, sideTag: "", indices: [r.S], color: nextColor()};
+        if (mode === "P") entry = {name: r.pretty, base: r.base, sideTag: "L+R", indices: [r.L, r.R], color: nextColor()};
+        else if (mode === "L") entry = {name: r.pretty, base: r.base, sideTag: "L", indices: [r.L], color: nextColor()};
+        else if (mode === "R") entry = {name: r.pretty, base: r.base, sideTag: "R", indices: [r.R], color: nextColor()};
+        else if (mode === "S") entry = {name: r.pretty, base: r.base, sideTag: "", indices: [r.S], color: nextColor()};
         if (entry){ selections.set(key, entry); renderChips(); applyColormap(); }
       }
     }
