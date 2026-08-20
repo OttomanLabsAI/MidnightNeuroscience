@@ -1,10 +1,18 @@
 /* Cut the volume render open, and look inside.
 
-   A 3D render shows the outside of the head. This adds three cuts through
-   it — one per anatomical plane — so the scan inside can be seen where the
-   surface has been taken away. The sliders sit in the 3D box itself rather
-   than in the rail beside it, so the cut and the control that makes it are
-   in the same frame.
+   A 3D render shows the outside of the head. This puts a cut on each
+   anatomical axis, so the voxels inside can be seen where the surface has
+   been taken away — the scan itself on the cut face, with whatever the page
+   has painted on the atlas cut through in the same stroke.
+
+   Each control sits on the edge it works along: the up–down cut runs down
+   one side, the front–back cut down the other, and the left–right cut along
+   the bottom. They sit clear of the middle so the brain is never behind a
+   slider, and each name reads in the direction its cut travels.
+
+   Every slider starts in the centre, meaning nothing cut. Pushing it one way
+   takes the head away from one side, pushing it the other way takes it from
+   the other — the distance from centre is how deep the cut goes.
 
    Shared by every page carrying a volume render, so the tool behaves the
    same wherever it appears. Wire one up with:
@@ -15,55 +23,69 @@
    so a page whose 3D view is a tractogram gets nothing useful from it. */
 window.MN_SLICE = (function(){
 
-/* Each cut is a plane whose normal is fixed by an azimuth and elevation;
-   the slider moves it along that normal. Named for the plane the cut
-   exposes, which is what someone reading a scan expects. */
+/* A cut is a plane whose normal comes from an azimuth and elevation. The
+   negative half of each slider uses the opposite normal, which is the same
+   plane cutting the other way: azimuth turned through 180°, elevation
+   negated. */
 var AXES = [
-  {id:"sag", label:"Sagittal", aziElev:[ 90,  0], hint:"left – right"},
-  {id:"cor", label:"Coronal",  aziElev:[  0,  0], hint:"front – back"},
-  {id:"ax",  label:"Axial",    aziElev:[  0, 90], hint:"top – bottom"}
+  {id:"ax",  label:"Axial",    edge:"left",   hint:"up – down"},
+  {id:"cor", label:"Coronal",  edge:"right",  hint:"front – back"},
+  {id:"sag", label:"Sagittal", edge:"bottom", hint:"left – right"}
 ];
+/* azimuth, elevation per axis, checked against the plane normals the viewer
+   builds: 90 cuts left–right, 0 cuts front–back, elevation 90 cuts up–down */
+var NORMAL = {
+  sag: [90, 0],
+  cor: [0, 0],
+  ax:  [0, 90]
+};
 
-/* A slider at the open end contributes no plane at all, so a cut has to be
-   asked for rather than being on by default the moment the tool opens. */
-var OPEN = 1, SHUT = -1, STEP = 0.02;
+var STEP = 0.01;
 
 function attach(o){
   var stage = o.stage, tools = o.tools, nv = o.nv;
   if (!stage || !tools || !nv) return null;
 
-  var depths = AXES.map(function(){ return OPEN; });
-  var on = false;
+  var cuts = {}, on = false;
+  AXES.forEach(function(ax){ cuts[ax.id] = 0; });
 
   /* The viewer paints a translucent sheet over the cut face by default,
-     which is the opposite of the point — the cut is there to show the scan
+     which is the opposite of the point — the cut is there to show the voxels
      underneath it, so the sheet is made fully transparent. */
   try{ nv.setClipPlaneColor([0, 0, 0, 0]); }catch(e){}
 
   var panel = document.createElement("div");
   panel.className = "slice-panel";
 
-  var rows = AXES.map(function(ax, i){
+  var rows = {};
+  AXES.forEach(function(ax){
+    var edge = document.createElement("div");
+    edge.className = "slice-edge " + ax.edge;
+
     var name = document.createElement("span");
-    name.className = "ax"; name.textContent = ax.label;
+    name.className = "ax";
+    name.textContent = ax.label;
 
     var slider = document.createElement("input");
     slider.type = "range";
-    slider.min = String(SHUT); slider.max = String(OPEN); slider.step = String(STEP);
-    slider.value = String(OPEN);
-    slider.setAttribute("aria-label", ax.label + " cut, " + ax.hint);
-
-    var val = document.createElement("span");
-    val.className = "val"; val.textContent = "open";
+    slider.min = "-1"; slider.max = "1"; slider.step = String(STEP);
+    slider.value = "0";
+    slider.className = "slice-range";
+    slider.setAttribute("aria-label", ax.label + " cut, " + ax.hint +
+                        ". Centre is uncut; either direction cuts from that side.");
 
     slider.addEventListener("input", function(){
-      depths[i] = Number(slider.value);
-      val.textContent = depths[i] >= OPEN - 1e-9 ? "open" : depths[i].toFixed(2);
+      cuts[ax.id] = Number(slider.value);
+      edge.classList.toggle("cutting", Math.abs(cuts[ax.id]) > 0.005);
       apply();
     });
+    /* a double-click on one slider returns just that axis */
+    slider.addEventListener("dblclick", function(){ resetAxis(ax.id); });
 
-    panel.appendChild(name); panel.appendChild(slider); panel.appendChild(val);
-    return {slider: slider, val: val};
+    edge.appendChild(name);
+    edge.appendChild(slider);
+    panel.appendChild(edge);
+    rows[ax.id] = {slider: slider, edge: edge};
   });
 
   stage.appendChild(panel);
@@ -73,23 +95,45 @@ function attach(o){
   btn.className = "ts-btn slice-btn";
   btn.textContent = "Slice";
   btn.setAttribute("aria-pressed", "false");
+
+  var resetBtn = document.createElement("button");
+  resetBtn.type = "button";
+  resetBtn.className = "ts-btn slice-reset";
+  resetBtn.textContent = "Reset cuts";
+  resetBtn.hidden = true;
+
   /* before the Centre planes button, which holds the right-hand end */
   var centre = tools.querySelector(".centre-btn");
-  if (centre) tools.insertBefore(btn, centre); else tools.appendChild(btn);
+  if (centre){ tools.insertBefore(btn, centre); tools.insertBefore(resetBtn, centre); }
+  else { tools.appendChild(btn); tools.appendChild(resetBtn); }
 
   function planes(){
     if (!on) return [];
     var out = [];
-    for (var i = 0; i < AXES.length; i++){
-      if (depths[i] >= OPEN - 1e-9) continue;      /* this cut is not asked for */
-      out.push([depths[i], AXES[i].aziElev[0], AXES[i].aziElev[1]]);
-    }
+    AXES.forEach(function(ax){
+      var v = cuts[ax.id];
+      if (Math.abs(v) <= 0.005) return;            /* centred: nothing cut */
+      var n = NORMAL[ax.id], azi = n[0], elev = n[1];
+      if (v < 0){ azi = (azi + 180) % 360; elev = -elev; }
+      /* depth 1 leaves the head whole, -1 takes all of it */
+      out.push([1 - 2*Math.abs(v), azi, elev]);
+    });
     return out;
   }
 
   function apply(){
     try{ nv.setClipPlanes(planes()); }
-    catch(e){ /* an older viewer without multi-plane clipping simply does nothing */ }
+    catch(e){ /* a viewer without multi-plane clipping simply does nothing */ }
+  }
+
+  function resetAxis(id){
+    cuts[id] = 0;
+    rows[id].slider.value = "0";
+    rows[id].edge.classList.remove("cutting");
+    apply();
+  }
+  function resetAll(){
+    AXES.forEach(function(ax){ resetAxis(ax.id); });
   }
 
   function setOn(next){
@@ -97,19 +141,17 @@ function attach(o){
     panel.classList.toggle("on", on);
     btn.classList.toggle("active", on);
     btn.setAttribute("aria-pressed", String(on));
+    resetBtn.hidden = !on;
     apply();
   }
 
   btn.addEventListener("click", function(){ setOn(!on); });
+  resetBtn.addEventListener("click", resetAll);
 
   return {
     open: function(){ setOn(true); },
     close: function(){ setOn(false); },
-    reset: function(){
-      depths = AXES.map(function(){ return OPEN; });
-      rows.forEach(function(r){ r.slider.value = String(OPEN); r.val.textContent = "open"; });
-      apply();
-    }
+    reset: resetAll
   };
 }
 

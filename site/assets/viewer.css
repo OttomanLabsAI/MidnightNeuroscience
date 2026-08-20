@@ -139,33 +139,75 @@ select{
 /* the 3D box leads the grid; the atlas names it "render", the other two "Ren" */
 .views .view[data-box="Ren"], .views .view[data-box="render"]{ order:-1; }
 
-/* ── slice tool: three cuts through the volume render ───────────────────
-   Sliders sit inside the 3D box rather than beside it, so the cut and the
-   controls that make it are in the same frame. Hidden until the toggle in
-   the viewport's own rule turns them on. */
+/* ── slice tool: a cut on each axis, run from the edges ─────────────────
+   Each control sits on the edge it works along — up–down down one side,
+   front–back down the other, left–right along the bottom — so the middle of
+   the box stays clear and the brain is never behind a slider. Each name
+   reads in the direction its own cut travels. */
 .slice-panel{
-  position:absolute; left:0; right:0; bottom:0; z-index:2;
-  display:none; grid-template-columns:auto minmax(0,1fr) auto;
-  align-items:center; gap:.25rem .5rem; padding:.45rem .55rem .5rem;
-  background:rgba(0,0,0,.74);
-  border-top:1px solid rgba(255,255,255,.35);
+  position:absolute; inset:0; z-index:2;
+  display:none; pointer-events:none;
 }
-.slice-panel.on{ display:grid; }
-.slice-panel .ax{
-  font-family:var(--font-brand); font-weight:500; font-size:.5rem;
-  letter-spacing:.2em; text-transform:uppercase; color:#DADADA; white-space:nowrap;
+.slice-panel.on{ display:block; }
+
+.slice-edge{
+  position:absolute; pointer-events:auto;
+  display:flex; align-items:center; gap:.35rem;
 }
-.slice-panel .val{
-  font-family:var(--font-brand); font-size:.5rem; letter-spacing:.1em;
-  color:#8A8A8A; min-width:3.2em; text-align:right; font-variant-numeric:tabular-nums;
+.slice-edge .ax{
+  font-family:var(--font-brand); font-weight:500; font-size:.48rem;
+  letter-spacing:.2em; text-transform:uppercase; white-space:nowrap;
+  color:#9A9A9A; transition:color .2s ease;
+  text-shadow:0 0 4px #000, 0 0 4px #000;
 }
-.slice-panel input[type=range]{
-  width:100%; min-width:0; height:16px; accent-color:#FFFFFF;
-  background:transparent; cursor:pointer;
+.slice-edge.cutting .ax{ color:#FFFFFF; }
+
+/* the two vertical edges */
+.slice-edge.left, .slice-edge.right{
+  top:10px; bottom:10px; width:30px;
+  flex-direction:column; justify-content:center;
 }
+.slice-edge.left{ left:3px; }
+.slice-edge.right{ right:3px; }
+.slice-edge.left .ax{ writing-mode:vertical-rl; transform:rotate(180deg); }
+.slice-edge.right .ax{ writing-mode:vertical-rl; }
+
+/* the bottom edge, held clear of both verticals */
+.slice-edge.bottom{ left:36px; right:36px; bottom:5px; height:20px; }
+
+.slice-range{
+  -webkit-appearance:none; appearance:none;
+  background:transparent; cursor:pointer; margin:0;
+}
+.slice-edge.bottom .slice-range{ flex:1; min-width:0; height:18px; }
+.slice-edge.left .slice-range, .slice-edge.right .slice-range{
+  writing-mode:vertical-lr; direction:rtl;
+  width:18px; flex:1; min-height:0;
+}
+.slice-range::-webkit-slider-runnable-track{
+  background:rgba(255,255,255,.28); border-radius:2px;
+}
+.slice-edge.bottom .slice-range::-webkit-slider-runnable-track{ height:2px; }
+.slice-edge.left .slice-range::-webkit-slider-runnable-track,
+.slice-edge.right .slice-range::-webkit-slider-runnable-track{ width:2px; }
+.slice-range::-moz-range-track{ background:rgba(255,255,255,.28); border-radius:2px; }
+.slice-range::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none;
+  width:12px; height:12px; border-radius:50%;
+  background:#FFFFFF; border:1px solid #000000; margin-top:-5px;
+}
+.slice-edge.left .slice-range::-webkit-slider-thumb,
+.slice-edge.right .slice-range::-webkit-slider-thumb{ margin:0 0 0 -5px; }
+.slice-range::-moz-range-thumb{
+  width:12px; height:12px; border-radius:50%;
+  background:#FFFFFF; border:1px solid #000000;
+}
+.slice-range:focus-visible{ outline:1px solid #FFFFFF; outline-offset:3px; }
+
 .slice-btn.active{ background:var(--ink); color:var(--paper); }
+
 @media (max-width:760px){
-  .slice-panel{ padding:.35rem .4rem .4rem; gap:.2rem .4rem; }
-  .slice-panel .ax{ font-size:.44rem; letter-spacing:.14em; }
-  .slice-panel .val{ font-size:.44rem; min-width:2.8em; }
+  .slice-edge.left, .slice-edge.right{ width:24px; top:6px; bottom:6px; }
+  .slice-edge.bottom{ left:28px; right:28px; bottom:3px; }
+  .slice-edge .ax{ font-size:.42rem; letter-spacing:.14em; }
 }
