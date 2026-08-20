@@ -482,6 +482,7 @@ td.hl{ color:var(--over); }
 </section>
 </main>
 
+<script src="assets/slice-tool.js"></script>
 <script>
 "use strict";
 
@@ -874,6 +875,17 @@ async function ensureScan(){
     });
     scanState = "ready";
     $("scan-note").textContent = "MNI152 template · AAL-116 parcellation";
+
+      /* The slice tool goes on the 3D box only: a clip plane cuts the volume,
+         which is what the render draws. The 2D planes already are slices. */
+      if (window.MN_SLICE){
+        var renBox = document.querySelector('.view[data-box="Ren"]');
+        if (renBox) MN_SLICE.attach({
+          stage: renBox.querySelector(".mri-stage"),
+          tools: renBox.querySelector(".view-tools"),
+          nv: byKey.Ren
+        });
+      }
     applyOpacity();
     renderAll();
   } catch (err){

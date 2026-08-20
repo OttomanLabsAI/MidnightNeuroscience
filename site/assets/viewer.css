@@ -138,3 +138,34 @@ select{
 
 /* the 3D box leads the grid; the atlas names it "render", the other two "Ren" */
 .views .view[data-box="Ren"], .views .view[data-box="render"]{ order:-1; }
+
+/* ── slice tool: three cuts through the volume render ───────────────────
+   Sliders sit inside the 3D box rather than beside it, so the cut and the
+   controls that make it are in the same frame. Hidden until the toggle in
+   the viewport's own rule turns them on. */
+.slice-panel{
+  position:absolute; left:0; right:0; bottom:0; z-index:2;
+  display:none; grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center; gap:.25rem .5rem; padding:.45rem .55rem .5rem;
+  background:rgba(0,0,0,.74);
+  border-top:1px solid rgba(255,255,255,.35);
+}
+.slice-panel.on{ display:grid; }
+.slice-panel .ax{
+  font-family:var(--font-brand); font-weight:500; font-size:.5rem;
+  letter-spacing:.2em; text-transform:uppercase; color:#DADADA; white-space:nowrap;
+}
+.slice-panel .val{
+  font-family:var(--font-brand); font-size:.5rem; letter-spacing:.1em;
+  color:#8A8A8A; min-width:3.2em; text-align:right; font-variant-numeric:tabular-nums;
+}
+.slice-panel input[type=range]{
+  width:100%; min-width:0; height:16px; accent-color:#FFFFFF;
+  background:transparent; cursor:pointer;
+}
+.slice-btn.active{ background:var(--ink); color:var(--paper); }
+@media (max-width:760px){
+  .slice-panel{ padding:.35rem .4rem .4rem; gap:.2rem .4rem; }
+  .slice-panel .ax{ font-size:.44rem; letter-spacing:.14em; }
+  .slice-panel .val{ font-size:.44rem; min-width:2.8em; }
+}

@@ -584,6 +584,7 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
 <script src="assets/niivue.js"></script>
 <script src="assets/atlas-data.js"></script>
 <script src="assets/region-notes.js"></script>
+<script src="assets/slice-tool.js"></script>
 <script>
 "use strict";
 (function(){
@@ -1062,6 +1063,17 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
                            .map(function(q){ return INSTANCES[q.key]; });
         INSTANCES[p.key].broadcastTo(others, {"2d": true, "3d": true});
       });
+
+      /* The slice tool goes on the 3D box only: a clip plane cuts the volume,
+         which is what the render draws. The 2D planes already are slices. */
+      if (window.MN_SLICE){
+        var renBox = document.querySelector('.view[data-box="render"]');
+        if (renBox) MN_SLICE.attach({
+          stage: renBox.querySelector(".mri-stage"),
+          tools: renBox.querySelector(".view-tools"),
+          nv: INSTANCES.render
+        });
+      }
       applyColormap();
       statusEl.classList.add("hidden");
     } catch(err){
