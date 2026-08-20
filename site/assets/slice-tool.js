@@ -28,8 +28,11 @@ window.MN_SLICE = (function(){
    plane cutting the other way: azimuth turned through 180°, elevation
    negated. */
 var AXES = [
-  {id:"ax",  label:"Axial",    edge:"left",   hint:"up – down"},
-  {id:"cor", label:"Coronal",  edge:"right",  hint:"front – back"},
+  /* flip turns a slider's sense round, so the end you push towards is the
+     side that goes: without it the up–down and front–back cuts each took the
+     opposite side to the one the thumb was moving to */
+  {id:"ax",  label:"Axial",    edge:"left",   hint:"up – down",    flip:true},
+  {id:"cor", label:"Coronal",  edge:"right",  hint:"front – back", flip:true},
   {id:"sag", label:"Sagittal", edge:"bottom", hint:"left – right"}
 ];
 /* azimuth, elevation per axis, checked against the plane normals the viewer
@@ -111,7 +114,7 @@ function attach(o){
     if (!on) return [];
     var out = [];
     AXES.forEach(function(ax){
-      var v = cuts[ax.id];
+      var v = cuts[ax.id] * (ax.flip ? -1 : 1);
       if (Math.abs(v) <= 0.005) return;            /* centred: nothing cut */
       var n = NORMAL[ax.id], azi = n[0], elev = n[1];
       if (v < 0){ azi = (azi + 180) % 360; elev = -elev; }

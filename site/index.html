@@ -468,8 +468,8 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
     <a href="index.html" aria-current="page">Region Atlas</a>
     <a href="receptors.html">Receptor Density</a>
     <a href="tracts.html">Tractography</a>
-    <a href="studies.html">Visualizing Studies</a>
     <a href="network-atlas.html">Network Atlas</a>
+    <a href="studies.html">Visualizing Studies</a>
     <button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button>
   </nav>
 </header>
@@ -584,6 +584,7 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
 <script src="assets/atlas-data.js"></script>
 <script src="assets/region-notes.js"></script>
 <script src="assets/slice-tool.js"></script>
+<script src="assets/wheel-zoom.js"></script>
 <script>
 "use strict";
 (function(){
@@ -1070,6 +1071,15 @@ select optgroup{ font-family:var(--font-brand); font-style:normal;
         if (renBox) MN_SLICE.attach({
           stage: renBox.querySelector(".mri-stage"),
           tools: renBox.querySelector(".view-tools"),
+          nv: INSTANCES.render
+        });
+      }
+
+      /* the wheel zooms the 3D model rather than the 2D pan behind it */
+      if (window.MN_WHEEL){
+        var wheelBox = document.querySelector('.view[data-box="render"]');
+        if (wheelBox) MN_WHEEL.attach({
+          stage: wheelBox.querySelector(".mri-stage"),
           nv: INSTANCES.render
         });
       }

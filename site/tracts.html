@@ -207,8 +207,8 @@ svg{ display:block; }
     <a href="index.html">Region Atlas</a>
     <a href="receptors.html">Receptor Density</a>
     <a href="tracts.html" aria-current="page">Tractography</a>
-    <a href="studies.html">Visualizing Studies</a>
     <a href="network-atlas.html">Network Atlas</a>
+    <a href="studies.html">Visualizing Studies</a>
     <button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button>
   </nav>
 </header>
@@ -288,7 +288,7 @@ svg{ display:block; }
       <span class="key-item"><span class="key-swatch" style="background:#4FB06A"></span>front &ndash; back</span>
       <span class="key-item"><span class="key-swatch" style="background:#4C7FE1"></span>up &ndash; down</span>
     </div>
-    <p>Drag to turn the brain; use the zoom slider, or hold <kbd>Shift</kbd> and scroll over the view. It rotates on its own until you touch it. This is a population average rather than any one person's brain, so it shows the pathways people generally share.</p>
+    <p>Drag to turn the brain; use the zoom slider, or scroll over the view. It rotates on its own until you touch it. This is a population average rather than any one person's brain, so it shows the pathways people generally share.</p>
   </section>
 
   <section class="credits">
@@ -299,6 +299,7 @@ svg{ display:block; }
 
 </main>
 
+<script src="assets/wheel-zoom.js"></script>
 <script>
 (function(){
   "use strict";
@@ -462,6 +463,19 @@ svg{ display:block; }
     byKey.Ren.drawScene();
   }
   zoomEl.addEventListener("input", function(){ applyZoom(zoomEl.value); });
+
+  /* the wheel zooms the tractogram, and the slider follows it */
+  if (window.MN_WHEEL && byKey.Ren){
+    var renBox = document.querySelector('.view[data-box="Ren"]');
+    if (renBox) MN_WHEEL.attach({
+      stage: renBox.querySelector(".mri-stage"),
+      nv: byKey.Ren,
+      onZoom: function(v){
+        zoomEl.value = String(v);
+        zoomVal.textContent = Number(v).toFixed(2) + "\u00D7";
+      }
+    });
+  }
 
   var radiusEl = document.getElementById("radius");
   var radiusVal = document.getElementById("radiusVal");
