@@ -178,10 +178,15 @@ svg{ display:block; }
 #ring{ width:100%; height:auto; max-width:780px; margin:0 auto; }
 .regionarc{ fill:none; stroke-width:11; stroke-linecap:butt; cursor:pointer; }
 .regionarc.nomap{ stroke-dasharray:7 6; }
+/* the group names are buttons too: one picks the whole network */
 .grouplabel{
   font-family:var(--font-brand); font-size:9.5px; font-weight:500;
   letter-spacing:.26em; text-transform:uppercase; fill:var(--ink-35);
+  cursor:pointer; transition:fill .25s ease, opacity .25s ease;
 }
+.grouplabel:hover{ fill:var(--ink); }
+.grouplabel.lit-group{ fill:var(--ink); }
+.grouplabel.dim-group{ opacity:.4; }
 .chord{ fill:none; stroke-linecap:butt; transition:opacity .25s ease; }
 .chord.quiet{ stroke:var(--quiet); }
 .nodedot{ stroke-width:1.8; pointer-events:none; }
@@ -471,6 +476,12 @@ function paint(colouring){
    emphasis: the picked region comes forward, the ones it couples to in the
    state now showing hold at half strength, and the rest fall back. */
 function emphasisFor(n){
+  if (selectedGroup){
+    /* a whole network: its own regions come forward, the ones it couples to
+       hold at half strength, the rest fall back */
+    if (n.group === selectedGroup) return EMPH.full;
+    return groupTouches.indexOf(n.id) >= 0 ? EMPH.mid : EMPH.faint;
+  }
   if (!selected){
     /* nothing picked: the state itself is the reading — the regions it powers
        down sit back from the ones it drives */
@@ -494,8 +505,12 @@ function repaint(){
 /* Put the planes through the region that was picked, so the highlight is
    actually on screen rather than three slices away. */
 function centreOnRegion(n){
-  if (scanState !== "ready" || !n.bases) return;
-  const want = new Set(parcelsOf(n));
+  if (!n.bases) return;
+  centreOnParcels(parcelsOf(n));
+}
+function centreOnParcels(list){
+  if (scanState !== "ready" || !list.length) return;
+  const want = new Set(list);
   const vol = scanInstances[0].volumes[1], dims = vol.hdr.dims, img = vol.img;
   let sx = 0, sy = 0, sz = 0, count = 0;
   for (let k = 0; k < dims[3]; k++)
@@ -607,16 +622,20 @@ const DEFAULTS = {
   note: "Click a region — coloured threads strengthen, grey dashed threads fall quiet, and hollow markers power down."
 };
 const FIT_LABEL = { exact:"Measured parcel", approx:"Approximate", none:"Not in the atlas" };
-let selected = null;
+let selected = null, selectedGroup = null, groupTouches = [];
+const pinned = () => selected || selectedGroup;
 
 const ring = MN_RING.create({
   svg: $("ring"),
   data: DATA,
   dashed: n => n.fit === "none",
-  onHover: n => { if (!selected) read(n); },
-  onLeave: () => { if (!selected) unread(); },
+  onHover: n => { if (!pinned()) read(n); },
+  onLeave: () => { if (!pinned()) unread(); },
   onSelect: n => { if (selected === n.id) deselect(); else select(n); },
-  onBackground: () => { if (selected) deselect(); }
+  onGroupHover: g => { if (!pinned()) readGroup(g); },
+  onGroupLeave: () => { if (!pinned()) unread(); },
+  onGroupSelect: g => { if (selectedGroup === g.id) deselect(); else selectGroup(g); },
+  onBackground: () => { if (pinned()) deselect(); }
 });
 
 /* what the rail says about a region, in the state now showing */
@@ -637,6 +656,38 @@ function read(n){
   box.append(badge);
   $("whereBox").hidden = false;
 }
+function readGroup(g){
+  groupTouches = ring.focusGroup(g.id);
+  const members = ring.membersOf(g.id);
+  const outside = groupTouches.filter(id => ring.byId[id] && ring.byId[id].group !== g.id);
+  const down = ring.state.down || [];
+  const quiet = members.filter(n => down.indexOf(n.id) >= 0);
+
+  $("hintKicker").textContent = "Network" + (quiet.length === members.length ? " · quiets here" : "");
+  $("hintName").textContent = g.label;
+  $("hintNote").textContent = g.role + " Here: " +
+    members.map(n => n.id).join(", ") +
+    (outside.length ? ", coupled to " + outside.join(", ") + "." : ", coupled to nothing in this state.") +
+    (quiet.length && quiet.length < members.length
+      ? " " + quiet.map(n => n.id).join(" and ") + " power down." : "");
+
+  /* on the scan, a network is only as drawable as its regions are */
+  const drawn = members.filter(n => n.bases), missing = members.filter(n => !n.bases);
+  const box = $("whereText");
+  box.innerHTML = "";
+  box.append(drawn.length
+    ? drawn.map(n => n.full).join("; ") + "."
+    : "None of this network has a parcel on the atlas.");
+  if (missing.length){
+    box.append(" Not on the atlas: " + missing.map(n => n.id).join(", ") + ".");
+  }
+  const badge = document.createElement("span");
+  badge.className = "fit";
+  badge.textContent = drawn.length + " of " + members.length + " drawn";
+  box.append(badge);
+  $("whereBox").hidden = false;
+}
+
 function unread(){
   ring.clear();
   $("hintKicker").textContent = DEFAULTS.kicker;
@@ -647,24 +698,33 @@ function unread(){
 
 /* clicking a region drives the scan as well as the ring */
 function select(n){
-  selected = n.id;
+  selected = n.id; selectedGroup = null; groupTouches = [];
   read(n);
   repaint();
   if (n.mni) gotoMni(n.mni); else centreOnRegion(n);
 }
+function selectGroup(g){
+  selected = null; selectedGroup = g.id;
+  readGroup(g);
+  repaint();
+  /* centre on the network as a whole, using every parcel its regions own */
+  const parcels = [];
+  ring.membersOf(g.id).forEach(n => { parcels.push.apply(parcels, parcelsOf(n)); });
+  centreOnParcels(parcels);
+}
 function deselect(){
-  selected = null;
+  selected = null; selectedGroup = null; groupTouches = [];
   unread();
   repaint();
 }
-$("clearBtn").addEventListener("click", () => { if (selected) deselect(); });
+$("clearBtn").addEventListener("click", () => { if (pinned()) deselect(); });
 
 /* …and the ring follows the crosshair back, while nothing is pinned. Only the
    ring moves: repainting the scan on every drag frame would cost more than the
    feedback is worth. */
 let lastParcel = -1;
 function crosshairMoved(d){
-  if (selected) return;
+  if (pinned()) return;
   let parcel = -1;
   try{
     const vals = d && d.values;
@@ -685,7 +745,7 @@ DATA.STATES.forEach(s => {
 });
 function showState(id){
   const st = DATA.STATES.find(s => s.id === id) || DATA.STATES[0];
-  selected = null;
+  selected = null; selectedGroup = null; groupTouches = [];
   ring.setState(st);
   $("stTitle").textContent = st.title + " on the Brain";
   $("stAnno").textContent = st.anno;

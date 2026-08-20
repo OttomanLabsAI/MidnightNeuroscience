@@ -152,10 +152,15 @@ svg{ display:block; }
 .ring-stage{ border:1px solid var(--hair); padding:.6rem; background:var(--paper); }
 #ring{ width:100%; height:auto; }
 .regionarc{ fill:none; stroke-width:11; stroke-linecap:butt; cursor:pointer; }
+/* the group names are buttons too: one picks the whole network */
 .grouplabel{
   font-family:var(--font-brand); font-size:9.5px; font-weight:500;
   letter-spacing:.26em; text-transform:uppercase; fill:var(--ink-35);
+  cursor:pointer; transition:fill .25s ease, opacity .25s ease;
 }
+.grouplabel:hover{ fill:var(--ink); }
+.grouplabel.lit-group{ fill:var(--ink); }
+.grouplabel.dim-group{ opacity:.4; }
 .chord{ fill:none; stroke-linecap:butt; transition:opacity .25s ease; }
 .chord.quiet{ stroke:var(--quiet); }
 .nodedot{ stroke-width:1.8; pointer-events:none; }
@@ -272,7 +277,8 @@ const DEFAULTS = {
   name: "Explore the ring",
   note: "Hover or tap a region — coloured threads strengthen, grey dashed threads fall quiet, and hollow markers power down."
 };
-let locked = null;
+/* what is pinned: a region id, or a group id, or nothing */
+let locked = null, lockedKind = null;
 
 const ring = MN_RING.create({
   svg: $("ring"),
@@ -280,11 +286,19 @@ const ring = MN_RING.create({
   onHover: n => { if (!locked) read(n); },
   onLeave: () => { if (!locked) unread(); },
   onSelect: n => {
-    if (locked === n.id){ locked = null; ring.clear(); unread(); }
-    else { locked = n.id; ring.focus(n.id); read(n); }
+    if (lockedKind === "node" && locked === n.id){ release(); }
+    else { locked = n.id; lockedKind = "node"; read(n); }
   },
-  onBackground: () => { if (locked){ locked = null; ring.clear(); unread(); } }
+  onGroupHover: g => { if (!locked) readGroup(g); },
+  onGroupLeave: () => { if (!locked) unread(); },
+  onGroupSelect: g => {
+    if (lockedKind === "group" && locked === g.id){ release(); }
+    else { locked = g.id; lockedKind = "group"; readGroup(g); }
+  },
+  onBackground: () => { if (locked) release(); }
 });
+
+function release(){ locked = null; lockedKind = null; unread(); }
 
 /* what the rail says about a region, in the state now showing */
 function read(n){
@@ -295,6 +309,23 @@ function read(n){
   $("hintName").textContent = n.full;
   $("hintNote").textContent = (st.notes && st.notes[n.id]) || n.role;
 }
+/* a whole network: what it is, and what it is coupled to here */
+function readGroup(g){
+  const touched = ring.focusGroup(g.id);
+  const st = ring.state, down = st.down || [];
+  const members = ring.membersOf(g.id);
+  const outside = touched.filter(id => ring.byId[id] && ring.byId[id].group !== g.id);
+  const quiet = members.filter(n => down.indexOf(n.id) >= 0);
+
+  $("hintKicker").textContent = "Network" + (quiet.length === members.length ? " · quiets here" : "");
+  $("hintName").textContent = g.label;
+  $("hintNote").textContent = g.role + " Here: " +
+    members.map(n => n.id).join(", ") +
+    (outside.length ? ", coupled to " + outside.join(", ") + "." : ", coupled to nothing in this state.") +
+    (quiet.length && quiet.length < members.length
+      ? " " + quiet.map(n => n.id).join(" and ") + " power down." : "");
+}
+
 function unread(){
   ring.clear();
   $("hintKicker").textContent = DEFAULTS.kicker;
@@ -311,7 +342,7 @@ DATA.STATES.forEach((s, i) => {
 });
 function showState(id){
   const st = DATA.STATES.find(s => s.id === id) || DATA.STATES[0];
-  locked = null;
+  locked = null; lockedKind = null;
   ring.setState(st);
   $("stTitle").textContent = st.title;
   $("stAnno").textContent = st.anno;

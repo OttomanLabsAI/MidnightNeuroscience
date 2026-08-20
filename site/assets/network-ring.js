@@ -39,8 +39,11 @@ function create(opts){
   var dashed = opts.dashed || function(){ return false; };
 
   /* ── geometry, fixed for every state ─────────────────────────────────── */
+  /* carry every field the data gives a group, not just id and label — the
+     pages read its description straight off this object */
   var byGroup = GROUPS.map(function(g){
-    var copy = {id:g.id, label:g.label};
+    var copy = {};
+    for (var k in g) copy[k] = g[k];
     copy.nodes = NODES.filter(function(n){ return n.group === g.id; });
     return copy;
   });
@@ -64,15 +67,17 @@ function create(opts){
   var defs = el("defs");
   svg.appendChild(defs);
 
-  byGroup.forEach(function(g){
+  var groupLabels = byGroup.map(function(g){
     var mid = (g.a0 + g.a1)/2;
     var gx = CX + GROUP_R*Math.cos(mid), gy = CY + GROUP_R*Math.sin(mid);
     var rot = mid*180/Math.PI + 90;
     if (mid > 0 && mid < Math.PI) rot += 180;
     var t = el("text", {"class":"grouplabel", x:gx, y:gy, "text-anchor":"middle",
-                        transform:"rotate(" + rot + "," + gx + "," + gy + ")", dy:"0.35em"});
+                        transform:"rotate(" + rot + "," + gx + "," + gy + ")", dy:"0.35em",
+                        tabindex:"0", role:"button"});
     t.textContent = g.label;
     svg.appendChild(t);
+    return {g:g, text:t};
   });
 
   var chordLayer = el("g"); svg.appendChild(chordLayer);
@@ -186,6 +191,34 @@ function create(opts){
     });
   }
 
+  function inGroup(gid, nodeId){ return N[nodeId] && N[nodeId].group === gid; }
+
+  /* A whole network at once: every thread with one end inside it. The regions
+     it reaches keep their colour, so what the group touches is as legible as
+     the group itself. */
+  function focusGroup(gid){
+    var touched = {};
+    chords.forEach(function(c){
+      var on = inGroup(gid, c.l.s) || inGroup(gid, c.l.t);
+      if (on){ touched[c.l.s] = true; touched[c.l.t] = true; }
+      c.path.classList.toggle("dim", !on);
+      c.path.classList.toggle("lit", on);
+    });
+    arcs.forEach(function(x){
+      var keep = x.n.group === gid || touched[x.n.id];
+      x.path.classList.toggle("dimarc", !keep);
+    });
+    labels.forEach(function(x){
+      var keep = x.n.group === gid || touched[x.n.id];
+      x.text.setAttribute("fill", keep ? x.n.color : "var(--ink-35)");
+    });
+    groupLabels.forEach(function(x){
+      x.text.classList.toggle("lit-group", x.g.id === gid);
+      x.text.classList.toggle("dim-group", x.g.id !== gid);
+    });
+    return Object.keys(touched);
+  }
+
   function focus(id){
     chords.forEach(function(c){
       var on = c.l.s === id || c.l.t === id;
@@ -198,11 +231,16 @@ function create(opts){
     labels.forEach(function(x){
       x.text.setAttribute("fill", (x.n.id === id || linked(id, x.n.id)) ? x.n.color : "var(--ink-35)");
     });
+    groupLabels.forEach(function(x){
+      x.text.classList.remove("lit-group");
+      x.text.classList.toggle("dim-group", !N[id] || x.g.id !== N[id].group);
+    });
   }
   function clear(){
     chords.forEach(function(c){ c.path.classList.remove("dim", "lit"); });
     arcs.forEach(function(x){ x.path.classList.remove("dimarc"); });
     labels.forEach(function(x){ x.text.setAttribute("fill", x.n.color); });
+    groupLabels.forEach(function(x){ x.text.classList.remove("lit-group", "dim-group"); });
   }
 
   /* ── wiring ──────────────────────────────────────────────────────────── */
@@ -214,8 +252,23 @@ function create(opts){
       if (opts.onSelect) opts.onSelect(n);
     });
   }
+  function bindGroup(node, g){
+    node.addEventListener("mouseenter", function(){ if (opts.onGroupHover) opts.onGroupHover(g); });
+    node.addEventListener("mouseleave", function(){ if (opts.onGroupLeave) opts.onGroupLeave(g); });
+    node.addEventListener("click", function(e){
+      e.stopPropagation();
+      if (opts.onGroupSelect) opts.onGroupSelect(g);
+    });
+    node.addEventListener("keydown", function(e){
+      if (e.key === "Enter" || e.key === " "){
+        e.preventDefault(); e.stopPropagation();
+        if (opts.onGroupSelect) opts.onGroupSelect(g);
+      }
+    });
+  }
   arcs.forEach(function(x){ bind(x.path, x.n); });
   labels.forEach(function(x){ bind(x.text, x.n); });
+  groupLabels.forEach(function(x){ bindGroup(x.text, x.g); });
   svg.addEventListener("click", function(){ if (opts.onBackground) opts.onBackground(); });
 
   return {
@@ -225,7 +278,12 @@ function create(opts){
     get state(){ return state; },
     setWeight: function(k){ weight = k; applyWeight(); },
     isLinked: linked,
+    groups: byGroup,
+    membersOf: function(gid){
+      return NODES.filter(function(n){ return n.group === gid; });
+    },
     focus: focus,
+    focusGroup: focusGroup,
     clear: clear
   };
 }

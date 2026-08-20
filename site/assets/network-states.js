@@ -10,14 +10,25 @@
    page and the Network Atlas so the two can never drift apart. */
 window.MN_NET = (function(){
 
+/* The networks the regions are grouped into. Each is a button on the ring:
+   picking one lifts every thread with an end inside it, which is a different
+   question from what one region does — it asks what a whole system is
+   coupled to in the state now showing. */
 var GROUPS = [
-  {id:"dmn",     label:"Default mode"},
-  {id:"exec",    label:"Executive"},
-  {id:"sal",     label:"Salience"},
-  {id:"attn",    label:"Attention"},
-  {id:"reward",  label:"Reward"},
-  {id:"arousal", label:"Arousal · Limbic"},
-  {id:"motor",   label:"Motor"}
+  {id:"dmn",     label:"Default mode",
+   role:"The network that runs when nothing is asked of you — self-reference, memory and the mind's own commentary. Its defining feature is that it goes quiet as attention turns outwards."},
+  {id:"exec",    label:"Executive",
+   role:"Deliberate control: holding a goal in mind, checking progress against it, and overriding what would otherwise happen. Expensive to run, and the first thing to stand down when a skill becomes automatic."},
+  {id:"sal",     label:"Salience",
+   role:"The switchboard. It reads the body and the world for what matters now, and tips activity between the default network and the task-positive ones. Whichever state is showing, this is usually what put it there."},
+  {id:"attn",    label:"Attention",
+   role:"The dorsal attention system, pointing the spotlight where the goal requires and holding the maps that keep it there. Engaged whenever focus is outward."},
+  {id:"reward",  label:"Reward",
+   role:"The dopaminergic pursuit circuit — prediction, wanting, and the turn from effortful action into habit. It supplies the reason to keep going rather than the means."},
+  {id:"arousal", label:"Arousal · Limbic",
+   role:"Gain and threat. Noradrenaline sets how strongly everything else responds, and the amygdala decides what counts as danger. Too little and nothing engages; too much and it becomes anxiety."},
+  {id:"motor",   label:"Motor",
+   role:"Action: sequencing it, preparing it, and refining its timing. Where a practised skill actually runs once control has let go of it."}
 ];
 
 /* What each region does, in any state. What it does in a particular state is
