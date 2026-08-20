@@ -7,12 +7,13 @@ five hundred. Geometry, palette and links are the same ones the live page
 uses (site/assets/network-ring.js and network-states.js) — change them there
 and re-run this to keep the mark in step.
 
-    python3 scripts/make_logo.py          > site/assets/logo.svg
-    python3 scripts/make_logo.py --favicon > site/assets/favicon.svg
+    python3 scripts/make_logo.py > site/assets/logo.svg
 
-The --favicon variant drops the threads and thickens the arcs. At sixteen
-pixels the threads collapse into mush and the ring goes to a hairline, so the
-tab gets the coloured ring alone — the part of the mark that still reads.
+The site uses this one mark everywhere — masthead and browser tab alike — so
+the tab shows what the page shows. A --favicon variant is kept for the case
+where that stops working: it drops the threads and thickens the arcs to the
+coloured ring alone, which holds up better if the icon is ever rendered very
+small. Nothing references it at present.
 """
 
 import math

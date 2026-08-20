@@ -7,7 +7,7 @@
 <meta name="description" content="What neuroimaging finds in the hallucinating brain, mapped onto the MNI152 template: overactive auditory cortex, altered frontotemporal connectivity, and weakened control systems.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <link rel="alternate icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="stylesheet" href="assets/viewer.css">
@@ -182,6 +182,58 @@ svg{ display:block; }
 .panel .empty{ font-style:italic; color:var(--ink-60); font-size:.94rem; }
 
 /* prose below the brain */
+/* ── the model, drawn as a circuit ──────────────────────────────────────
+   The scan says where; this says what flows where, which is the part of
+   Allen's model a map of places cannot carry on its own. */
+.mech-stage{ border:1px solid var(--hair); background:var(--paper); padding:.9rem .7rem; }
+#mech{ width:100%; height:auto; }
+.mech-node rect, .mech-chip rect{
+  fill:none; stroke:var(--ink-35); stroke-width:1.2;
+}
+.mech-node text, .mech-chip text{
+  font-family:var(--font-brand); font-weight:500; font-size:13px;
+  letter-spacing:.06em; fill:var(--ink);
+}
+.mech-node .mech-sub, .mech-chip .mech-sub{
+  font-family:var(--font-serif); font-style:italic; font-size:11.5px;
+  letter-spacing:0; fill:var(--ink-60);
+}
+.mech-node, .mech-chip{ cursor:pointer; }
+.mech-node:hover rect, .mech-chip:hover rect{ stroke-width:2.4; }
+
+/* a region carries its own colour here, the same one it has on the scan */
+.mech-node.lit rect, .mech-chip.lit rect{ stroke-width:3; }
+.mech-node.faded rect, .mech-chip.faded rect{ stroke-dasharray:3 3; opacity:.45; }
+.mech-node.faded text, .mech-chip.faded text{ opacity:.45; }
+
+.mech-bracket{ fill:none; stroke:var(--ink-35); stroke-width:1; stroke-dasharray:2 4; }
+.mech-brackettag, .mech-edge{
+  font-family:var(--font-brand); font-weight:500; font-size:10px;
+  letter-spacing:.22em; text-transform:uppercase; fill:var(--ink-60);
+}
+.mech-edge{ letter-spacing:.12em; font-size:10.5px; text-transform:none; }
+
+.mech-arrow{ fill:none; stroke:var(--ink); stroke-width:2; }
+.mech-arrow.weak{ stroke:var(--ink-35); stroke-dasharray:5 5; stroke-width:1.6; }
+.mech-arrow.heavy{ stroke-width:5; }
+.mech-break{ stroke:#FF507A; stroke-width:2.6; stroke-linecap:round; }
+
+.mech-source rect{ stroke-dasharray:none; }
+.mech-out rect{ fill:none; stroke:var(--ink); stroke-width:1.6; }
+.mech-out text{
+  font-family:var(--font-display); font-size:15px; fill:var(--ink);
+}
+.mech-read{
+  font-family:var(--font-serif); font-size:.94rem; line-height:1.55;
+  color:var(--ink-60); margin-top:.85rem; max-width:76ch;
+}
+@media (max-width:760px){
+  .mech-stage{ padding:.4rem .3rem; }
+  .mech-node text, .mech-chip text{ font-size:16px; }
+  .mech-brackettag, .mech-edge{ font-size:13px; }
+  .mech-out text{ font-size:19px; }
+}
+
 .below{ margin-top:var(--gap); }
 .blk{ padding:2.6rem 0 0; border-top:1px solid var(--ink-35); margin-top:2rem; }
 .blk h2{ font-family:var(--font-display); font-weight:400;
@@ -216,7 +268,7 @@ td.hl{ color:var(--over); }
     <a href="index.html">Region Atlas</a>
     <a href="receptors.html">Receptor Density</a>
     <a href="tracts.html">Tractography</a>
-    <a href="hallucinations.html" aria-current="page">Hallucinations</a>
+    <a href="studies.html" aria-current="page">Visualizing Studies</a>
     <a href="networks.html">Networks</a>
     <a href="network-atlas.html">Network Atlas</a>
     <button class="theme-toggle" id="themeBtn" type="button" aria-pressed="false"><span class="th-dot"></span><span id="themeLbl">Dark</span></button>
@@ -301,6 +353,67 @@ td.hl{ color:var(--over); }
 </div>
 
 <section class="below">
+
+<section class="blk">
+  <h2>The model, as a circuit</h2>
+  <p class="sub">Allen's model is a claim about signal flow, not just about places. Three things have to go wrong together: the auditory cortices are overactive, their connection to the frontal language areas is altered, and the control regions that normally tag a self-generated signal as one's own lose their grip. Switch the state above and watch which arrows survive.</p>
+
+  <div class="mech-stage">
+    <svg id="mech" viewBox="0 0 980 430" role="img" aria-label="Signal-flow diagram of the auditory hallucination model">
+
+      <!-- control bracket -->
+      <g class="mech-group" id="mx-control">
+        <rect class="mech-bracket" x="256" y="30" width="520" height="86" rx="2"/>
+        <text class="mech-brackettag" x="516" y="24" text-anchor="middle">Control &middot; self-monitoring</text>
+        <g class="mech-chip" data-region="dlpfc"      tabindex="0" role="button"><rect x="276" y="52" width="112" height="42"/><text x="332" y="78" text-anchor="middle">DLPFC</text></g>
+        <g class="mech-chip" data-region="acc"        tabindex="0" role="button"><rect x="404" y="52" width="112" height="42"/><text x="460" y="78" text-anchor="middle">Cingulate</text></g>
+        <g class="mech-chip" data-region="premotor"   tabindex="0" role="button"><rect x="532" y="52" width="112" height="42"/><text x="588" y="78" text-anchor="middle">Premotor</text></g>
+        <g class="mech-chip" data-region="cerebellum" tabindex="0" role="button"><rect x="660" y="52" width="112" height="42"/><text x="716" y="78" text-anchor="middle">Cerebellum</text></g>
+      </g>
+
+      <!-- corollary discharge, the arrow the hallucinating state breaks -->
+      <path class="mech-arrow mech-ctrl" id="mx-tag" d="M516 116 L516 196" marker-end="url(#mx-head)"/>
+      <text class="mech-edge" id="mx-tag-label" x="556" y="152">tags the signal as self-generated</text>
+      <g id="mx-break" style="display:none">
+        <line class="mech-break" x1="494" y1="146" x2="538" y2="132"/>
+        <line class="mech-break" x1="494" y1="162" x2="538" y2="148"/>
+      </g>
+
+      <!-- the perception stream -->
+      <g class="mech-node mech-source" id="mx-source"><rect x="26" y="204" width="128" height="46"/><text x="90" y="232" text-anchor="middle" id="mx-source-label">Sound in the world</text></g>
+      <path class="mech-arrow" id="mx-in" d="M154 227 L196 227" marker-end="url(#mx-head)"/>
+
+      <g class="mech-node" data-region="thalamus" tabindex="0" role="button"><rect x="196" y="204" width="128" height="46"/><text x="260" y="232" text-anchor="middle">Thalamus</text></g>
+      <path class="mech-arrow" id="mx-thal" d="M324 227 L378 227" marker-end="url(#mx-head)"/>
+
+      <g class="mech-node" data-region="primary" tabindex="0" role="button"><rect x="378" y="204" width="128" height="46"/><text x="442" y="226" text-anchor="middle">Primary aud.</text><text x="442" y="242" text-anchor="middle" class="mech-sub">Heschl</text></g>
+      <path class="mech-arrow" d="M506 227 L560 227" marker-end="url(#mx-head)"/>
+
+      <g class="mech-node" data-region="secondary" tabindex="0" role="button"><rect x="560" y="204" width="128" height="46"/><text x="624" y="226" text-anchor="middle">Secondary aud.</text><text x="624" y="242" text-anchor="middle" class="mech-sub">STG</text></g>
+      <path class="mech-arrow" d="M688 227 L742 227" marker-end="url(#mx-head)"/>
+
+      <g class="mech-node" data-region="mtg" tabindex="0" role="button"><rect x="742" y="204" width="128" height="46"/><text x="806" y="232" text-anchor="middle">Middle temporal</text></g>
+
+      <!-- the outcome, which is the whole point -->
+      <path class="mech-arrow" d="M806 250 L806 300" marker-end="url(#mx-head)"/>
+      <g class="mech-out" id="mx-out"><rect x="686" y="300" width="268" height="62" rx="2"/><text x="820" y="326" text-anchor="middle" id="mx-out-1">Recognised as one's own</text><text x="820" y="346" text-anchor="middle" id="mx-out-2">inner speech</text></g>
+
+      <!-- language production, feeding the same cortex -->
+      <g class="mech-node" data-region="broca" tabindex="0" role="button"><rect x="276" y="330" width="128" height="46"/><text x="340" y="352" text-anchor="middle">Broca</text><text x="340" y="368" text-anchor="middle" class="mech-sub">inner speech</text></g>
+      <path class="mech-arrow mech-lang" id="mx-lang1" d="M404 353 L458 353" marker-end="url(#mx-head)"/>
+      <g class="mech-node" data-region="wernicke" tabindex="0" role="button"><rect x="458" y="330" width="128" height="46"/><text x="522" y="358" text-anchor="middle">Wernicke</text></g>
+      <path class="mech-arrow mech-lang" id="mx-lang2" d="M586 344 C630 330 600 280 624 254" marker-end="url(#mx-head)"/>
+
+      <defs>
+        <marker id="mx-head" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <p class="mech-read" id="mx-read"></p>
+</section>
 
 <section class="blk">
   <h2>Not only in illness</h2>
@@ -626,6 +739,78 @@ function renderPanel(){
     (region.approx ? " · drawn on the nearest atlas parcels" : "");
 }
 
+
+/* ── the model as a circuit ─────────────────────────────────────────────
+   Same regions, same colours as the scan, but drawn as signal flow. The
+   state does not merely recolour it: in the hallucinating state the
+   corollary-discharge arrow is cut, the external input falls away and the
+   auditory cortices drive themselves, which is the claim Allen's model
+   actually makes. */
+const MECH_READ = {
+  healthy:
+    "Sound arrives from the world, is relayed by the thalamus and is worked up through the auditory cortices. " +
+    "Inner speech from the frontal language areas reaches the same cortex — but the control regions send a " +
+    "copy of the command with it, so the signal arrives already tagged as self-generated, and is recognised as one's own.",
+  halluc:
+    "No sound arrives, yet the auditory cortices are active anyway, driven from within and no longer held in check " +
+    "by the thalamus. Inner speech still reaches them from the frontal language areas over an altered connection — " +
+    "but the control regions have lost their grip, so nothing tags the signal as self-generated. What arrives untagged " +
+    "is heard as a voice from outside."
+};
+
+function paintMechanism(){
+  const nodes = document.querySelectorAll("#mech .mech-node[data-region], #mech .mech-chip[data-region]");
+  const halluc = state === "halluc";
+
+  nodes.forEach(g => {
+    const id = g.dataset.region, colour = REGION_COLOUR[id];
+    const rect = g.querySelector("rect");
+    const over = OVER.indexOf(id) >= 0, weak = WEAKENED.indexOf(id) >= 0;
+    /* inline, because the stylesheet's stroke would win over an attribute */
+    rect.style.stroke = colour;
+    g.querySelectorAll("text:not(.mech-sub)").forEach(t => { t.style.fill = colour; });
+    g.classList.toggle("lit", halluc && over);
+    g.classList.toggle("faded", halluc && weak);
+    g.classList.toggle("sel", selected === id);
+    rect.style.fill = selected === id ? colour + "33" : "none";
+  });
+
+  /* the external input, and the thalamic gate that no longer constrains it */
+  $("mx-in").classList.toggle("weak", halluc);
+  $("mx-source-label").textContent = halluc ? "No external sound" : "Sound in the world";
+  $("mx-source").classList.toggle("faded", halluc);
+  $("mx-thal").classList.toggle("heavy", halluc);
+
+  /* the arrow the state cuts */
+  $("mx-tag").classList.toggle("weak", halluc);
+  /* SVG does not honour the hidden attribute, so this is set outright */
+  $("mx-break").style.display = halluc ? "" : "none";
+  $("mx-tag-label").textContent = halluc
+    ? "nothing tags the signal as self-generated"
+    : "tags the signal as self-generated";
+
+  /* the altered frontotemporal connection */
+  $("mx-lang2").classList.toggle("weak", halluc);
+
+  $("mx-out-1").textContent = halluc ? "Experienced as a voice" : "Recognised as one's own";
+  $("mx-out-2").textContent = halluc ? "from outside" : "inner speech";
+  $("mx-read").textContent = MECH_READ[halluc ? "halluc" : "healthy"];
+}
+
+/* a node in the circuit picks the same region the rail's list would */
+document.querySelectorAll("#mech [data-region]").forEach(g => {
+  const pick = () => {
+    const id = g.dataset.region;
+    selected = (selected === id) ? null : id;
+    focus = selected ? [selected] : [];
+    renderAll();
+  };
+  g.addEventListener("click", pick);
+  g.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === " "){ e.preventDefault(); pick(); }
+  });
+});
+
 function renderAll(){
   $("btn-healthy").classList.toggle("active", state === "healthy");
   $("btn-healthy").setAttribute("aria-pressed", String(state === "healthy"));
@@ -638,6 +823,7 @@ function renderAll(){
   });
   $("legendKey").classList.toggle("hidden", state !== "halluc");
   renderPanel();
+  paintMechanism();
   repaint();
 }
 
